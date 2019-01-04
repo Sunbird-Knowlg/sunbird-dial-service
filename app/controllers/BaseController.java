@@ -13,6 +13,7 @@ import commons.exception.ResourceNotFoundException;
 import commons.exception.ResponseCode;
 import org.apache.commons.lang3.StringUtils;
 import play.libs.F.Promise;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Results;
@@ -31,22 +32,17 @@ public class BaseController extends Controller {
     }
 
 
-    protected Promise<Result> getResponseEntity(Response response, String apiId, String msgId) throws JsonProcessingException {
+    protected Promise<Result> getResponseEntity(Response response, String apiId, String msgId) {
         int statusCode = response.getResponseCode().code();
         setResponseEnvelope(response, apiId, msgId);
-        return Promise.pure(Results.status(statusCode).sendResource(mapper.writeValueAsString(response)));
+        return Promise.<Result>pure(Results.status(statusCode ,Json.toJson(response)).as("application/json"));
     }
 
     protected Promise<Result> getExceptionResponseEntity(Exception e, String apiId, String msgId) {
         int statusCode = getStatus(e);
         Response response = getErrorResponse(e);
         setResponseEnvelope(response, apiId, msgId);
-        try {
-            return Promise.pure(Results.status(statusCode).sendResource(mapper.writeValueAsString(response)));
-        } catch (JsonProcessingException e1) {
-            e1.printStackTrace();
-            return null;
-        }
+        return Promise.<Result>pure(Results.status(statusCode ,Json.toJson(response)).as("application/json"));
     }
 
     private void setResponseEnvelope(Response response, String apiId, String msgId) {

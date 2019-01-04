@@ -6,7 +6,7 @@
 
     <groupId>org.sunbird</groupId>
     <artifactId>sunbird-dial-service</artifactId>
-    <packaging>jar</packaging>
+    <packaging>play2</packaging>
     <version>1.0-SNAPSHOT</version>
 
     <repositories>
@@ -82,6 +82,11 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+            <version>2.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
             <version>2.6.0</version>
         </dependency>
         <dependency>

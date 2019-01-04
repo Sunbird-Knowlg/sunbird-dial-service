@@ -389,7 +389,7 @@ public class DialcodeManager extends BaseManager {
     private int getCount(Map<String, Object> map) throws ClientException {
         Integer count = 0;
         try {
-            count = (Integer) map.get(DialCodeEnum.count.name());
+            count = ((Number) map.get(DialCodeEnum.count.name())).intValue();
         } catch (Exception e) {
             throw new ClientException(DialCodeErrorCodes.ERR_INVALID_COUNT, DialCodeErrorMessage.ERR_INVALID_COUNT);
         }
