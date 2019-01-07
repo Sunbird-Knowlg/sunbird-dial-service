@@ -100,5 +100,5 @@ public class Constants {
 
     // Dialcode Constants
     public static final String DIALCODE_SEARCH_LIMIT = "dialcode.search.limit";
-    public static final String DIALCODE_ES_CONN_INFO = "dialcode.es_conn_info";
+    public static final String DIALCODE_ES_CONN_INFO = "search.es_conn_info";
 }

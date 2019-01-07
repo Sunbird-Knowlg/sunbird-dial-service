@@ -167,7 +167,7 @@ public abstract class CassandraStore {
             Where selectWhere = selectQuery.where();
             for (Entry<String, Object> entry : propertyMap.entrySet()) {
                 if (entry.getValue() instanceof List) {
-                    Clause clause = QueryBuilder.in(entry.getKey(), Arrays.asList(entry.getValue()));
+                    Clause clause = QueryBuilder.in(entry.getKey(), ((List) entry.getValue()).toArray());
                     selectWhere.and(clause);
                 } else {
                     Clause clause = QueryBuilder.eq(entry.getKey(), entry.getValue());
