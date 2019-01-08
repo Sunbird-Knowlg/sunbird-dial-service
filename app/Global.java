@@ -15,6 +15,8 @@ import play.mvc.Action;
 import play.mvc.Http.Context;
 import play.mvc.Http.Request;
 import play.mvc.Result;
+import telemetry.TelemetryAccessEventUtil;
+import telemetry.TelemetryGenerator;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -27,13 +29,12 @@ public class Global extends GlobalSettings {
 
     public void onStart(Application app) {
         System.setProperty("es.set.netty.runtime.available.processors", "false");
-        //TelemetryGenerator.setComponent("dialcode-service");
+        TelemetryGenerator.setComponent("dialcode-service");
     }
 
     @SuppressWarnings("rawtypes")
     public Action onRequest(Request request, Method actionMethod) {
         long startTime = System.currentTimeMillis();
-        System.out.println("Entering global!!");
         return new Action.Simple() {
             public Promise<Result> call(Context ctx) throws Throwable {
                 Promise<Result> call = delegate.call(ctx);
@@ -78,7 +79,7 @@ public class Global extends GlobalSettings {
                             else
                                 ExecutionContext.getCurrent().getGlobalContext().put(HeaderParam.CHANNEL_ID.name(),
                                         AppConfig.config.getString("channel.default"));
-                            //TelemetryAccessEventUtil.writeTelemetryEventLog(data);
+                            TelemetryAccessEventUtil.writeTelemetryEventLog(data);
                             accessLogger.info(request.remoteAddress() + " " + request.host() + " " + request.method()
                                     + " " + request.uri() + " " + r.status() + " " + body.length);
                         }
