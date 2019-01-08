@@ -90,10 +90,11 @@ public class DialcodeV3Controller extends BaseController {
     /**
      * @return
      */
-    public Promise<Result> syncDialCode(String ids) {
+    public Promise<Result> syncDialCode() {
         String apiId = "sunbird.dialcode.sync";
         String channelId = request().getHeader("X-Channel-ID");
-        List<String> identifiers = Optional.ofNullable(Arrays.asList(ids.split(","))).orElse(new ArrayList<>());
+        String[] ids = request().queryString().get("identifier");
+        List<String> identifiers = Optional.ofNullable(Arrays.asList(ids)).orElse(new ArrayList<>());
         Request request = getRequest();
         try {
             Map<String, Object> map = (Map<String, Object>) request.get("sync");
