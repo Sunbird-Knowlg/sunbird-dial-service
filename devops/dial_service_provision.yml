@@ -18,7 +18,7 @@
     - name: create folder data for learning
       become: yes
       file: path={{ item }} state=directory mode=0755 owner={{learner_user}} group={{learner_group}}
-      with_items: "{{ searchs.paths }}"
+      with_items: "{{ dial.paths }}"
   roles:
     - java
     - logstash
