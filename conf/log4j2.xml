@@ -67,6 +67,28 @@
 		<Async name="TelemetryEventAppenderAsync">
 			<AppenderRef ref="TelemetryEventAppender" />
 		</Async>
+		<RollingRandomAccessFile name="GraphEventAppender"
+								 fileName="/data/logs/learning_graph_event_mw.log"
+								 filePattern="/data/logs/learning_graph_event_mw-%d{MM-dd-yyyy-hh}-%i.log">
+			<PatternLayout>
+				<Pattern>%d %msg%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="250 MB" />
+				<TimeBasedTriggeringPolicy interval="24"
+										   modulate="true" />
+				<OnStartupTriggeringPolicy />
+			</Policies>
+			<DefaultRolloverStrategy>
+				<Delete basePath="/data/logs/" maxDepth="1" testMode="false">
+					<IfFileName glob="learning_graph_event_mw-*.log" />
+					<IfLastModified age="7d" />
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingRandomAccessFile>
+		<Async name="GraphEventAppenderAsync">
+			<AppenderRef ref="GraphEventAppender" />
+		</Async>
 	</Appenders>
 	<Loggers>
 		<Logger name="TelemetryEventLogger" level="INFO" additivity="false">
@@ -74,6 +96,9 @@
 		</Logger>
 		<Logger name="PerformanceTestLogger" level="INFO" additivity="false">
 			<AppenderRef ref="PerfLogAppender" />
+		</Logger>
+		<Logger name="GraphEventLogger" level="INFO" additivity="false">
+			<AppenderRef ref="GraphEventAppender" />
 		</Logger>
 		<Logger name="DefaultPlatformLogger" level="INFO" additivity="false">
 			<AppenderRef ref="DefaultLogAppender" />
