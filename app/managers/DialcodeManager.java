@@ -240,22 +240,20 @@ public class DialcodeManager extends BaseManager {
      * org.ekstep.dialcode.mgr.IDialCodeManager#syncDialCode(java.lang.String,
      * java.utils.Map, java.utils.List)
      */
-    public Response syncDialCode(String channelId, Map<String, Object> map, List<String> identifiers) {
+    public Response syncDialCode(String channelId, Map<String, Object> map, List<String> identifiers) throws Exception {
         Map<String, Object> requestMap = new HashMap<String, Object>();
         if ((null == identifiers || identifiers.isEmpty()) && (null == map || map.isEmpty())) {
             return ERROR(DialCodeErrorCodes.ERR_INVALID_SYNC_REQUEST, DialCodeErrorMessage.ERR_INVALID_SYNC_REQUEST,
                     ResponseCode.CLIENT_ERROR);
         }
-        if (StringUtils.isNotBlank((String) map.get(DialCodeEnum.publisher.name()))
-                || StringUtils.isNotBlank((String) map.get(DialCodeEnum.batchCode.name())))
-            requestMap.putAll(map);
+        requestMap.putAll(map);
         if (null != identifiers && !identifiers.isEmpty()) {
             requestMap.put(DialCodeEnum.identifier.name(), identifiers);
         }
 
         if (requestMap.isEmpty()) {
             throw new ClientException(DialCodeErrorCodes.ERR_INVALID_SYNC_REQUEST,
-                    "Either publisher or batchCode or atleat one identifier is mandatory");
+                    "Either batchCode or atleat one identifier is mandatory");
         }
         int rowsSynced = dialCodeStore.sync(requestMap);
         Response response = getSuccessResponse();
@@ -515,7 +513,7 @@ public class DialcodeManager extends BaseManager {
         filters.putAll(searchCriteria);
         int count = (int) dialCodeSearch.get(DialCodeEnum.count.name());
         Object topN = getTopNResult((List<Object>) dialCodeSearch.get(DialCodeEnum.dialcodes.name()));
-        // TelemetryManager.search(query, filters, sort, count, topN, type);
+        TelemetryManager.search(query, filters, sort, count, topN, type);
 
     }
 

@@ -4,6 +4,7 @@ import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Session;
 import commons.AppConfig;
 import commons.exception.ServerException;
+import telemetry.TelemetryManager;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class CassandraConnector {
                 sessionMap.put(sessionKey.toLowerCase(), Cluster.builder().addContactPointsWithPorts(addressList).build().connect());
                 registerShutdownHook();
             } catch (Exception e) {
-               // TelemetryManager.error("Error! While Loading Cassandra Properties." + e.getMessage(), e);
+               TelemetryManager.error("Error! While Loading Cassandra Properties." + e.getMessage(), e);
             }
         }
     }
