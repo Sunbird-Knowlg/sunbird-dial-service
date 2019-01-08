@@ -25,7 +25,7 @@
   become_user: "{{learner_user}}"
   vars:
     description: Sunbird dial service
-    script_name: "dial-service"
+    script_name: "sunbird-dial-service"
     script_dir: "{{ dial_service_path }}"
     grep_key: play.core.server.ProdServerStart
     process: "/usr/bin/java"
