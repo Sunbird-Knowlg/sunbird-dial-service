@@ -8,14 +8,14 @@
 - name: Status of the dial service
   become: yes
   become_user: "{{learner_user}}"
-  command: "{{ dial_service_path }}/dial-service status"
+  command: "{{ dial_service_path }}/sunbird-dial-service status"
   register: dial_status
 
 
 - name: Stop the dial api service
   become: yes
   become_user: "{{learner_user}}"
-  command: "{{ dial_service_path }}/dial-service stop"
+  command: "{{ dial_service_path }}/sunbird-dial-service stop"
   when: "dial_status.stdout.find('RUNNING') != -1"
   async: 10
   poll: 5
@@ -63,6 +63,6 @@
 - name: Start the dial service
   become: yes
   become_user: "{{learner_user}}"
-  command: "{{ dial_service_path }}/dial-service start"
+  command: "{{ dial_service_path }}/sunbird-dial-service start"
   async: 20
   poll: 5 
