@@ -7,6 +7,7 @@
 
 - name: Status of the dial service
   become: yes
+  become_method: su
   become_user: "{{learner_user}}"
   command: "{{ dial_service_path }}/sunbird-dial-service status"
   register: dial_status
@@ -14,6 +15,7 @@
 
 - name: Stop the dial api service
   become: yes
+  become_method: su
   become_user: "{{learner_user}}"
   command: "{{ dial_service_path }}/sunbird-dial-service stop"
   when: "dial_status.stdout.find('RUNNING') != -1"
@@ -22,6 +24,7 @@
 
 - name: Setup dial as service
   become: yes
+  become_method: su
   become_user: "{{learner_user}}"
   vars:
     description: Sunbird dial service
@@ -37,31 +40,32 @@
 
 - name: Copy the configuration files
   become: yes
-  become_user: "{{learner_user}}"
+  #become_user: "{{learner_user}}"
   template: src=dial-service.conf.j2 dest={{ dial_root }}/dial-service.conf mode=755 owner={{ learner_user }} group={{ learner_user }}
 
 - name: Copy dial artifact
   become: yes
-  become_user: "{{learner_user}}"
+  #become_user: "{{learner_user}}"
   copy: src=sunbird-dial-service-1.0-SNAPSHOT-dist.zip dest={{ dial_root }} mode=755 owner={{ learner_user }} group={{ learner_user }}
 
 - name: Remove dial-service
   become: yes
-  become_user: "{{learner_user}}"
+  #become_user: "{{learner_user}}"
   file: name={{dial_root}}/sunbird-dial-service state=absent
 
 - name: Unarchive dial artifact
   become: yes
-  become_user: "{{learner_user}}"
+  #become_user: "{{learner_user}}"
   unarchive: src={{ dial_root }}/sunbird-dial-service-1.0-SNAPSHOT-dist.zip dest={{ dial_root }} copy=no group={{ learner_user }} owner={{ learner_user }} mode=755
 
 - name: Change dial artifact
   become: yes
-  become_user: "{{learner_user}}"
+  #become_user: "{{learner_user}}"
   command: mv {{learner_user_home}}/platform/dial/sunbird-dial-service-1.0-SNAPSHOT {{learner_user_home}}/platform/dial/sunbird-dial-service
 
 - name: Start the dial service
   become: yes
+  become_method: su
   become_user: "{{learner_user}}"
   command: "{{ dial_service_path }}/sunbird-dial-service start"
   async: 20
