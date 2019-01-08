@@ -18,7 +18,7 @@
     - name: create folder data for learning
       become: yes
       file: path={{ item }} state=directory mode=0755 owner={{learner_user}} group={{learner_group}}
-      with_items: "{{ dial.paths }}"
+      with_items: "{{ dials.paths }}"
   roles:
     - dial-service
   serial: 1

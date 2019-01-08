@@ -12,3 +12,5 @@ dial_home: /home/{{learner_user}}/platform/dial/sunbird-dial-service
 process_home: ""
 app_home: "{{ dial_home }}"
 process_args: -- -cp '{{ app_home }}/lib/*' {{ service_args }} play.core.server.ProdServerStart {{ app_home }}
+dials:
+  paths: ['/data', '/data/logs', '/data/contentBundle', '/data/properties', '/home/learning/tmp', '/home/learning/platform', '/home/learning/platform/dial', '/home/learning/platform/service', '/home/learning/platform/service/logs' ]
