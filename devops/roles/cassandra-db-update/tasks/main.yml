@@ -1,0 +1,10 @@
+- name: Copy DB script
+  become: yes
+  template:
+    src: "dialcode.cql.j2"
+    dest: "/tmp/dial-data.cql"
+    mode: 0755
+  
+- name: run cql 
+  become: yes
+  raw: /bin/bash -c 'cqlsh -f /tmp/dial-data.cql'

@@ -1,0 +1,14 @@
+learner_user: learning
+learner_group: learning
+description: Sunbird Dial Service
+service_path: /home/{{learner_user}}/platform/service
+script_name: "dial-service"
+script_dir: "{{ service_path }}"
+grep_key: play.core.server.ProdServerStart
+process: "/usr/bin/java"
+dial_root: /home/{{learner_user}}/platform/dial
+service_args: "-Dconfig.file={{ dial_root }}/dial-service.conf"
+dial_home: /home/{{learner_user}}/platform/dial/sunbird-dial-service
+process_home: ""
+app_home: "{{ dial_home }}"
+process_args: -- -cp '{{ app_home }}/lib/*' {{ service_args }} play.core.server.ProdServerStart {{ app_home }}

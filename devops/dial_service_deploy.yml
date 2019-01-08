@@ -1,0 +1,4 @@
+- hosts: searchall
+  roles:
+    - dial-service-deploy
+  serial: 1
