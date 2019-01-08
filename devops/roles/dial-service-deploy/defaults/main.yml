@@ -1,9 +1,9 @@
 learner_user: learning
 learner_user_home: /home/{{learner_user}}
 dial_service_path: "{{learner_user_home}}/platform/service"
-dial_index_host: "{{ groups['composite-search-cluster'][0] }}:9200"
+dial_index_host: "{{ dial_es_index_host }}"
 dial_home: "{{learner_user_home}}/platform/dial/sunbird-dial-service"
 dial_root: "{{learner_user_home}}/platform/dial"
 platform_api_url: "http://{{ groups['learning1'][0] }}:8080/learning-service"
 instance: "{{env}}"
-instance_name: sunbird
+instance_name: ekstep
