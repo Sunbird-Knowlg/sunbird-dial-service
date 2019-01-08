@@ -2,7 +2,7 @@ learner_user: learning
 learner_group: learning
 description: Sunbird Dial Service
 service_path: /home/{{learner_user}}/platform/service
-script_name: "dial-service"
+script_name: "sunbird-dial-service"
 script_dir: "{{ service_path }}"
 grep_key: play.core.server.ProdServerStart
 process: "/usr/bin/java"
