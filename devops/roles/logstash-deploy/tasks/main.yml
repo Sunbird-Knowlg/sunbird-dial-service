@@ -5,18 +5,18 @@
 
 - name: Copy logstash configuration files for platform
   become: yes
-  become_user: "{{learner_user}}"
+  #become_user: "{{learner_user}}"
   template: src={{item}}.j2  dest={{ logstash_home }}/{{item}}.conf
   with_items: "{{ platform.logstash_config }}"
  
 - name: Stop logstash processes related to platform
   become: yes
-  systemd: name=logstash state=stopped
+  service: name=logstash state=stopped
   ignore_errors: yes
  
 - name: create folder for logs
   become: yes
-  become_user: "{{learner_user}}"
+  #become_user: "{{learner_user}}"
   file: path={{logstash_home}}/logs state=directory mode=0755
  
 #- name: remove sincedb file
@@ -33,4 +33,4 @@
  
 - name: Start logstash processes related to platform
   become: yes
-  systemd: name=logstash state=started 
+  service: name=logstash state=started
