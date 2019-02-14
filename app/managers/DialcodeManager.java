@@ -50,6 +50,14 @@ public class DialcodeManager extends BaseManager {
     private String connectionInfo = "localhost:9300";
     private SearchProcessor processor = null;
 
+    public SearchProcessor getProcessor() {
+        return processor;
+    }
+
+    public void setProcessor(SearchProcessor processor) {
+        this.processor = processor;
+    }
+
     public DialcodeManager(){
         init();
     }
@@ -60,7 +68,8 @@ public class DialcodeManager extends BaseManager {
         connectionInfo = AppConfig.config.hasPath(Constants.DIALCODE_ES_CONN_INFO)
                 ? AppConfig.config.getString(Constants.DIALCODE_ES_CONN_INFO)
                 : connectionInfo;
-        ElasticSearchUtil.initialiseESClient(Constants.DIAL_CODE_INDEX, connectionInfo);
+
+        //ElasticSearchUtil.initialiseESClient(Constants.DIAL_CODE_INDEX, connectionInfo);
         processor = new SearchProcessor();
 
     }
@@ -160,6 +169,8 @@ public class DialcodeManager extends BaseManager {
                     ResponseCode.CLIENT_ERROR);
         return searchDialCode(channelId, map);
     }
+
+
 
     /*
      * (non-Javadoc)

@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @author rayulu
  * 
  */
-public class RequestParams implements Serializable {
+public class  RequestParams implements Serializable {
 
     private static final long serialVersionUID = -759588115950763188L;
 
