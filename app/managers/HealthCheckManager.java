@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 public class HealthCheckManager extends BaseManager implements IHealthCheckManager {
-    public static String CONNECTION_SUCCESS ="Connection Check is Successful";
-    public static String CONNECTION_FAIL ="Connection Check has Failed";
+    public static String CONNECTION_SUCCESS ="connection check is Successful";
+    public static String CONNECTION_FAIL ="connection check has Failed";
 
     @Override
     public Response getAllServiceHealth(){
@@ -23,11 +23,11 @@ public class HealthCheckManager extends BaseManager implements IHealthCheckManag
             if(!status){
                 overAllHealth=false;
             }
-            check = generateCheck("Search-db",check,status);
-            TelemetryManager.log("Elastic-Search "+CONNECTION_SUCCESS);
+            check = generateCheck("elasticsearch",check,status);
+            TelemetryManager.log("elasticsearch "+CONNECTION_SUCCESS);
         }catch (Exception e){
-            check = generateCheck("Search-db",check,status);
-            TelemetryManager.error("Elastic-Search "+CONNECTION_FAIL,e);
+            check = generateCheck("elasticsearch",check,status);
+            TelemetryManager.error("elasticsearch "+CONNECTION_FAIL,e);
         }
 
         allChecks.add(check);
@@ -37,25 +37,25 @@ public class HealthCheckManager extends BaseManager implements IHealthCheckManag
             if(!status){
                 overAllHealth=false;
             }
-            check = generateCheck("Redis-Cache",check,status);
-            TelemetryManager.log("Redis-Cache "+CONNECTION_SUCCESS);
+            check = generateCheck("redis cache",check,status);
+            TelemetryManager.log("redis cache "+CONNECTION_SUCCESS);
         }catch (Exception e){
-            check = generateCheck("Redis-Cache",check,status);
-            TelemetryManager.error("Redis-Cache "+CONNECTION_FAIL,e);
+            check = generateCheck("redis cache",check,status);
+            TelemetryManager.error("redis cache "+CONNECTION_FAIL,e);
         }
 
         allChecks.add(check);
         check = new HashMap<>();
         try{
             status = IHealthCheckManager.checkCassandraHealth();
-            check = generateCheck("Cassandra",check,status);
+            check = generateCheck("cassandra db",check,status);
             if(!status){
                 overAllHealth=false;
             }
-            TelemetryManager.log("Cassandra "+CONNECTION_SUCCESS);
+            TelemetryManager.log("cassandra db "+CONNECTION_SUCCESS);
         }catch (Exception e){
-            check = generateCheck("Cassandra",check,status);
-            TelemetryManager.error("Cassandra "+CONNECTION_FAIL,e);
+            check = generateCheck("cassandra db",check,status);
+            TelemetryManager.error("cassandra db "+CONNECTION_FAIL,e);
         }
         allChecks.add(check);
         Response response = OK("checks",allChecks);
@@ -72,7 +72,7 @@ public class HealthCheckManager extends BaseManager implements IHealthCheckManag
             check.put("name",db);
             check.put("healthy",status);
             check.put("err","503");
-            check.put("errmsg", db+" Connection Unavailable");
+            check.put("errmsg", db+" connection unavailable");
         }
         return check;
     }
