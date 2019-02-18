@@ -7,10 +7,7 @@ import commons.DialCodeErrorCodes;
 import commons.dto.Request;
 import commons.dto.Response;
 import commons.dto.ResponseParams;
-import commons.exception.ClientException;
-import commons.exception.MiddlewareException;
-import commons.exception.ResourceNotFoundException;
-import commons.exception.ResponseCode;
+import commons.exception.*;
 import org.apache.commons.lang3.StringUtils;
 import play.libs.F.Promise;
 import play.libs.Json;
@@ -44,6 +41,14 @@ public class BaseController extends Controller {
         setResponseEnvelope(response, apiId, msgId);
         return Promise.<Result>pure(Results.status(statusCode ,Json.toJson(response)).as("application/json"));
     }
+
+    public Result getServiceUnavailableResponseEntity(Exception e, String apiId, String msgId) {
+        int statusCode = getStatus(e);
+        Response response = getErrorResponse(e);
+        setResponseEnvelope(response, apiId, msgId);
+        return Results.status(statusCode ,Json.toJson(response)).as("application/json");
+    }
+
 
     private void setResponseEnvelope(Response response, String apiId, String msgId) {
         if (null != response) {
@@ -101,6 +106,8 @@ public class BaseController extends Controller {
             return Results.badRequest().status();
         } else if (e instanceof ResourceNotFoundException) {
             return Results.notFound().status();
+        }else if (e instanceof ServiceUnavailableException){
+            return Results.status(503).status();
         }
         return Results.internalServerError().status();
     }

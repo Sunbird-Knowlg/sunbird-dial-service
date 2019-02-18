@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class HealthCheckManager extends BaseManager implements IHealthCheckManager {
+    public static boolean health = false;
     public static String CONNECTION_SUCCESS ="connection check is Successful";
     public static String CONNECTION_FAIL ="connection check has Failed";
 
@@ -60,6 +61,7 @@ public class HealthCheckManager extends BaseManager implements IHealthCheckManag
         allChecks.add(check);
         Response response = OK("checks",allChecks);
         response.put("healthy",overAllHealth);
+        health = overAllHealth;
         return response;
     }
 
