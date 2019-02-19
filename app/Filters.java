@@ -1,3 +1,7 @@
+/**
+ *
+ * @author Rhea Fernandes
+ */
 import filters.HealthCheckFilter;
 import play.api.mvc.EssentialFilter;
 import play.http.HttpFilters;

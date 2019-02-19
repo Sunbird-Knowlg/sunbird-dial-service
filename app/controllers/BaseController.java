@@ -1,6 +1,5 @@
 package controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import commons.DialCodeErrorCodes;
@@ -107,7 +106,7 @@ public class BaseController extends Controller {
         } else if (e instanceof ResourceNotFoundException) {
             return Results.notFound().status();
         }else if (e instanceof ServiceUnavailableException){
-            return Results.status(503).status();
+            return Results.status(ResponseCode.SERVICE_UNAVAILABLE.code()).status();
         }
         return Results.internalServerError().status();
     }

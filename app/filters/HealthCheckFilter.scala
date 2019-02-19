@@ -1,6 +1,11 @@
+/**
+  *
+  * @author Rhea Fernandes
+  */
 package filters;
 
-import commons.exception.ServiceUnavailableException
+import commons.DialCodeErrorMessage
+import commons.exception.{ResponseCode, ServiceUnavailableException}
 import controllers.BaseController
 import play.api.mvc._
 
@@ -15,7 +20,7 @@ class HealthCheckFilter extends Filter {
     if (!requestHeader.path.contains("/health")) {
       if (!managers.HealthCheckManager.health) {
         val jContext = JavaHelpers.createJavaContext(requestHeader)
-        val jResult:play.mvc.Result =baseController.getServiceUnavailableResponseEntity(new ServiceUnavailableException("503","Services are currently unavailable"),"sunbird.dialcode.exception",null)
+        val jResult:play.mvc.Result =baseController.getServiceUnavailableResponseEntity(new ServiceUnavailableException(ResponseCode.SERVICE_UNAVAILABLE.code().toString,DialCodeErrorMessage.ERR_SERVICE_UNAVAILABLE),"sunbird.dialcode.exception",null)
         Future{
           JavaHelpers.createResult(jContext,jResult);
         }

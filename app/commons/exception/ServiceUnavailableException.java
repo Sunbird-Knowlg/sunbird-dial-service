@@ -1,3 +1,7 @@
+/**
+ *
+ * @author Rhea Fernandes
+ */
 package commons.exception;
 
 public class ServiceUnavailableException extends  MiddlewareException {
