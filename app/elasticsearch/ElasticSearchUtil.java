@@ -68,6 +68,7 @@ public class ElasticSearchUtil {
 	public static int defaultResultLimit = 10000;
 	private static final int resultLimit = 100;
 	public int defaultResultOffset = 0;
+
 	private static int BATCH_SIZE = (AppConfig.config.hasPath("search.batch.size"))
 			? AppConfig.config.getInt("search.batch.size")
 			: 1000;
@@ -99,7 +100,7 @@ public class ElasticSearchUtil {
 		}
 	}
 
-	private static RestHighLevelClient getClient(String indexName) {
+	public static RestHighLevelClient getClient(String indexName) {
 		if (StringUtils.isBlank(indexName))
 			indexName = Constants.DIAL_CODE_INDEX;
 		return esClient.get(indexName);

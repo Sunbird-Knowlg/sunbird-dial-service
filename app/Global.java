@@ -4,14 +4,17 @@ import commons.AppConfig;
 import commons.dto.ExecutionContext;
 import commons.dto.HeaderParam;
 import commons.dto.Response;
+import managers.HealthCheckManager;
 import org.apache.commons.lang3.StringUtils;
 import play.Application;
 import play.GlobalSettings;
 import play.Logger;
 import play.Logger.ALogger;
+import play.api.mvc.Handler;
 import play.core.j.JavaResultExtractor;
 import play.libs.F.Promise;
 import play.mvc.Action;
+import play.mvc.Http;
 import play.mvc.Http.Context;
 import play.mvc.Http.Request;
 import play.mvc.Result;
@@ -30,6 +33,7 @@ public class Global extends GlobalSettings {
     public void onStart(Application app) {
         System.setProperty("es.set.netty.runtime.available.processors", "false");
         TelemetryGenerator.setComponent("dialcode-service");
+        new HealthCheckManager().getAllServiceHealth();
     }
 
     @SuppressWarnings("rawtypes")

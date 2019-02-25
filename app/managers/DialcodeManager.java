@@ -50,6 +50,14 @@ public class DialcodeManager extends BaseManager {
     private String connectionInfo = "localhost:9300";
     private SearchProcessor processor = null;
 
+    public SearchProcessor getProcessor() {
+        return processor;
+    }
+
+    public void setProcessor(SearchProcessor processor) {
+        this.processor = processor;
+    }
+
     public DialcodeManager(){
         init();
     }
@@ -60,7 +68,8 @@ public class DialcodeManager extends BaseManager {
         connectionInfo = AppConfig.config.hasPath(Constants.DIALCODE_ES_CONN_INFO)
                 ? AppConfig.config.getString(Constants.DIALCODE_ES_CONN_INFO)
                 : connectionInfo;
-        ElasticSearchUtil.initialiseESClient(Constants.DIAL_CODE_INDEX, connectionInfo);
+
+        //ElasticSearchUtil.initialiseESClient(Constants.DIAL_CODE_INDEX, connectionInfo);
         processor = new SearchProcessor();
 
     }
@@ -161,6 +170,8 @@ public class DialcodeManager extends BaseManager {
         return searchDialCode(channelId, map);
     }
 
+
+
     /*
      * (non-Javadoc)
      *
@@ -204,7 +215,7 @@ public class DialcodeManager extends BaseManager {
         int limit = defaultLimit;
         try {
             if (map.containsKey("limit"))
-                limit = (int) map.get("limit");
+                limit = ((Number) map.get("limit")).intValue();
         } catch (Exception e) {
             throw new ClientException(errCode, "Please provide valid limit.");
         }
