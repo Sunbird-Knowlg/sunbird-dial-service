@@ -37,7 +37,7 @@ public class PublisherStore extends CassandraStore {
 	}
 	
 	public void modify(String key, String idValue, Map<String, Object> props) {
-		update(key, idValue, props);
+		update(key, idValue, props, null);
 		List<String> keys = props.keySet().stream().collect(Collectors.toList());
 		//TelemetryManager.audit(idValue, getObjectType(), keys, null, null);
 	}

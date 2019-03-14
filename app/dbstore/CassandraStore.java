@@ -26,7 +26,6 @@ import utils.Constants;
 import utils.DateUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -71,7 +70,7 @@ public abstract class CassandraStore {
             String query = getPreparedStatement(keySet);
             Object[] objects = getBindObjects(request);
             executeQuery(query, objects);
-            logTransactionEvent(CassandraStoreParam.CREATE.name(), idValue, request);
+            logTransactionEvent(CassandraStoreParam.CREATE.name(), idValue, request, null);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ServerException(CassandraStoreParam.ERR_SERVER_ERROR.name(),
@@ -79,7 +78,7 @@ public abstract class CassandraStore {
         }
     }
 
-    protected void update(String identifier, Object idValue, Map<String, Object> request) {
+    protected void update(String identifier, Object idValue, Map<String, Object> request, Map<String, Object> extEventData) {
         try {
             if (null == request || request.isEmpty()) {
                 throw new ServerException(CassandraStoreParam.ERR_SERVER_ERROR.name(),
@@ -96,7 +95,7 @@ public abstract class CassandraStore {
             }
             objects[i] = idValue;
             executeQuery(updateQuery, objects);
-            logTransactionEvent(CassandraStoreParam.UPDATE.name(), idValue, request);
+            logTransactionEvent(CassandraStoreParam.UPDATE.name(), idValue, request, extEventData);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ServerException(CassandraStoreParam.ERR_SERVER_ERROR.name(),
@@ -112,7 +111,7 @@ public abstract class CassandraStore {
             }
             Delete.Where delete = QueryBuilder.delete().from(keyspace, table).where(eq(identifier, idValue));
             CassandraConnector.getSession().execute(delete);
-            logTransactionEvent(CassandraStoreParam.DELETE.name(), identifier, null);
+            logTransactionEvent(CassandraStoreParam.DELETE.name(), identifier, null, null);
         } catch (Exception e) {
             throw new ServerException(CassandraStoreParam.ERR_SERVER_ERROR.name(),
                     "Error while deleting record for id : " + idValue, e);
@@ -351,7 +350,7 @@ public abstract class CassandraStore {
         return table;
     }
 
-    protected void logTransactionEvent(String operation, Object identifier, Map<String, Object> map) {
+    protected void logTransactionEvent(String operation, Object identifier, Map<String, Object> map, Map<String, Object> extEventData) {
         if (index) {
             if (null == map && !StringUtils.equalsIgnoreCase(operation, CassandraStoreParam.DELETE.name())) {
                 TelemetryManager.log("Returning null as the map is is null", map);
@@ -368,6 +367,9 @@ public abstract class CassandraStore {
                     valueMap.put("nv", entry.getValue());
                     TelemetryManager.log("Adding propertiesMap to log kafka message", valueMap);
                     propertiesMap.put(entry.getKey(), valueMap);
+                }
+                if (null != extEventData && !extEventData.isEmpty()) {
+                        propertiesMap.putAll(extEventData);
                 }
                 transactionMap.put(CassandraStoreParam.properties.name(), propertiesMap);
                 dataMap.put(CassandraStoreParam.transactionData.name(), transactionMap);

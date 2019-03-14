@@ -36,6 +36,6 @@ public class SystemConfigStore extends CassandraStore {
 	public void setDialCodeIndex(double maxIndex) throws Exception {
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put(DialCodeEnum.prop_value.name(), String.valueOf((int) maxIndex));
-		update(DialCodeEnum.prop_key.name(), DialCodeEnum.dialcode_max_index.name(), data);
+		update(DialCodeEnum.prop_key.name(), DialCodeEnum.dialcode_max_index.name(), data, null);
 	}
 }
