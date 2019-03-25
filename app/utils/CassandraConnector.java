@@ -1,9 +1,12 @@
 package utils;
 
 import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.ConsistencyLevel;
+import com.datastax.driver.core.QueryOptions;
 import com.datastax.driver.core.Session;
 import commons.AppConfig;
 import commons.exception.ServerException;
+import org.apache.commons.lang3.StringUtils;
 import telemetry.TelemetryManager;
 
 import java.net.InetSocketAddress;
@@ -48,20 +51,26 @@ public class CassandraConnector {
     }
 
 	/**
+	 * This Method Create a session with Cassandra Cluster and Stores it into Local Session Cache against session key.
 	 * @param sessionKeys
 	 */
-    private static void prepareSession(String... sessionKeys) {
-        for (String sessionKey : sessionKeys) {
-            List<String> connectionInfo = getConnectionInfo(sessionKey.toLowerCase());
-            List<InetSocketAddress> addressList = getSocketAddress(connectionInfo);
-            try {
-                sessionMap.put(sessionKey.toLowerCase(), Cluster.builder().addContactPointsWithPorts(addressList).build().connect());
-                registerShutdownHook();
-            } catch (Exception e) {
-               TelemetryManager.error("Error! While Loading Cassandra Properties." + e.getMessage(), e);
-            }
-        }
-    }
+	private static void prepareSession(String... sessionKeys) {
+		ConsistencyLevel consistencyLevel = getConsistencyLevel();
+		for (String sessionKey : sessionKeys) {
+			List<String> connectionInfo = getConnectionInfo(sessionKey.toLowerCase());
+			List<InetSocketAddress> addressList = getSocketAddress(connectionInfo);
+			try {
+				if (null != consistencyLevel) {
+					sessionMap.put(sessionKey.toLowerCase(), Cluster.builder().addContactPointsWithPorts(addressList).withQueryOptions(new QueryOptions().setConsistencyLevel(consistencyLevel)).build().connect());
+				} else {
+					sessionMap.put(sessionKey.toLowerCase(), Cluster.builder().addContactPointsWithPorts(addressList).build().connect());
+				}
+				registerShutdownHook();
+			} catch (Exception e) {
+				TelemetryManager.error("Error! While Loading Cassandra Properties." + e.getMessage(), e);
+			}
+		}
+	}
 
 	/**
 	 *
@@ -120,5 +129,17 @@ public class CassandraConnector {
             }
         });
     }
+
+	/**
+	 * This Method Returns the value of Consistency Level for Multi Node/DC Cassandra Cluster.
+	 * @return ConsistencyLevel
+	 */
+	private static ConsistencyLevel getConsistencyLevel() {
+		String consistencyLevel = AppConfig.config.hasPath("cassandra.consistency.level") ?
+				AppConfig.config.getString("cassandra.consistency.level") : null;
+		if (StringUtils.isNotBlank(consistencyLevel))
+			return ConsistencyLevel.valueOf(consistencyLevel.toUpperCase());
+		return null;
+	}
 
 }
