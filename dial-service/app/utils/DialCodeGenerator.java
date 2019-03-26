@@ -4,6 +4,7 @@ import commons.AppConfig;
 import dbstore.DialCodeStore;
 import dbstore.SystemConfigStore;
 import org.apache.commons.lang3.StringUtils;
+import telemetry.TelemetryManager;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
@@ -70,7 +71,8 @@ public class DialCodeGenerator {
 					codesCount += 1;
 					codes.put(lastIndex, code);
 				} catch (Exception e) {
-					//TelemetryManager.error("Error while generating DIAL code", e);
+					TelemetryManager.error("Error while generating DIAL code", e);
+					throw e;
 				}
 			}
 		}

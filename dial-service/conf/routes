@@ -1,6 +1,7 @@
 # Routes
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
+GET    /health                                     @controllers.health.HealthCheckController.checkSystemHealth()
 POST   /v3/dialcode/generate                       @controllers.dialcode.DialcodeV3Controller.generateDialCode()
 GET    /v3/dialcode/read/:id                       @controllers.dialcode.DialcodeV3Controller.readDialCode(id: String)
 PATCH  /v3/dialcode/update/:id                     @controllers.dialcode.DialcodeV3Controller.updateDialCode(id: String)

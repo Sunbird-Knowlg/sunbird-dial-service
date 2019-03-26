@@ -8,7 +8,7 @@ package commons;
  *
  */
 public class DialCodeErrorMessage {
-
+	public static final String ERR_SERVICE_UNAVAILABLE = "Services are temporarily unavailable, please try again later";
 	public static final String ERR_SERVER_ERROR = "Something Went Wrong While Processing Your Request.";
 	public static final String ERR_INVALID_DIALCODE_REQUEST = "Invalid Request.";
 	public static final String ERR_INVALID_PUBLISHER = "Invalid Publisher. Please Provide Correct Publisher Details.";
