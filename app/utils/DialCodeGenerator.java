@@ -10,6 +10,8 @@ import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DialCodeGenerator {
 
@@ -65,7 +67,7 @@ public class DialCodeGenerator {
 			BigDecimal number = new BigDecimal(lastIndex);
 			BigDecimal num = number.multiply(largePrimeNumber).remainder(exponent);
 			String code = baseN(num, totalChars);
-			if (code.length() == length) {
+			if (code.length() == length && isValidCode(code)) {
 				try {
 					dialCodeStore.save(channel, publisher, batchCode, code, lastIndex);
 					codesCount += 1;
@@ -107,6 +109,18 @@ public class DialCodeGenerator {
 	private Double getMaxIndex() throws Exception {
 		double index = RedisStoreUtil.getNodePropertyIncVal("domain", "dialcode", "max_index");
 		return index;
+	}
+
+	/**
+	 * This Method will check if dialcode has numeric value at odd indexes.
+	 * @param code
+	 * @return Boolean
+	 */
+	private Boolean isValidCode(String code) {
+		String regex = "[A-Z][0-9][A-Z][0-9][A-Z][0-9]";
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(code);
+		return matcher.matches();
 	}
 
 }
