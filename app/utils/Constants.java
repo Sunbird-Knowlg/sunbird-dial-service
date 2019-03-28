@@ -1,7 +1,5 @@
 package utils;
 
-import commons.AppConfig;
-
 public class Constants {
 
     //Cassandra Connection constants
