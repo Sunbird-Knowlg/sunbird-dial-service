@@ -10,6 +10,8 @@ import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DialCodeGenerator {
 
@@ -20,7 +22,8 @@ public class DialCodeGenerator {
 	private static String stripChars = "0";
 	private static Double length = 6.0;
 	private static BigDecimal largePrimeNumber = new BigDecimal(1679979167);
-
+	private static String regex = "[A-Z][0-9][A-Z][0-9][A-Z][0-9]";
+	private static Pattern pattern = Pattern.compile(regex);
 	/**
 	 * Get Max Index from Cassandra and Set it to Cache.
 	 */
@@ -65,7 +68,7 @@ public class DialCodeGenerator {
 			BigDecimal number = new BigDecimal(lastIndex);
 			BigDecimal num = number.multiply(largePrimeNumber).remainder(exponent);
 			String code = baseN(num, totalChars);
-			if (code.length() == length) {
+			if (code.length() == length && isValidCode(code)) {
 				try {
 					dialCodeStore.save(channel, publisher, batchCode, code, lastIndex);
 					codesCount += 1;
@@ -107,6 +110,16 @@ public class DialCodeGenerator {
 	private Double getMaxIndex() throws Exception {
 		double index = RedisStoreUtil.getNodePropertyIncVal("domain", "dialcode", "max_index");
 		return index;
+	}
+
+	/**
+	 * This Method will check if dialcode has numeric value at odd indexes.
+	 * @param code
+	 * @return Boolean
+	 */
+	private Boolean isValidCode(String code) {
+		Matcher matcher = pattern.matcher(code);
+		return matcher.matches();
 	}
 
 }
