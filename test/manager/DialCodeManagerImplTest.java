@@ -41,6 +41,7 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 	private static String publisherId = "";
 	private static ObjectMapper mapper = new ObjectMapper();
 	private static String DIALCODE_INDEX = "testdialcode";
+	private static Pattern pattern;
 
 	private static String cassandraScript_1 = "CREATE KEYSPACE IF NOT EXISTS dialcode_store_test WITH replication = {'class': 'SimpleStrategy','replication_factor': '1'};";
 	private static String cassandraScript_2 = "CREATE TABLE IF NOT EXISTS dialcode_store_test.system_config_test (prop_key text,prop_value text,primary key(prop_key));";
@@ -53,6 +54,8 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 
 	@BeforeClass
 	public static void setup() throws Exception {
+		String regex = "[A-Z][0-9][A-Z][0-9][A-Z][0-9]";
+		pattern = Pattern.compile(regex);
 		executeScript(cassandraScript_1, cassandraScript_2, cassandraScript_3, cassandraScript_4, cassandraScript_5);
 		createDialCodeIndex();
 	}
@@ -294,8 +297,6 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 	 */
 	private static Boolean validateDialCodes(Collection<String> dialcodes) {
 		Boolean isValid = true;
-		String regex = "[A-Z][0-9][A-Z][0-9][A-Z][0-9]";
-		Pattern pattern = Pattern.compile(regex);
 		for (String str : dialcodes) {
 			if (!pattern.matcher(str).matches()) {
 				isValid = false;

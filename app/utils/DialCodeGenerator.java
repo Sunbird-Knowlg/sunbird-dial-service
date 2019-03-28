@@ -22,7 +22,8 @@ public class DialCodeGenerator {
 	private static String stripChars = "0";
 	private static Double length = 6.0;
 	private static BigDecimal largePrimeNumber = new BigDecimal(1679979167);
-
+	private static String regex = "[A-Z][0-9][A-Z][0-9][A-Z][0-9]";
+	private static Pattern pattern = Pattern.compile(regex);
 	/**
 	 * Get Max Index from Cassandra and Set it to Cache.
 	 */
@@ -117,8 +118,6 @@ public class DialCodeGenerator {
 	 * @return Boolean
 	 */
 	private Boolean isValidCode(String code) {
-		String regex = "[A-Z][0-9][A-Z][0-9][A-Z][0-9]";
-		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(code);
 		return matcher.matches();
 	}
