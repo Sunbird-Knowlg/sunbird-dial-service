@@ -59,7 +59,7 @@ public class DialcodeV3Controller extends BaseController {
     }
 
     public Promise<Result> listDialCode() {
-        String apiId = "ekstep.dialcode.list";
+        String apiId = "sunbird.dialcode.list";
         String channelId = request().getHeader("X-Channel-ID");
         Request request = getRequest();
         try {
@@ -73,7 +73,7 @@ public class DialcodeV3Controller extends BaseController {
     }
 
     public Promise<Result> searchDialCode() {
-        String apiId = "ekstep.dialcode.search";
+        String apiId = "sunbird.dialcode.search";
         String channelId = request().getHeader("X-Channel-ID");
         Request request = getRequest();
         try {
@@ -112,7 +112,7 @@ public class DialcodeV3Controller extends BaseController {
      * @return
      */
     public Promise<Result> publishDialCode(String dialCodeId) {
-        String apiId = "ekstep.dialcode.publish";
+        String apiId = "sunbird.dialcode.publish";
         String channelId = request().getHeader("X-Channel-ID");
         try {
             Response response = dialCodeManager.publishDialCode(dialCodeId, channelId);

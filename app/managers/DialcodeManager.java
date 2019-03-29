@@ -23,6 +23,7 @@ import scala.concurrent.Future;
 import scala.concurrent.duration.Duration;
 import telemetry.TelemetryManager;
 import utils.Constants;
+import utils.DateUtils;
 import utils.DialCodeEnum;
 import utils.DialCodeGenerator;
 
@@ -149,7 +150,7 @@ public class DialcodeManager extends BaseManager {
         String metaData = new Gson().toJson(map.get(DialCodeEnum.metadata.name()));
         Map<String, Object> data = new HashMap<String, Object>();
         data.put(DialCodeEnum.metadata.name(), metaData);
-        dialCodeStore.update(dialCodeId, data);
+        dialCodeStore.update(dialCodeId, data, null);
         Response resp = getSuccessResponse();
         resp.put(DialCodeEnum.identifier.name(), dialCode.getIdentifier());
         TelemetryManager.info("DIAL code updated", resp.getResult());
@@ -235,9 +236,18 @@ public class DialcodeManager extends BaseManager {
             return ERROR(DialCodeErrorCodes.ERR_INVALID_CHANNEL_ID, DialCodeErrorMessage.ERR_INVALID_CHANNEL_ID,
                     ResponseCode.CLIENT_ERROR);
         Map<String, Object> data = new HashMap<String, Object>();
+        String publishedOn = DateUtils.formatCurrentDate();
         data.put(DialCodeEnum.status.name(), DialCodeEnum.Live.name());
-        data.put(DialCodeEnum.published_on.name(), LocalDateTime.now().toString());
-        dialCodeStore.update(dialCodeId, data);
+        data.put(DialCodeEnum.published_on.name(), publishedOn);
+        Map<String, Object> statusChangedOnMap = new HashMap<String, Object>() {{
+            put("ov", dialCode.getGeneratedOn());
+            put("nv", publishedOn);
+        }};
+        Map<String, Object> extEventData = new HashMap<String, Object>() {{
+            put("lastStatusChangedOn", statusChangedOnMap);
+        }};
+
+        dialCodeStore.update(dialCodeId, data, extEventData);
         resp = getSuccessResponse();
         resp.put(DialCodeEnum.identifier.name(), dialCode.getIdentifier());
         TelemetryManager.info("DIAL code published", resp.getResult());

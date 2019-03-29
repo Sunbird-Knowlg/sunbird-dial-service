@@ -10,11 +10,9 @@ import play.Application;
 import play.GlobalSettings;
 import play.Logger;
 import play.Logger.ALogger;
-import play.api.mvc.Handler;
 import play.core.j.JavaResultExtractor;
 import play.libs.F.Promise;
 import play.mvc.Action;
-import play.mvc.Http;
 import play.mvc.Http.Context;
 import play.mvc.Http.Request;
 import play.mvc.Result;
@@ -47,8 +45,8 @@ public class Global extends GlobalSettings {
                         String path = request.uri();
                         if (!path.contains("/health")) {
                             JsonNode requestData = request.body().asJson();
-                            Request req = mapper.convertValue(requestData,
-                                    Request.class);
+                            commons.dto.Request req = mapper.convertValue(requestData,
+                                    commons.dto.Request.class);
 
                             byte[] body = JavaResultExtractor.getBody(r, 0l);
                             Response responseObj = mapper.readValue(body, Response.class);
@@ -83,6 +81,13 @@ public class Global extends GlobalSettings {
                             else
                                 ExecutionContext.getCurrent().getGlobalContext().put(HeaderParam.CHANNEL_ID.name(),
                                         AppConfig.config.getString("channel.default"));
+
+                            String appId = request.getHeader("X-App-ID");
+                            if(StringUtils.isNotBlank(appId)){
+                                ExecutionContext.getCurrent().getGlobalContext().put(HeaderParam.APP_ID.name(),
+                                        channelId);
+                                data.put("X-App-ID",appId);
+                            }
                             TelemetryAccessEventUtil.writeTelemetryEventLog(data);
                             accessLogger.info(request.remoteAddress() + " " + request.host() + " " + request.method()
                                     + " " + request.uri() + " " + r.status() + " " + body.length);

@@ -2,7 +2,9 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import commons.AppConfig;
 import commons.DialCodeErrorCodes;
+import commons.dto.HeaderParam;
 import commons.dto.Request;
 import commons.dto.Response;
 import commons.dto.ResponseParams;
@@ -11,8 +13,10 @@ import org.apache.commons.lang3.StringUtils;
 import play.libs.F.Promise;
 import play.libs.Json;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Results;
+import telemetry.TelemetryParams;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,6 +28,7 @@ public class BaseController extends Controller {
     protected Request getRequest() {
         JsonNode requestData = request().body().asJson();
         Request req = mapper.convertValue(requestData, Request.class);
+        setHeaderContext(request(),req);
         return req;
     }
 
@@ -109,6 +114,46 @@ public class BaseController extends Controller {
             return Results.status(ResponseCode.SERVICE_UNAVAILABLE.code()).status();
         }
         return Results.internalServerError().status();
+    }
+
+    /**
+     *
+     * @param httpRequest
+     * @param dialRequest
+     */
+    protected void setHeaderContext(Http.Request httpRequest, Request dialRequest) {
+        String sessionId = httpRequest.getHeader("X-Session-ID");
+        String consumerId = httpRequest.getHeader("X-Consumer-ID");
+        String deviceId = httpRequest.getHeader("X-Device-ID");
+        String authUserId = httpRequest.getHeader("X-Authenticated-Userid");
+        String channelId = httpRequest.getHeader("X-Channel-ID");
+        String appId = httpRequest.getHeader("X-App-Id");
+
+        if (StringUtils.isNotBlank(sessionId))
+            dialRequest.getContext().put("SESSION_ID", sessionId);
+        if (StringUtils.isNotBlank(consumerId))
+            dialRequest.getContext().put(HeaderParam.CONSUMER_ID.name(), consumerId);
+        if (StringUtils.isNotBlank(deviceId))
+            dialRequest.getContext().put(HeaderParam.DEVICE_ID.name(), deviceId);
+        if (StringUtils.isNotBlank(authUserId))
+            dialRequest.getContext().put(HeaderParam.CONSUMER_ID.name(), authUserId);
+        if (StringUtils.isNotBlank(channelId))
+            dialRequest.getContext().put(HeaderParam.CHANNEL_ID.name(), channelId);
+        else
+            dialRequest.getContext().put(HeaderParam.CHANNEL_ID.name(), AppConfig.config.getString("channel.default"));
+        if (StringUtils.isNotBlank(appId))
+            dialRequest.getContext().put(HeaderParam.APP_ID.name(), appId);
+
+        dialRequest.getContext().put(TelemetryParams.ENV.name(), "dialcode");
+
+        if (null != dialRequest.getContext().get(HeaderParam.CONSUMER_ID.name())) {
+            dialRequest.put(TelemetryParams.ACTOR.name(), dialRequest.getContext().get(HeaderParam.CONSUMER_ID.name()));
+        } else if (null != dialRequest && null != dialRequest.getParams().getCid()) {
+            dialRequest.put(TelemetryParams.ACTOR.name(), dialRequest.getParams().getCid());
+        } else {
+            dialRequest.put(TelemetryParams.ACTOR.name(), "learning.platform");
+        }
+
     }
 
 }

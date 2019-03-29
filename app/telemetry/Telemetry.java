@@ -20,13 +20,14 @@ public class Telemetry {
 	private String eid;
 	private long ets = System.currentTimeMillis();
 	private String ver = "3.0";
-	private String mid = "LP." + System.currentTimeMillis() + "." + UUID.randomUUID();;
+	private String mid = "LP." + System.currentTimeMillis() + "." + UUID.randomUUID();
 	private Actor actor;
 	private Context context;
 	private Target object;
 	private Map<String, Object> edata;
 	private List<Map<String, Object>> cdata;
 	private List<String> tags;
+	private Long syncts = ets;
 
 	/**
 	 * @param eid
@@ -44,6 +45,7 @@ public class Telemetry {
 		this.actor = actor;
 		this.context = context;
 		this.edata = edata;
+		this.syncts = ets;
 	}
 
 	/**
@@ -224,6 +226,20 @@ public class Telemetry {
 	 */
 	public void setCdata(List<Map<String, Object>> cdata) {
 		this.cdata = cdata;
+	}
+
+	/**
+	 * @return Long
+	 */
+	public Long getSyncts() {
+		return syncts;
+	}
+
+	/**
+	 * @param syncts
+	 */
+	public void setSyncts(Long syncts) {
+		this.syncts = syncts;
 	}
 
 }
