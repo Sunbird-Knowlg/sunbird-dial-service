@@ -172,16 +172,14 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 	@Test
 	public void dialCodeTest_09() throws Exception {
 		String listReq = "{\"status\":\"Live\"}";
-		String channelId = "channelTest";
-		Response response = dialCodeMgr.listDialCode(channelId, getRequestMap(listReq));
+		Response response = dialCodeMgr.listDialCode(getRequestContext(), getRequestMap(listReq));
 		Assert.assertEquals("OK", response.getResponseCode().toString());
 	}
 
 	// Search Dial Code with null map - CLIENT_ERROR
 	@Test
 	public void dialCodeTest_10() throws Exception {
-		String channelId = "channelTest";
-		Response response = dialCodeMgr.searchDialCode(channelId, null);
+		Response response = dialCodeMgr.searchDialCode(getRequestContext(), null);
 		Assert.assertEquals("CLIENT_ERROR", response.getResponseCode().toString());
 	}
 
@@ -190,8 +188,7 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 	public void dialCodeTest_11() throws Exception {
 		exception.expect(ClientException.class);
 		String searchReq = "{\"status\":\"Live\",\"limit\":\"abc\"}";
-		String channelId = "channelTest";
-		Response response = dialCodeMgr.searchDialCode(channelId, getRequestMap(searchReq));
+		Response response = dialCodeMgr.searchDialCode(getRequestContext(), getRequestMap(searchReq));
 	}
 
 	// Sync Dial Code with null Request - CLIENT_ERROR
@@ -288,6 +285,16 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 	private static Map<String, Object> getRequestMap(String request) throws Exception {
 		return mapper.readValue(request, new TypeReference<Map<String, Object>>() {
 		});
+	}
+
+	/**
+	 * This Method Returns Request Context Map.
+	 * @return Map
+	 */
+	private static Map<String, Object> getRequestContext() {
+		return new HashMap<String, Object>() {{
+			put("CHANNEL_ID", "channelTest");
+		}};
 	}
 
 	/**
