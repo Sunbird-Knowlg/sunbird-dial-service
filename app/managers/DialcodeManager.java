@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import commons.AppConfig;
 import commons.DialCodeErrorCodes;
 import commons.DialCodeErrorMessage;
+import commons.dto.HeaderParam;
 import commons.dto.Response;
 import commons.exception.ClientException;
 import commons.exception.ResponseCode;
@@ -164,11 +165,11 @@ public class DialcodeManager extends BaseManager {
      * org.ekstep.dialcode.mgr.IDialCodeManager#listDialCode(java.lang.String,
      * java.utils.Map)
      */
-    public Response listDialCode(String channelId, Map<String, Object> map) throws Exception {
+    public Response listDialCode(Map<String, Object> requestContext, Map<String, Object> map) throws Exception {
         if (null == map)
             return ERROR(DialCodeErrorCodes.ERR_INVALID_SEARCH_REQUEST, DialCodeErrorMessage.ERR_INVALID_SEARCH_REQUEST,
                     ResponseCode.CLIENT_ERROR);
-        return searchDialCode(channelId, map);
+        return searchDialCode(requestContext, map);
     }
 
 
@@ -180,7 +181,7 @@ public class DialcodeManager extends BaseManager {
      * org.ekstep.dialcode.mgr.IDialCodeManager#listDialCode(java.lang.String,
      * java.utils.Map)
      */
-    public Response searchDialCode(String channelId, Map<String, Object> map) throws Exception {
+    public Response searchDialCode(Map<String, Object> requestContext, Map<String, Object> map) throws Exception {
         if (null == map)
             return ERROR(DialCodeErrorCodes.ERR_INVALID_SEARCH_REQUEST, DialCodeErrorMessage.ERR_INVALID_SEARCH_REQUEST,
                     ResponseCode.CLIENT_ERROR);
@@ -188,7 +189,7 @@ public class DialcodeManager extends BaseManager {
         int offset = getOffset(map, DialCodeErrorCodes.ERR_INVALID_SEARCH_REQUEST);
         map.remove("limit");
         map.remove("offset");
-        Map<String, Object> dialCodeSearch = searchDialCodes(channelId, map, limit, offset);
+        Map<String, Object> dialCodeSearch = searchDialCodes(requestContext, map, limit, offset);
 
         Response resp = getSuccessResponse();
         resp.put(DialCodeEnum.count.name(), dialCodeSearch.get(DialCodeEnum.count.name()));
@@ -441,16 +442,17 @@ public class DialcodeManager extends BaseManager {
     }
 
     /**
-     * @param channelId
+     * @param requestContext
      * @param map
      * @param offset
      * @return
      * @throws Exception
      */
-    private Map<String, Object> searchDialCodes(String channelId, Map<String, Object> map, int limit, int offset)
+    private Map<String, Object> searchDialCodes(Map<String, Object> requestContext, Map<String, Object> map, int limit, int offset)
             throws Exception {
         Map<String, Object> dialCodeSearch = new HashMap<String, Object>();
         List<Object> searchResult = new ArrayList<Object>();
+        String channelId = (String)requestContext.getOrDefault(HeaderParam.CHANNEL_ID.name(),"");
         SearchDTO searchDto = new SearchDTO();
         searchDto.setFuzzySearch(false);
 
@@ -469,7 +471,7 @@ public class DialcodeManager extends BaseManager {
         searchResult = ElasticSearchUtil.getDocumentsFromHits(searchResponse.getHits());
         dialCodeSearch.put(DialCodeEnum.count.name(), (int) searchResponse.getHits().getTotalHits());
         dialCodeSearch.put(DialCodeEnum.dialcodes.name(), searchResult);
-        writeTelemetrySearchLog(channelId, map, dialCodeSearch);
+        writeTelemetrySearchLog(requestContext, map, dialCodeSearch);
         return dialCodeSearch;
     }
 
@@ -521,20 +523,20 @@ public class DialcodeManager extends BaseManager {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private void writeTelemetrySearchLog(String channelId, Map<String, Object> searchCriteria,
+    private void writeTelemetrySearchLog(Map<String, Object> requestContext, Map<String, Object> searchCriteria,
                                          Map<String, Object> dialCodeSearch) {
 
         String query = "";
         String type = DialCodeEnum.DialCode.name();
         Map sort = new HashMap();
-
+        String channelId = (String)requestContext.get(HeaderParam.CHANNEL_ID.name());
         Map<String, Object> filters = new HashMap<String, Object>();
         filters.put(DialCodeEnum.objectType.name(), DialCodeEnum.DialCode.name());
         filters.put(DialCodeEnum.channel.name(), channelId);
         filters.putAll(searchCriteria);
         int count = (int) dialCodeSearch.get(DialCodeEnum.count.name());
         Object topN = getTopNResult((List<Object>) dialCodeSearch.get(DialCodeEnum.dialcodes.name()));
-        TelemetryManager.search(query, filters, sort, count, topN, type);
+        TelemetryManager.search(requestContext, query, filters, sort, count, topN, type);
 
     }
 

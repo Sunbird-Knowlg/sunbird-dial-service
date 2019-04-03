@@ -60,11 +60,10 @@ public class DialcodeV3Controller extends BaseController {
 
     public Promise<Result> listDialCode() {
         String apiId = "sunbird.dialcode.list";
-        String channelId = request().getHeader("X-Channel-ID");
         Request request = getRequest();
         try {
-            Map<String, Object> map = (Map<String, Object>) request.get(DialCodeEnum.search.name());
-            Response response = dialCodeManager.listDialCode(channelId, map);
+            Map<String, Object> requestMap = (Map<String, Object>) request.get(DialCodeEnum.search.name());
+            Response response = dialCodeManager.listDialCode(request.getContext(), requestMap);
             return getResponseEntity(response, apiId, null);
         } catch (Exception e) {
             TelemetryManager.error("Exception Occured while Performing List Operation for Dial Codes : "+ e.getMessage(), e);
@@ -74,11 +73,10 @@ public class DialcodeV3Controller extends BaseController {
 
     public Promise<Result> searchDialCode() {
         String apiId = "sunbird.dialcode.search";
-        String channelId = request().getHeader("X-Channel-ID");
         Request request = getRequest();
         try {
             Map<String, Object> map = (Map<String, Object>) request.get(DialCodeEnum.search.name());
-            Response response = dialCodeManager.searchDialCode(channelId, map);
+            Response response = dialCodeManager.searchDialCode(request.getContext(), map);
             return getResponseEntity(response, apiId, null);
         } catch (Exception e) {
             TelemetryManager

@@ -86,8 +86,8 @@ public class Global extends GlobalSettings {
                             if(StringUtils.isNotBlank(appId)){
                                 ExecutionContext.getCurrent().getGlobalContext().put(HeaderParam.APP_ID.name(),
                                         channelId);
-                                data.put("X-App-ID",appId);
                             }
+                            data.put(HeaderParam.APP_ID.name(), appId);
                             TelemetryAccessEventUtil.writeTelemetryEventLog(data);
                             accessLogger.info(request.remoteAddress() + " " + request.host() + " " + request.method()
                                     + " " + request.uri() + " " + r.status() + " " + body.length);
