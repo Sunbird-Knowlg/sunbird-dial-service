@@ -68,8 +68,8 @@
 			<AppenderRef ref="TelemetryEventAppender" />
 		</Async>
 		<RollingRandomAccessFile name="GraphEventAppender"
-								 fileName="/data/logs/learning_graph_event_mw.log"
-								 filePattern="/data/logs/learning_graph_event_mw-%d{MM-dd-yyyy-hh}-%i.log">
+								 fileName="/data/logs/dial_graph_event_mw.log"
+								 filePattern="/data/logs/dial_graph_event_mw-%d{MM-dd-yyyy-hh}-%i.log">
 			<PatternLayout>
 				<Pattern>%d %msg%n</Pattern>
 			</PatternLayout>
@@ -81,7 +81,7 @@
 			</Policies>
 			<DefaultRolloverStrategy>
 				<Delete basePath="/data/logs/" maxDepth="1" testMode="false">
-					<IfFileName glob="learning_graph_event_mw-*.log" />
+					<IfFileName glob="dial_graph_event_mw-*.log" />
 					<IfLastModified age="7d" />
 				</Delete>
 			</DefaultRolloverStrategy>
