@@ -10,6 +10,7 @@ import commons.exception.ResourceNotFoundException;
 import dto.DialCode;
 import org.apache.commons.lang3.StringUtils;
 import utils.CassandraStoreParam;
+import utils.DateUtils;
 import utils.DialCodeEnum;
 
 import java.time.LocalDateTime;
@@ -58,8 +59,8 @@ public class DialCodeStore extends CassandraStore {
 		return dialCodeObj;
 	}
 
-	public void update(String id, Map<String, Object> data) throws Exception {
-		update(DialCodeEnum.identifier.name(), id, data);
+	public void update(String id, Map<String, Object> data, Map<String, Object> extEventData) throws Exception {
+		update(DialCodeEnum.identifier.name(), id, data, extEventData);
 	}
 
 	private static Map<String, Object> getInsertData(String channel, String publisher, String batchCode,
@@ -71,7 +72,7 @@ public class DialCodeStore extends CassandraStore {
 		data.put(DialCodeEnum.batchcode.name(), batchCode);
 		data.put(DialCodeEnum.dialcode_index.name(), dialCodeIndex);
 		data.put(DialCodeEnum.status.name(), DialCodeEnum.Draft.name());
-		data.put(DialCodeEnum.generated_on.name(), LocalDateTime.now().toString());
+		data.put(DialCodeEnum.generated_on.name(), DateUtils.formatCurrentDate());
 		return data;
 	}
 
@@ -108,7 +109,7 @@ public class DialCodeStore extends CassandraStore {
 			syncRequest.put(DialCodeEnum.generated_on.name(), row.getString(DialCodeEnum.generated_on.name()));
 			syncRequest.put(DialCodeEnum.published_on.name(), row.getString(DialCodeEnum.published_on.name()));
 			logTransactionEvent(CassandraStoreParam.UPDATE.name(), row.getString(DialCodeEnum.identifier.name()),
-					syncRequest);
+					syncRequest, null);
 		}
 
 		return rows.size();

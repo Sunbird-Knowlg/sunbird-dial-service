@@ -59,12 +59,11 @@ public class DialcodeV3Controller extends BaseController {
     }
 
     public Promise<Result> listDialCode() {
-        String apiId = "ekstep.dialcode.list";
-        String channelId = request().getHeader("X-Channel-ID");
+        String apiId = "sunbird.dialcode.list";
         Request request = getRequest();
         try {
-            Map<String, Object> map = (Map<String, Object>) request.get(DialCodeEnum.search.name());
-            Response response = dialCodeManager.listDialCode(channelId, map);
+            Map<String, Object> requestMap = (Map<String, Object>) request.get(DialCodeEnum.search.name());
+            Response response = dialCodeManager.listDialCode(request.getContext(), requestMap);
             return getResponseEntity(response, apiId, null);
         } catch (Exception e) {
             TelemetryManager.error("Exception Occured while Performing List Operation for Dial Codes : "+ e.getMessage(), e);
@@ -73,12 +72,11 @@ public class DialcodeV3Controller extends BaseController {
     }
 
     public Promise<Result> searchDialCode() {
-        String apiId = "ekstep.dialcode.search";
-        String channelId = request().getHeader("X-Channel-ID");
+        String apiId = "sunbird.dialcode.search";
         Request request = getRequest();
         try {
             Map<String, Object> map = (Map<String, Object>) request.get(DialCodeEnum.search.name());
-            Response response = dialCodeManager.searchDialCode(channelId, map);
+            Response response = dialCodeManager.searchDialCode(request.getContext(), map);
             return getResponseEntity(response, apiId, null);
         } catch (Exception e) {
             TelemetryManager
@@ -112,7 +110,7 @@ public class DialcodeV3Controller extends BaseController {
      * @return
      */
     public Promise<Result> publishDialCode(String dialCodeId) {
-        String apiId = "ekstep.dialcode.publish";
+        String apiId = "sunbird.dialcode.publish";
         String channelId = request().getHeader("X-Channel-ID");
         try {
             Response response = dialCodeManager.publishDialCode(dialCodeId, channelId);

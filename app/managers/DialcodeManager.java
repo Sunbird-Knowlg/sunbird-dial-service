@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import commons.AppConfig;
 import commons.DialCodeErrorCodes;
 import commons.DialCodeErrorMessage;
+import commons.dto.HeaderParam;
 import commons.dto.Response;
 import commons.exception.ClientException;
 import commons.exception.ResponseCode;
@@ -23,6 +24,7 @@ import scala.concurrent.Future;
 import scala.concurrent.duration.Duration;
 import telemetry.TelemetryManager;
 import utils.Constants;
+import utils.DateUtils;
 import utils.DialCodeEnum;
 import utils.DialCodeGenerator;
 
@@ -50,6 +52,14 @@ public class DialcodeManager extends BaseManager {
     private String connectionInfo = "localhost:9300";
     private SearchProcessor processor = null;
 
+    public SearchProcessor getProcessor() {
+        return processor;
+    }
+
+    public void setProcessor(SearchProcessor processor) {
+        this.processor = processor;
+    }
+
     public DialcodeManager(){
         init();
     }
@@ -60,7 +70,8 @@ public class DialcodeManager extends BaseManager {
         connectionInfo = AppConfig.config.hasPath(Constants.DIALCODE_ES_CONN_INFO)
                 ? AppConfig.config.getString(Constants.DIALCODE_ES_CONN_INFO)
                 : connectionInfo;
-        ElasticSearchUtil.initialiseESClient(Constants.DIAL_CODE_INDEX, connectionInfo);
+
+        //ElasticSearchUtil.initialiseESClient(Constants.DIAL_CODE_INDEX, connectionInfo);
         processor = new SearchProcessor();
 
     }
@@ -140,7 +151,7 @@ public class DialcodeManager extends BaseManager {
         String metaData = new Gson().toJson(map.get(DialCodeEnum.metadata.name()));
         Map<String, Object> data = new HashMap<String, Object>();
         data.put(DialCodeEnum.metadata.name(), metaData);
-        dialCodeStore.update(dialCodeId, data);
+        dialCodeStore.update(dialCodeId, data, null);
         Response resp = getSuccessResponse();
         resp.put(DialCodeEnum.identifier.name(), dialCode.getIdentifier());
         TelemetryManager.info("DIAL code updated", resp.getResult());
@@ -154,12 +165,14 @@ public class DialcodeManager extends BaseManager {
      * org.ekstep.dialcode.mgr.IDialCodeManager#listDialCode(java.lang.String,
      * java.utils.Map)
      */
-    public Response listDialCode(String channelId, Map<String, Object> map) throws Exception {
+    public Response listDialCode(Map<String, Object> requestContext, Map<String, Object> map) throws Exception {
         if (null == map)
             return ERROR(DialCodeErrorCodes.ERR_INVALID_SEARCH_REQUEST, DialCodeErrorMessage.ERR_INVALID_SEARCH_REQUEST,
                     ResponseCode.CLIENT_ERROR);
-        return searchDialCode(channelId, map);
+        return searchDialCode(requestContext, map);
     }
+
+
 
     /*
      * (non-Javadoc)
@@ -168,7 +181,7 @@ public class DialcodeManager extends BaseManager {
      * org.ekstep.dialcode.mgr.IDialCodeManager#listDialCode(java.lang.String,
      * java.utils.Map)
      */
-    public Response searchDialCode(String channelId, Map<String, Object> map) throws Exception {
+    public Response searchDialCode(Map<String, Object> requestContext, Map<String, Object> map) throws Exception {
         if (null == map)
             return ERROR(DialCodeErrorCodes.ERR_INVALID_SEARCH_REQUEST, DialCodeErrorMessage.ERR_INVALID_SEARCH_REQUEST,
                     ResponseCode.CLIENT_ERROR);
@@ -176,7 +189,7 @@ public class DialcodeManager extends BaseManager {
         int offset = getOffset(map, DialCodeErrorCodes.ERR_INVALID_SEARCH_REQUEST);
         map.remove("limit");
         map.remove("offset");
-        Map<String, Object> dialCodeSearch = searchDialCodes(channelId, map, limit, offset);
+        Map<String, Object> dialCodeSearch = searchDialCodes(requestContext, map, limit, offset);
 
         Response resp = getSuccessResponse();
         resp.put(DialCodeEnum.count.name(), dialCodeSearch.get(DialCodeEnum.count.name()));
@@ -204,7 +217,7 @@ public class DialcodeManager extends BaseManager {
         int limit = defaultLimit;
         try {
             if (map.containsKey("limit"))
-                limit = (int) map.get("limit");
+                limit = ((Number) map.get("limit")).intValue();
         } catch (Exception e) {
             throw new ClientException(errCode, "Please provide valid limit.");
         }
@@ -224,9 +237,18 @@ public class DialcodeManager extends BaseManager {
             return ERROR(DialCodeErrorCodes.ERR_INVALID_CHANNEL_ID, DialCodeErrorMessage.ERR_INVALID_CHANNEL_ID,
                     ResponseCode.CLIENT_ERROR);
         Map<String, Object> data = new HashMap<String, Object>();
+        String publishedOn = DateUtils.formatCurrentDate();
         data.put(DialCodeEnum.status.name(), DialCodeEnum.Live.name());
-        data.put(DialCodeEnum.published_on.name(), LocalDateTime.now().toString());
-        dialCodeStore.update(dialCodeId, data);
+        data.put(DialCodeEnum.published_on.name(), publishedOn);
+        Map<String, Object> statusChangedOnMap = new HashMap<String, Object>() {{
+            put("ov", dialCode.getGeneratedOn());
+            put("nv", publishedOn);
+        }};
+        Map<String, Object> extEventData = new HashMap<String, Object>() {{
+            put("lastStatusChangedOn", statusChangedOnMap);
+        }};
+
+        dialCodeStore.update(dialCodeId, data, extEventData);
         resp = getSuccessResponse();
         resp.put(DialCodeEnum.identifier.name(), dialCode.getIdentifier());
         TelemetryManager.info("DIAL code published", resp.getResult());
@@ -420,16 +442,17 @@ public class DialcodeManager extends BaseManager {
     }
 
     /**
-     * @param channelId
+     * @param requestContext
      * @param map
      * @param offset
      * @return
      * @throws Exception
      */
-    private Map<String, Object> searchDialCodes(String channelId, Map<String, Object> map, int limit, int offset)
+    private Map<String, Object> searchDialCodes(Map<String, Object> requestContext, Map<String, Object> map, int limit, int offset)
             throws Exception {
         Map<String, Object> dialCodeSearch = new HashMap<String, Object>();
         List<Object> searchResult = new ArrayList<Object>();
+        String channelId = (String)requestContext.getOrDefault(HeaderParam.CHANNEL_ID.name(),"");
         SearchDTO searchDto = new SearchDTO();
         searchDto.setFuzzySearch(false);
 
@@ -448,7 +471,7 @@ public class DialcodeManager extends BaseManager {
         searchResult = ElasticSearchUtil.getDocumentsFromHits(searchResponse.getHits());
         dialCodeSearch.put(DialCodeEnum.count.name(), (int) searchResponse.getHits().getTotalHits());
         dialCodeSearch.put(DialCodeEnum.dialcodes.name(), searchResult);
-        writeTelemetrySearchLog(channelId, map, dialCodeSearch);
+        writeTelemetrySearchLog(requestContext, map, dialCodeSearch);
         return dialCodeSearch;
     }
 
@@ -500,20 +523,20 @@ public class DialcodeManager extends BaseManager {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private void writeTelemetrySearchLog(String channelId, Map<String, Object> searchCriteria,
+    private void writeTelemetrySearchLog(Map<String, Object> requestContext, Map<String, Object> searchCriteria,
                                          Map<String, Object> dialCodeSearch) {
 
         String query = "";
         String type = DialCodeEnum.DialCode.name();
         Map sort = new HashMap();
-
+        String channelId = (String)requestContext.get(HeaderParam.CHANNEL_ID.name());
         Map<String, Object> filters = new HashMap<String, Object>();
         filters.put(DialCodeEnum.objectType.name(), DialCodeEnum.DialCode.name());
         filters.put(DialCodeEnum.channel.name(), channelId);
         filters.putAll(searchCriteria);
         int count = (int) dialCodeSearch.get(DialCodeEnum.count.name());
         Object topN = getTopNResult((List<Object>) dialCodeSearch.get(DialCodeEnum.dialcodes.name()));
-        TelemetryManager.search(query, filters, sort, count, topN, type);
+        TelemetryManager.search(requestContext, query, filters, sort, count, topN, type);
 
     }
 

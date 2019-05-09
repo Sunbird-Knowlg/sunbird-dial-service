@@ -11,7 +11,8 @@ public class RedisStoreUtil {
 
 	public static void saveNodeProperty(String graphId, String objectId, String nodeProperty, String propValue) {
 
-		Jedis jedis = getRedisConncetion();
+		Jedis jedis =
+				getRedisConncetion();
 		try {
 			String redisKey = getNodePropertyKey(graphId, objectId, nodeProperty);
 			jedis.set(redisKey, propValue);

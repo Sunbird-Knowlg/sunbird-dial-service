@@ -1,3 +1,6 @@
 /target/
 *.idea*
 *.iml
+.project
+.settings/org.eclipse.m2e.core.prefs
+RUNNING_PID

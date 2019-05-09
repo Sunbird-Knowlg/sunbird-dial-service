@@ -4,6 +4,7 @@ import commons.AppConfig;
 import commons.dto.ExecutionContext;
 import commons.dto.HeaderParam;
 import commons.dto.Response;
+import managers.HealthCheckManager;
 import org.apache.commons.lang3.StringUtils;
 import play.Application;
 import play.GlobalSettings;
@@ -30,6 +31,7 @@ public class Global extends GlobalSettings {
     public void onStart(Application app) {
         System.setProperty("es.set.netty.runtime.available.processors", "false");
         TelemetryGenerator.setComponent("dialcode-service");
+        new HealthCheckManager().getAllServiceHealth();
     }
 
     @SuppressWarnings("rawtypes")
@@ -43,8 +45,8 @@ public class Global extends GlobalSettings {
                         String path = request.uri();
                         if (!path.contains("/health")) {
                             JsonNode requestData = request.body().asJson();
-                            Request req = mapper.convertValue(requestData,
-                                    Request.class);
+                            commons.dto.Request req = mapper.convertValue(requestData,
+                                    commons.dto.Request.class);
 
                             byte[] body = JavaResultExtractor.getBody(r, 0l);
                             Response responseObj = mapper.readValue(body, Response.class);
@@ -79,6 +81,13 @@ public class Global extends GlobalSettings {
                             else
                                 ExecutionContext.getCurrent().getGlobalContext().put(HeaderParam.CHANNEL_ID.name(),
                                         AppConfig.config.getString("channel.default"));
+
+                            String appId = request.getHeader("X-App-ID");
+                            if(StringUtils.isNotBlank(appId)){
+                                ExecutionContext.getCurrent().getGlobalContext().put(HeaderParam.APP_ID.name(),
+                                        channelId);
+                            }
+                            data.put(HeaderParam.APP_ID.name(), appId);
                             TelemetryAccessEventUtil.writeTelemetryEventLog(data);
                             accessLogger.info(request.remoteAddress() + " " + request.host() + " " + request.method()
                                     + " " + request.uri() + " " + r.status() + " " + body.length);

@@ -187,27 +187,18 @@ public class TelemetryManager {
 			reqContext.put(TelemetryParams.ACTOR.name(),(String) context.get(TelemetryParams.ACTOR.name()));
 			reqContext.put(TelemetryParams.ENV.name(),(String) context.get(TelemetryParams.ENV.name()));
 			reqContext.put(TelemetryParams.CHANNEL.name(),(String) context.get(HeaderParam.CHANNEL_ID.name()));
+			reqContext.put(TelemetryParams.APP_ID.name(),(String) context.get(HeaderParam.APP_ID.name()));
 			deviceId = (String) context.get(HeaderParam.DEVICE_ID.name());
 			if(StringUtils.isNotBlank(deviceId))
 				reqContext.put("did", deviceId);
-			appId=(String) context.get(HeaderParam.APP_ID.name());
 		}else{
 			reqContext = getContext();
 			deviceId = (String) ExecutionContext.getCurrent().getGlobalContext().get(HeaderParam.DEVICE_ID.name());
 			if(StringUtils.isNotBlank(deviceId))
 				reqContext.put("did", deviceId);
-			appId=(String) ExecutionContext.getCurrent().getGlobalContext().get(HeaderParam.APP_ID.name());
 		}
 
-		List<Map<String, Object>> cData = null;
-		if (StringUtils.isNotBlank(appId)) {
-			cData = new ArrayList<Map<String, Object>>();
-			Map<String, Object> data = new HashMap<String, Object>();
-			data.put("id", appId);
-			data.put("type", "appId");
-			cData.add(data);
-		}
-		String event = TelemetryGenerator.search(reqContext, query, filters, sort, cData, size, topN, type);
+		String event = TelemetryGenerator.search(reqContext, query, filters, sort, null, size, topN, type);
 		telemetryHandler.send(event, Level.INFO, true);
 	}
 
