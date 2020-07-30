@@ -38,7 +38,7 @@ node() {
         }
 
         stage('Build') {
-            sh 'clean install -DskipTests'
+            sh 'mvn clean install -DskipTests'
             
         }
 
@@ -51,7 +51,7 @@ node() {
         stage('Archive artifacts'){
             sh """
                mkdir lp_dial_artifacts
-               cp learning-platform/target/sunbird-dial-service-1.0-SNAPSHOT-dist.zip lp_dial_artifacts
+               cp target/sunbird-dial-service-1.0-SNAPSHOT-dist.zip lp_dial_artifacts
                zip -j lp_dial_artifacts.zip:${artifact_version} lp_dial_artifacts/*
             """
                  
