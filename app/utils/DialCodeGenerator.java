@@ -6,7 +6,6 @@ import dbstore.SystemConfigStore;
 import org.apache.commons.lang3.StringUtils;
 import telemetry.TelemetryManager;
 
-import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,37 +18,11 @@ public class DialCodeGenerator {
 
 	private SystemConfigStore systemConfigStore = new SystemConfigStore();
 
-	private static String stripChars = "0";
-	private static Double length = 6.0;
+	private static String stripChars = AppConfig.getString("dialcode.strip.chars", "0");
+	private static Double length = AppConfig.getDouble("dialcode.length", 6.0);
 	private static BigDecimal largePrimeNumber = new BigDecimal(1679979167);
 	private static String regex = "[A-Z][0-9][A-Z][0-9][A-Z][0-9]";
 	private static Pattern pattern = Pattern.compile(regex);
-	/**
-	 * Get Max Index from Cassandra and Set it to Cache.
-	 */
-	@PostConstruct
-	public void init() {
-		double maxIndex;
-		try {
-			stripChars = AppConfig.config.hasPath("dialcode.strip.chars")
-					? AppConfig.config.getString("dialcode.strip.chars")
-					: stripChars;
-			length = AppConfig.config.hasPath("dialcode.length") ? AppConfig.config.getDouble("dialcode.length") : length;
-			largePrimeNumber = AppConfig.config.hasPath("dialcode.large.prime_number")
-					? new BigDecimal(AppConfig.config.getLong("dialcode.large.prime_number"))
-					: largePrimeNumber;
-			maxIndex = systemConfigStore.getDialCodeIndex();
-			Map<String, Object> props = new HashMap<String, Object>();
-			props.put("max_index", maxIndex);
-			//TelemetryManager.info("setting DIAL code max index value to redis.", props);
-			setMaxIndexToCache(maxIndex);
-		} catch (Exception e) {
-			//TelemetryManager.error("fialed to set max index to redis.", e);
-			// TODO: Exception handling for getDialCodeIndex SystemConfig table.
-			// throw new ServerException(DialCodeErrorCodes.ERR_SERVER_ERROR,
-			// DialCodeErrorMessage.ERR_SERVER_ERROR);
-		}
-	}
 
 	private static final String[] alphabet = new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C",
 			"D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y",
@@ -62,9 +35,9 @@ public class DialCodeGenerator {
 		BigDecimal exponent = BigDecimal.valueOf(totalChars);
 		exponent = exponent.pow(length.intValue());
 		double codesCount = 0;
-		double lastIndex = 0;
+		double lastIndex = systemConfigStore.getDialCodeIndex();
 		while (codesCount < count) {
-			lastIndex = getMaxIndex();
+			lastIndex = getMaxIndex(lastIndex);
 			BigDecimal number = new BigDecimal(lastIndex);
 			BigDecimal num = number.multiply(largePrimeNumber).remainder(exponent);
 			String code = baseN(num, totalChars);
@@ -93,22 +66,25 @@ public class DialCodeGenerator {
 	}
 
 	private void setMaxIndex(double maxIndex) throws Exception {
+        System.out.println("Setting max index to cassandra: " + maxIndex);
 		systemConfigStore.setDialCodeIndex(maxIndex);
-	}
-
-	/**
-	 * @param maxIndex
-	 */
-	public static void setMaxIndexToCache(Double maxIndex) {
-		RedisStoreUtil.saveNodeProperty("domain", "dialcode", "max_index", maxIndex.toString());
 	}
 
 	/**
 	 * @return
 	 * @throws Exception
 	 */
-	private Double getMaxIndex() throws Exception {
+	private Double getMaxIndex(Double masterDBIndex) throws Exception {
 		double index = RedisStoreUtil.getNodePropertyIncVal("domain", "dialcode", "max_index");
+		if (index < masterDBIndex) {
+		    String message = "Redis doesn't have the latest max index. Please set max index in redis as : " + masterDBIndex + " to enable the service.";
+            System.out.println(message);
+            managers.HealthCheckManager.dialMaxIndexHealth = false;
+            throw new Exception(message);
+            // TODO: below code will be helpful for automating the Redis data correction.
+		    // RedisStoreUtil.saveNodeProperty("domain", "dialcode", "max_index", masterDBIndex.toString());
+		    // index = RedisStoreUtil.getNodePropertyIncVal("domain", "dialcode", "max_index");
+        }
 		return index;
 	}
 
