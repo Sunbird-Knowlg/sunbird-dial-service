@@ -30,4 +30,16 @@ public class AppConfig {
 		return requestTimeout;
 	}
 
+	public static String getString(String key, String defaultValue) {
+        return config.hasPath(key) ? config.getString(key) : defaultValue;
+    }
+
+    public static Double getDouble(String key, Double defaultValue) {
+        return config.hasPath(key) ? config.getDouble(key) : defaultValue;
+    }
+
+    public static Long getLong(String key, Long defaultValue) {
+        return config.hasPath(key) ? config.getLong(key) : defaultValue;
+    }
+
 }

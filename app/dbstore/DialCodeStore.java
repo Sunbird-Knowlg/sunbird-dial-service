@@ -8,6 +8,8 @@ import commons.DialCodeErrorCodes;
 import commons.DialCodeErrorMessage;
 import commons.exception.ResourceNotFoundException;
 import dto.DialCode;
+import managers.HealthCheckManager;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import utils.CassandraStoreParam;
 import utils.DateUtils;
@@ -42,8 +44,15 @@ public class DialCodeStore extends CassandraStore {
 
 	public void save(String channel, String publisher, String batchCode, String dialCode, Double dialCodeIndex)
 			throws Exception {
-		Map<String, Object> data = getInsertData(channel, publisher, batchCode, dialCode, dialCodeIndex);
-		insert(dialCode, data);
+        List<Row> rows = read(DialCodeEnum.identifier.name(), dialCode);
+        if (CollectionUtils.isEmpty(rows)) {
+            Map<String, Object> data = getInsertData(channel, publisher, batchCode, dialCode, dialCodeIndex);
+            insert(dialCode, data);
+        } else {
+            String message = "Newly generated DIAL code already exists in DB:" + "DIALCode:" + dialCode + ":: Index:" + dialCodeIndex;
+            HealthCheckManager.dialMaxIndexHealth = false;
+            throw new Exception(message);
+        }
 	}
 
 	public DialCode read(String dialCode) throws Exception {

@@ -14,6 +14,7 @@ import java.util.Map;
 
 public class HealthCheckManager extends BaseManager implements IHealthCheckManager {
     public static boolean health = false;
+    public static boolean dialMaxIndexHealth = true;
     public static String CONNECTION_SUCCESS ="connection check is Successful";
     public static String CONNECTION_FAIL ="connection check has Failed";
 
@@ -63,6 +64,13 @@ public class HealthCheckManager extends BaseManager implements IHealthCheckManag
             TelemetryManager.error("cassandra db "+CONNECTION_FAIL,e);
         }
         allChecks.add(check);
+
+        check = generateCheck("DIAL Max Index", check, dialMaxIndexHealth);
+        if (!dialMaxIndexHealth) {
+            overAllHealth = false;
+        }
+        allChecks.add(check);
+
         Response response = OK("checks",allChecks);
         response.put("healthy",overAllHealth);
         health = overAllHealth;
