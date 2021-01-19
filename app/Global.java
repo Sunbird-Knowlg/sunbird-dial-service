@@ -1,3 +1,4 @@
+import akka.stream.Materializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import commons.AppConfig;
@@ -19,11 +20,16 @@ import play.mvc.Result;
 import telemetry.TelemetryAccessEventUtil;
 import telemetry.TelemetryGenerator;
 
+import javax.inject.Inject;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletionStage;
 
 public class Global extends GlobalSettings {
+
+    @Inject
+    Materializer materializer;
 
     private static final ALogger accessLogger = Logger.of("accesslog");
     private static ObjectMapper mapper = new ObjectMapper();
@@ -38,9 +44,9 @@ public class Global extends GlobalSettings {
     public Action onRequest(Request request, Method actionMethod) {
         long startTime = System.currentTimeMillis();
         return new Action.Simple() {
-            public Promise<Result> call(Context ctx) throws Throwable {
-                Promise<Result> call = delegate.call(ctx);
-                call.onRedeem((r) -> {
+            public CompletionStage<Result> call(Context ctx) {
+                CompletionStage<Result> call = delegate.call(ctx);
+                call.thenApplyAsync((r) -> {
                     try {
                         String path = request.uri();
                         if (!path.contains("/health")) {
@@ -48,7 +54,7 @@ public class Global extends GlobalSettings {
                             commons.dto.Request req = mapper.convertValue(requestData,
                                     commons.dto.Request.class);
 
-                            byte[] body = JavaResultExtractor.getBody(r, 0l);
+                            byte[] body = JavaResultExtractor.getBody(r, 0l, materializer).toArray();
                             Response responseObj = mapper.readValue(body, Response.class);
 
                             Map<String, Object> data = new HashMap<String, Object>();
@@ -95,6 +101,7 @@ public class Global extends GlobalSettings {
                     } catch (Exception e) {
                         accessLogger.error(e.getMessage());
                     }
+                    return r;
                 });
                 return call;
             }

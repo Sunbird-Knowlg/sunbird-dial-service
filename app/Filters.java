@@ -3,7 +3,7 @@
  * @author Rhea Fernandes
  */
 import filters.HealthCheckFilter;
-import play.api.mvc.EssentialFilter;
+import play.mvc.EssentialFilter;
 import play.http.HttpFilters;
 import javax.inject.Inject;
 
@@ -18,6 +18,6 @@ public class Filters implements HttpFilters {
 
     @Override
     public EssentialFilter[] filters() {
-        return new EssentialFilter[] {(EssentialFilter) this.healthCheckFilter };
+        return new EssentialFilter[] { this.healthCheckFilter.asJava() };
     }
 }

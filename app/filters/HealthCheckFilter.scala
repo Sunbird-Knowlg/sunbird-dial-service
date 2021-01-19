@@ -4,16 +4,18 @@
   */
 package filters;
 
+import akka.actor.TypedActor.dispatcher
+import akka.stream.Materializer
 import commons.DialCodeErrorMessage
 import commons.exception.{ResponseCode, ServiceUnavailableException}
 import controllers.BaseController
+import javax.inject.Inject
 import play.api.mvc._
 
-import scala.concurrent.Future
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import scala.concurrent.{ Future }
 import play.core.j.JavaHelpers
 
-class HealthCheckFilter extends Filter {
+class HealthCheckFilter @Inject() (implicit val mat: Materializer) extends Filter {
   val baseController :BaseController = new BaseController();
   def apply(nextFilter: RequestHeader => Future[Result])
            (requestHeader: RequestHeader): Future[Result] = {
@@ -31,4 +33,5 @@ class HealthCheckFilter extends Filter {
       nextFilter(requestHeader)
     }
   }
+
 }
