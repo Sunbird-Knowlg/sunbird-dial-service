@@ -3,8 +3,8 @@
  */
 package telemetry;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is the custom logger implementation to carry out platform Logging. This
@@ -15,9 +15,9 @@ import org.apache.logging.log4j.Logger;
  */
 public class TelemetryLoggingHandler implements TelemetryHandler {
 
-	private static final Logger rootLogger = LogManager.getLogger("DefaultPlatformLogger");
-	private static final Logger telemetryLogger = LogManager.getLogger("TelemetryEventLogger");
-	
+	private static final Logger rootLogger = LoggerFactory.getLogger("DefaultPlatformLogger");
+	private static final Logger telemetryLogger = LoggerFactory.getLogger("TelemetryEventLogger");
+
 
 	public void send(String event, Level level) {
 		send(event, level, false);
@@ -46,9 +46,7 @@ public class TelemetryLoggingHandler implements TelemetryHandler {
 				case TRACE:
 					rootLogger.trace(event);
 					break;
-				case FATAL:
-					rootLogger.fatal(event);
-					break;				
+
 			}
 		}
 		
