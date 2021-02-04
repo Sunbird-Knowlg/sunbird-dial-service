@@ -9,6 +9,16 @@
     <packaging>play2</packaging>
     <version>1.0-SNAPSHOT</version>
 
+    <properties>
+        <play2.version>2.4.6</play2.version>
+        <play2.plugin.version>1.0.0-beta5</play2.plugin.version>
+        <scala.version>2.11.12</scala.version>
+        <jackson.version>2.9.8</jackson.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <scoverage.plugin.version>1.4.1</scoverage.plugin.version>
+        <sbt-compiler.plugin.version>1.0.0</sbt-compiler.plugin.version>
+    </properties>
+
     <repositories>
         <repository>
             <id>scalaz-bintray</id>
@@ -28,12 +38,7 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
-    <properties>
-        <play2.version>2.4.6</play2.version>
-        <play2.plugin.version>1.0.0-beta5</play2.plugin.version>
-        <scala.version>2.11.8</scala.version>
-        <jackson.version>2.9.8</jackson.version>
-    </properties>
+
 
     <dependencies>
         <dependency>
@@ -160,6 +165,11 @@
             <version>3.2.2</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.danielwegener</groupId>
+            <artifactId>logback-kafka-appender</artifactId>
+            <version>0.2.0-RC2</version>
+        </dependency>
     </dependencies>
     <build>
         <sourceDirectory>${basedir}/app</sourceDirectory>
@@ -177,8 +187,25 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <release>11</release>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/assembly/bin.xml</descriptor>
+                    </descriptors>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.16</version>
+                <version>3.0.0-M4</version>
                 <configuration>
                     <includes>
                         <include>**/*Spec.java</include>
@@ -200,15 +227,51 @@
                 </dependencies>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.1</version>
+                <groupId>com.google.code.sbt-compiler-maven-plugin</groupId>
+                <artifactId>sbt-compiler-maven-plugin</artifactId>
+                <version>${sbt-compiler.plugin.version}</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <scalacOptions>-feature -deprecation -Xfatal-warnings</scalacOptions>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.scoverage</groupId>
+                <artifactId>scoverage-maven-plugin</artifactId>
+                <version>${scoverage.plugin.version}</version>
+                <configuration>
+                    <scalaVersion>${scala.version}</scalaVersion>
+                    <aggregate>true</aggregate>
+                    <highlighting>true</highlighting>
+                    <excludedFiles>.*RoutesPrefix.*;.*Routes.*;.*javascript.*</excludedFiles>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.5</version>
+                <executions>
+                    <execution>
+                        <id>default-prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report-aggregate</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
-
 </project>
