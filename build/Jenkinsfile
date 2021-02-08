@@ -40,7 +40,7 @@ node('build-slave') {
                 stage('Package') {
                     sh 'mvn play2:dist'
                     sh('chmod 777 build/build.sh')
-                    sh("build/build.sh ${build_tag} ${"dial-service"} ${env.NODE_NAME} ${hub_org}")
+                    sh("build/build.sh ${build_tag} ${"sunbird-dial-service"} ${env.NODE_NAME} ${hub_org}")
                 }
                 stage('ArchiveArtifacts') {
                     archiveArtifacts "metadata.json"
