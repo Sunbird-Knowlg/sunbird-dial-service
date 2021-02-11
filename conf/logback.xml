@@ -21,8 +21,6 @@
 	<!-- Telemetry Loggers-->
 	<logger name="TelemetryEventLogger" level="INFO" />
 
-	<logger name="GraphEventLogger" level="INFO" />
-
 	<root level="INFO">
 		<appender-ref ref="ASYNCSTDOUT" />
 	</root>
