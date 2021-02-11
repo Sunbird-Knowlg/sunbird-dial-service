@@ -388,7 +388,8 @@ public abstract class CassandraStore {
                 dataMap.put(CassandraStoreParam.createdOn.name(), DateUtils.format(new Date()));
                 dataMap.put("channel", getChannel(DEFAULT_CHANNEL_ID));
                 message.add(dataMap);
-                KafkaUtils.send(mapper.writeValueAsString(message), topicName);
+                boolean txnEventEnabled = AppConfig.getBoolean("kafka.topic.send_enable", false);
+                if(txnEventEnabled) KafkaUtils.send(mapper.writeValueAsString(message), topicName);
             }
         }
     }
