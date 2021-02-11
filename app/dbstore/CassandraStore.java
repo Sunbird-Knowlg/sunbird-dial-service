@@ -363,7 +363,6 @@ public abstract class CassandraStore {
                 Map<String, Object> dataMap = new HashMap<String, Object>();
                 Map<String, Object> transactionMap = new HashMap<String, Object>();
                 Map<String, Object> propertiesMap = new HashMap<String, Object>();
-                List<Map<String, Object>> message = new ArrayList<Map<String, Object>>();
                 for (Entry<String, Object> entry : map.entrySet()) {
                     Map<String, Object> valueMap = new HashMap<String, Object>();
                     valueMap.put("ov", null);
@@ -387,9 +386,8 @@ public abstract class CassandraStore {
                 dataMap.put(CassandraStoreParam.ets.name(), System.currentTimeMillis());
                 dataMap.put(CassandraStoreParam.createdOn.name(), DateUtils.format(new Date()));
                 dataMap.put("channel", getChannel(DEFAULT_CHANNEL_ID));
-                message.add(dataMap);
                 boolean txnEventEnabled = AppConfig.getBoolean("kafka.topic.send_enable", false);
-                if(txnEventEnabled) KafkaUtils.send(mapper.writeValueAsString(message), topicName);
+                if(txnEventEnabled) KafkaUtils.send(mapper.writeValueAsString(dataMap), topicName);
             }
         }
     }
