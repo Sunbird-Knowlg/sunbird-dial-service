@@ -104,7 +104,7 @@ public class DialCodeStore extends CassandraStore {
 		return dialCodeObj;
 	}
 
-	public int sync(Map<String, Object> map) {
+	public int sync(Map<String, Object> map) throws Exception {
 		List<Row> rows = getRecordsByProperties(map);
 		Map<String, Object> syncRequest = new HashMap<String, Object>();
 		for (Row row : rows) {
