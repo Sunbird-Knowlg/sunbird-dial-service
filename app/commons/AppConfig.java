@@ -42,4 +42,8 @@ public class AppConfig {
         return config.hasPath(key) ? config.getLong(key) : defaultValue;
     }
 
+	public static Boolean getBoolean(String key, Boolean defaultValue) {
+		return config.hasPath(key) ? config.getBoolean(key) : defaultValue;
+	}
+
 }

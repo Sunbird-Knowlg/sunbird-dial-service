@@ -13,17 +13,18 @@ import com.datastax.driver.core.querybuilder.Delete;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.querybuilder.Select;
 import com.datastax.driver.core.querybuilder.Select.Where;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import commons.AppConfig;
 import commons.dto.ExecutionContext;
 import commons.dto.HeaderParam;
 import commons.exception.ServerException;
 import org.apache.commons.lang3.StringUtils;
-import telemetry.LogAsyncGraphEvent;
 import telemetry.TelemetryManager;
 import utils.CassandraConnector;
 import utils.CassandraStoreParam;
 import utils.Constants;
 import utils.DateUtils;
+import utils.KafkaUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,6 +49,8 @@ public abstract class CassandraStore {
     protected String nodeType = CassandraStoreParam.EXTERNAL.name();
     private String DEFAULT_CHANNEL_ID = AppConfig.config.getString("channel.default");
     private Constants Constants;
+    private static ObjectMapper mapper = new ObjectMapper();
+    private static String topicName = AppConfig.getString("kafka.topic.graph_event", "sunbirddev.learning.graph.events");
 
     protected void initialise(String keyspace, String table, String objectType) {
         initialise(keyspace, table, objectType, false);
@@ -350,7 +353,7 @@ public abstract class CassandraStore {
         return table;
     }
 
-    protected void logTransactionEvent(String operation, Object identifier, Map<String, Object> map, Map<String, Object> extEventData) {
+    protected void logTransactionEvent(String operation, Object identifier, Map<String, Object> map, Map<String, Object> extEventData) throws Exception {
         if (index) {
             if (null == map && !StringUtils.equalsIgnoreCase(operation, CassandraStoreParam.DELETE.name())) {
                 TelemetryManager.log("Returning null as the map is is null", map);
@@ -385,7 +388,7 @@ public abstract class CassandraStore {
                 dataMap.put(CassandraStoreParam.createdOn.name(), DateUtils.format(new Date()));
                 dataMap.put("channel", getChannel(DEFAULT_CHANNEL_ID));
                 message.add(dataMap);
-                LogAsyncGraphEvent.pushMessageToLogger(message);
+                KafkaUtils.send(mapper.writeValueAsString(message), topicName);
             }
         }
     }
