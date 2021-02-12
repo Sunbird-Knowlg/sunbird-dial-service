@@ -3,8 +3,8 @@ package telemetry;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import commons.dto.Request;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -13,8 +13,8 @@ import java.util.UUID;
 
 public class LogTelemetryEventUtil {
 
-	
-	private static final Logger telemetryEventLogger = LogManager.getLogger("TelemetryEventLogger");
+
+	private static final Logger telemetryEventLogger = LoggerFactory.getLogger("TelemetryEventLogger");
 	private static ObjectMapper mapper = new ObjectMapper();
 	private static String beJobRequesteventId = "BE_JOB_REQUEST";
 	private static int iteration = 1;
