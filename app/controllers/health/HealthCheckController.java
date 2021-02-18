@@ -26,5 +26,9 @@ public class HealthCheckController extends BaseController {
         }
     }
 
+    public Promise<Result> checkServiceHealth() {
+        Response response = healthCheckManager.getServiceHealth();
+        return getResponseEntity(response, apiId, null);
+    }
 
 }

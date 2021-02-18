@@ -5,6 +5,7 @@
 package managers;
 
 import commons.dto.Response;
+import commons.exception.ResponseCode;
 import telemetry.TelemetryManager;
 
 import java.util.ArrayList;
@@ -72,6 +73,8 @@ public class HealthCheckManager extends BaseManager implements IHealthCheckManag
         allChecks.add(check);
 
         Response response = OK("checks",allChecks);
+        if(!overAllHealth)
+            response.setResponseCode(ResponseCode.SERVICE_UNAVAILABLE);
         response.put("healthy",overAllHealth);
         health = overAllHealth;
         return response;
@@ -89,5 +92,11 @@ public class HealthCheckManager extends BaseManager implements IHealthCheckManag
             check.put("errmsg", db+" connection unavailable");
         }
         return check;
+    }
+
+    public Response getServiceHealth() {
+        Response response = OK();
+        response.put("healthy",true);
+        return response;
     }
 }
