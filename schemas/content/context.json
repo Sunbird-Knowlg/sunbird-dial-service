@@ -25,13 +25,6 @@
       "@type": "@id",
       "@container": "@list"
     },
-    "content_id": {
-      "@id": "schema:name#content_id",
-      "@type": "schema:name"
-    },
-    "name": {
-      "@id": "schema:name#name",
-      "@type": "schema:name"
-    }
+    "content": "schema:WebContent"
   }
 }

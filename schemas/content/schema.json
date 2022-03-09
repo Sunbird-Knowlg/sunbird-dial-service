@@ -4,19 +4,13 @@
   "title": "textbook",
   "type": "object",
   "required": [
-    "content_id"
+    "content"
   ],
   "properties": {
     "code": {
       "type": "string"
     },
     "framework": {
-      "type": "string"
-    },
-    "name": {
-      "type": "string"
-    },
-    "content_id": {
       "type": "string"
     },
     "board" : {
@@ -30,6 +24,26 @@
     },
     "gradeLevel" : {
       "type": "array"
+    },
+    "content": {
+      "type": "object",
+      "properties": {
+        "@id": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "name": {
+          "type": "string"
+        },
+        "identifier": {
+          "type": "string"
+        },
+        "primaryCategory": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": ["@id","identifier"]
     }
   }
 }
