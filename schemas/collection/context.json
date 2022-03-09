@@ -25,7 +25,7 @@
       "@type": "@id",
       "@container": "@list"
     },
-    "rootNode": "schema:Book",
-    "unitNode": "schema:Chapter"
+    "rootNode": "schema:Collection",
+    "unitNode": "schema:CollectionPage"
   }
 }

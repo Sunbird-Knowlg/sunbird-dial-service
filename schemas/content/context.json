@@ -25,8 +25,8 @@
       "@type": "@id",
       "@container": "@list"
     },
-    "identifier": {
-      "@id": "schema:name#identifier",
+    "content_id": {
+      "@id": "schema:name#content_id",
       "@type": "schema:name"
     },
     "name": {

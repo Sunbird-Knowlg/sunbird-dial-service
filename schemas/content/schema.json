@@ -4,7 +4,7 @@
   "title": "textbook",
   "type": "object",
   "required": [
-    "identifier"
+    "content_id"
   ],
   "properties": {
     "code": {
@@ -16,7 +16,7 @@
     "name": {
       "type": "string"
     },
-    "identifier": {
+    "content_id": {
       "type": "string"
     },
     "board" : {
