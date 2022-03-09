@@ -1,0 +1,47 @@
+{
+  "$id": "file:./schemas/course/schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "course",
+  "type": "object",
+  "required": [
+    "channel",
+    "course"
+  ],
+  "properties": {
+    "code": {
+      "type": "string"
+    },
+    "channel": {
+      "type": "string"
+    },
+    "framework": {
+      "type": "string"
+    },
+    "course": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 5
+        },
+        "identifier": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": ["identifier"]
+    },
+    "purpose" : {
+      "type": "string"
+    },
+    "subject" : {
+      "type": "array"
+    },
+    "medium" : {
+      "type": "array"
+    },
+    "gradeLevel" : {
+      "type": "array"
+    }
+  }
+}
