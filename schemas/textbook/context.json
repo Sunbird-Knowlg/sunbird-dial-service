@@ -1,0 +1,31 @@
+{
+  "@context": {
+    "@import": "https://sunbirddev.blob.core.windows.net/sunbird-content-dev/schemas/dial/dialcode/context.json",
+    "schema": "http://schema.org/",
+    "framework": {
+      "@id": "schema:name#framework",
+      "@type": "schema:name"
+    },
+    "board": {
+      "@id": "schema:name#board",
+      "@type": "schema:name"
+    },
+    "medium": {
+      "@id": "schema:name#medium",
+      "@type": "@id",
+      "@container": "@list"
+    },
+    "gradeLevel": {
+      "@id": "schema:name#grade_level",
+      "@type": "@id",
+      "@container": "@list"
+    },
+    "subject": {
+      "@id": "schema:name#subject",
+      "@type": "@id",
+      "@container": "@list"
+    },
+    "textbook": "schema:Book",
+    "textBookUnit": "schema:Chapter"
+  }
+}
