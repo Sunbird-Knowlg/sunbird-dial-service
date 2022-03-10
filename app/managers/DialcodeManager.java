@@ -2,7 +2,13 @@ package managers;
 
 import akka.util.Timeout;
 import com.datastax.driver.core.Row;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.networknt.schema.JsonSchema;
+import com.networknt.schema.JsonSchemaFactory;
+import com.networknt.schema.SpecVersion;
+import com.networknt.schema.ValidationMessage;
 import commons.AppConfig;
 import commons.DialCodeErrorCodes;
 import commons.DialCodeErrorMessage;
@@ -17,6 +23,7 @@ import dto.Publisher;
 import dto.SearchDTO;
 import elasticsearch.ElasticSearchUtil;
 import elasticsearch.SearchProcessor;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.search.SearchResponse;
 import scala.concurrent.Await;
@@ -28,14 +35,16 @@ import utils.DateUtils;
 import utils.DialCodeEnum;
 import utils.DialCodeGenerator;
 
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class DialcodeManager extends BaseManager {
@@ -126,7 +135,25 @@ public class DialcodeManager extends BaseManager {
                     DialCodeErrorMessage.ERR_INVALID_DIALCODE_REQUEST, ResponseCode.CLIENT_ERROR);
         DialCode dialCode = dialCodeStore.read(dialCodeId);
         Response resp = getSuccessResponse();
-        resp.put(DialCodeEnum.dialcode.name(), dialCode);
+        Map<String, Object> dialCodeMap = new HashMap<String, Object>();
+        if( dialCode.getMetadata() != null && dialCode.getMetadata().get("type") !=null ) {
+            String contextType = dialCode.getMetadata().get("type").toString();
+            String contextJson = AppConfig.getString("schema.basePath", "") + File.separator + contextType + File.separator + "context.json";
+            dialCodeMap.put("@context", contextJson);
+            dialCodeMap.put("@id", AppConfig.getString("dial_id", "").replaceAll("\\{dialcode\\}", dialCodeId));
+            dialCodeMap.put("@type", AppConfig.getString("dial_type", "") + dialCode.getMetadata().get("type"));
+            Map<String, Object> contextMap = dialCode.getMetadata();
+            contextMap.remove("type");
+            dialCodeMap.putAll(contextMap);
+        }
+        dialCodeMap.put("identifier", dialCode.getIdentifier());
+        dialCodeMap.put("channel", dialCode.getChannel());
+        dialCodeMap.put("publisher", dialCode.getPublisher());
+        dialCodeMap.put("batchCode", dialCode.getBatchCode());
+        dialCodeMap.put("status", dialCode.getStatus());
+        dialCodeMap.put("generatedOn", dialCode.getGeneratedOn());
+        dialCodeMap.put("publishedOn", dialCode.getPublishedOn());
+        resp.put(DialCodeEnum.dialcode.name(), dialCodeMap);
         return resp;
     }
 
@@ -138,6 +165,11 @@ public class DialcodeManager extends BaseManager {
      * java.lang.String, java.utils.Map)
      */
     public Response updateDialCode(String dialCodeId, String channelId, Map<String, Object> map) throws Exception {
+
+        System.out.println("DialcodeManager:: updateDialCode:: dialCodeId: " + dialCodeId);
+        System.out.println("DialcodeManager:: updateDialCode:: channelId: " + channelId);
+        System.out.println("DialcodeManager:: updateDialCode:: map: " + map);
+
         if (null == map)
             return ERROR(DialCodeErrorCodes.ERR_INVALID_DIALCODE_REQUEST,
                     DialCodeErrorMessage.ERR_INVALID_DIALCODE_REQUEST, ResponseCode.CLIENT_ERROR);
@@ -148,10 +180,66 @@ public class DialcodeManager extends BaseManager {
         if (dialCode.getStatus().equalsIgnoreCase(DialCodeEnum.Live.name()))
             return ERROR(DialCodeErrorCodes.ERR_DIALCODE_UPDATE, DialCodeErrorMessage.ERR_DIALCODE_UPDATE,
                     ResponseCode.CLIENT_ERROR);
+        if(!AppConfig.config.hasPath("schema.basePath"))
+            return ERROR(DialCodeErrorCodes.ERR_SCHEMA_BASEPATH_CONFIG_MISSING, DialCodeErrorMessage.ERR_SCHEMA_BASEPATH_CONFIG_MISSING,
+                    ResponseCode.CLIENT_ERROR);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonSchemaFactory validatorFactory = JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7)).objectMapper(objectMapper).build();
+
         String metaData = new Gson().toJson(map.get(DialCodeEnum.metadata.name()));
+        JsonNode metadataNode = objectMapper.readTree(metaData);
+        if(metadataNode.get(DialCodeEnum.type.name()) == null || metadataNode.get(DialCodeEnum.type.name()).textValue().trim().isBlank() || metadataNode.get(DialCodeEnum.type.name()).textValue().trim().isEmpty()) {
+            return ERROR(DialCodeErrorCodes.ERR_CONTEXT_TYPE_MANDATORY, DialCodeErrorMessage.ERR_CONTEXT_TYPE_MANDATORY,
+                    ResponseCode.CLIENT_ERROR);
+        }
+        String type = metadataNode.get(DialCodeEnum.type.name()).textValue();
+        String schemaJson = AppConfig.config.getString("schema.basePath")+File.separator+type+File.separator+"schema.json";
+
+        System.out.println("DialcodeManager:: updateDialCode:: schemaJson:: " + schemaJson);
+        if(!verifySchemaAndContextPaths(schemaJson)) {
+            return ERROR(DialCodeErrorCodes.ERR_TYPE_SCHEMA_MISSING, DialCodeErrorMessage.ERR_TYPE_SCHEMA_MISSING,
+                    ResponseCode.CLIENT_ERROR);
+        }
+
+        File theDir = new File(AppConfig.config.getString("schema.localPath"));
+        if (!theDir.exists()) theDir.mkdirs();
+        String localSchemaPath = theDir.getAbsolutePath()+File.separator+type+File.separator+"schema.json";
+
+        FileUtils.copyURLToFile(new URL(schemaJson), new File(localSchemaPath));
+
+        // Schema validation
+        File jsonSchemaFile = new File(localSchemaPath);
+        final URI schemaUri = jsonSchemaFile.toURI();
+        System.out.println("DialcodeManager:: updateDialCode:: schemaUri:: " + schemaUri);
+        JsonSchema schema = validatorFactory.getSchema(schemaUri);
+
+        String contextJson = AppConfig.getString("schema.basePath","")+File.separator+type+File.separator+"context.json";
+        if(!verifySchemaAndContextPaths(contextJson)) {
+            return ERROR(DialCodeErrorCodes.ERR_TYPE_CONTEXT_MISSING, DialCodeErrorMessage.ERR_TYPE_CONTEXT_MISSING,
+                    ResponseCode.CLIENT_ERROR);
+        }
+
+        Set<ValidationMessage> errorMessage = schema.validate(metadataNode);
+        if(errorMessage.size()>0) {
+            System.out.println("errorMessage.size():: " + errorMessage.size());
+            StringBuilder finalErrorMsg = new StringBuilder();
+            for (ValidationMessage error: errorMessage) {
+                System.out.println("ValidationMessage:: " + error.toString());
+                finalErrorMsg.append(error.getMessage().replaceAll("\\$.", ""));
+                finalErrorMsg.append(" | ");
+            }
+            return ERROR(DialCodeErrorCodes.ERR_SCHEMA_VALIDATION_FAILED, DialCodeErrorMessage.ERR_SCHEMA_VALIDATION_FAILED+finalErrorMsg, ResponseCode.CLIENT_ERROR);
+        }
+
+        // do compact of response and do dial code schema validation. - START
+
+        // do compact of response and do dial code schema validation. - END
+
         Map<String, Object> data = new HashMap<String, Object>();
         data.put(DialCodeEnum.metadata.name(), metaData);
         dialCodeStore.update(dialCodeId, data, null);
+
         Response resp = getSuccessResponse();
         resp.put(DialCodeEnum.identifier.name(), dialCode.getIdentifier());
         TelemetryManager.info("DIAL code updated", resp.getResult());
@@ -564,6 +652,13 @@ public class DialcodeManager extends BaseManager {
         return list;
     }
 
-
+    @SuppressWarnings("unchecked")
+    private boolean verifySchemaAndContextPaths(String strURI) throws IOException {
+        URL url = new URL(strURI);
+        HttpURLConnection huc = (HttpURLConnection)url.openConnection();
+        huc.setRequestMethod("GET");
+        huc.connect() ;
+        return huc.getResponseCode() == HttpURLConnection.HTTP_OK;
+    }
 
 }

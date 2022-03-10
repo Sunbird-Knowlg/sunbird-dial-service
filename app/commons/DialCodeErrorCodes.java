@@ -25,4 +25,9 @@ public class DialCodeErrorCodes {
 	public static final String ERR_DIALCODE_LINK = "ERR_DIALCODE_LINK";
 	public static final String ERR_INVALID_SYNC_REQUEST = "ERR_INVALID_SYNC_REQUEST";
 	public static final String SYSTEM_ERROR = "SYSTEM_ERROR";
+	public static final String ERR_SCHEMA_VALIDATION_FAILED = "ERR_SCHEMA_VALIDATION_FAILED";
+	public static final String ERR_CONTEXT_TYPE_MANDATORY = "ERR_CONTEXT_TYPE_MANDATORY";
+	public static final String ERR_TYPE_SCHEMA_MISSING = "ERR_TYPE_SCHEMA_MISSING";
+	public static final String ERR_TYPE_CONTEXT_MISSING = "ERR_TYPE_CONTEXT_MISSING";
+	public static final String ERR_SCHEMA_BASEPATH_CONFIG_MISSING = "ERR_SCHEMA_BASEPATH_CONFIG_MISSING";
 }

@@ -3,48 +3,9 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "textbook",
   "type": "object",
-  "required": [
-    "rootNode"
-  ],
   "properties": {
-    "code": {
-      "type": "string"
-    },
     "framework": {
       "type": "string"
-    },
-    "rootNode": {
-      "type": "object",
-      "properties": {
-        "@id": {
-          "type": "string",
-          "format": "uri-reference"
-        },
-        "name": {
-          "type": "string"
-        },
-        "identifier": {
-          "type": "string"
-        },
-        "primaryCategory": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "required": ["@id","identifier"]
-    },
-    "unitNode": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "identifier": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": false,
-      "required": ["identifier"]
     },
     "board" : {
       "type": "string"
@@ -56,6 +17,12 @@
       "type": "array"
     },
     "gradeLevel" : {
+      "type": "array"
+    },
+    "purpose" : {
+      "type": "array"
+    },
+    "topic" : {
       "type": "array"
     }
   }
