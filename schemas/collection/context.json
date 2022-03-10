@@ -1,6 +1,6 @@
 {
   "@context": {
-    "@import": "https://sunbirddev.blob.core.windows.net/sunbird-content-dev/schemas/dial/dialcode/context.json",
+    "@import": "{{dial_service_schema_base_path}}/dialcode/context.json",
     "schema": "http://schema.org/",
     "framework": {
       "@id": "schema:name#framework",
@@ -24,8 +24,6 @@
       "@id": "schema:name#subject",
       "@type": "@id",
       "@container": "@list"
-    },
-    "rootNode": "schema:Collection",
-    "unitNode": "schema:CollectionPage"
+    }
   }
 }
