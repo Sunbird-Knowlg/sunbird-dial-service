@@ -165,11 +165,6 @@ public class DialcodeManager extends BaseManager {
      * java.lang.String, java.utils.Map)
      */
     public Response updateDialCode(String dialCodeId, String channelId, Map<String, Object> map) throws Exception {
-
-        System.out.println("DialcodeManager:: updateDialCode:: dialCodeId: " + dialCodeId);
-        System.out.println("DialcodeManager:: updateDialCode:: channelId: " + channelId);
-        System.out.println("DialcodeManager:: updateDialCode:: map: " + map);
-
         if (null == map)
             return ERROR(DialCodeErrorCodes.ERR_INVALID_DIALCODE_REQUEST,
                     DialCodeErrorMessage.ERR_INVALID_DIALCODE_REQUEST, ResponseCode.CLIENT_ERROR);
@@ -196,7 +191,6 @@ public class DialcodeManager extends BaseManager {
         String type = metadataNode.get(DialCodeEnum.type.name()).textValue();
         String schemaJson = AppConfig.config.getString("schema.basePath")+File.separator+type+File.separator+"schema.json";
 
-        System.out.println("DialcodeManager:: updateDialCode:: schemaJson:: " + schemaJson);
         if(!verifySchemaAndContextPaths(schemaJson)) {
             return ERROR(DialCodeErrorCodes.ERR_TYPE_SCHEMA_MISSING, DialCodeErrorMessage.ERR_TYPE_SCHEMA_MISSING,
                     ResponseCode.CLIENT_ERROR);
@@ -211,7 +205,7 @@ public class DialcodeManager extends BaseManager {
         // Schema validation
         File jsonSchemaFile = new File(localSchemaPath);
         final URI schemaUri = jsonSchemaFile.toURI();
-        System.out.println("DialcodeManager:: updateDialCode:: schemaUri:: " + schemaUri);
+
         JsonSchema schema = validatorFactory.getSchema(schemaUri);
 
         String contextJson = AppConfig.getString("schema.basePath","")+File.separator+type+File.separator+"context.json";
@@ -222,10 +216,8 @@ public class DialcodeManager extends BaseManager {
 
         Set<ValidationMessage> errorMessage = schema.validate(metadataNode);
         if(errorMessage.size()>0) {
-            System.out.println("errorMessage.size():: " + errorMessage.size());
             StringBuilder finalErrorMsg = new StringBuilder();
             for (ValidationMessage error: errorMessage) {
-                System.out.println("ValidationMessage:: " + error.toString());
                 finalErrorMsg.append(error.getMessage().replaceAll("\\$.", ""));
                 finalErrorMsg.append(" | ");
             }
