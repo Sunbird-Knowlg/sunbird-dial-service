@@ -6,6 +6,10 @@
       "@id": "schema:name#framework",
       "@type": "schema:name"
     },
+    "identifier": {
+      "@id": "schema:name#identifier",
+      "@type": "schema:name"
+    },
     "board": {
       "@id": "schema:name#board",
       "@type": "schema:name"
