@@ -30,9 +30,8 @@
       "@type": "schema:name"
     },
     "contextInfo": {
-      "@id": "schema:CreativeWork",
-      "@type": "@id",
-      "@container": "@list"
+      "@id": "schema:CreativeWork#contextInfo",
+      "@type": "@id"
     }
   }
 }
