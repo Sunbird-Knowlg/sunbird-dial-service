@@ -31,7 +31,8 @@
     },
     "contextInfo": {
       "@id": "schema:CreativeWork#contextInfo",
-      "@type": "@id"
+      "@type": "@id",
+      "@container": "@list"
     }
   }
 }
