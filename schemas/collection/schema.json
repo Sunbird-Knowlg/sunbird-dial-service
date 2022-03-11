@@ -4,6 +4,9 @@
   "title": "textbook",
   "type": "object",
   "properties": {
+    "code": {
+      "type": "string"
+    },
     "framework": {
       "type": "string"
     },
@@ -22,8 +25,8 @@
     "purpose" : {
       "type": "array"
     },
-    "topic" : {
-      "type": "array"
+    "identifier" : {
+      "type": "string"
     }
   }
 }
