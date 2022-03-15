@@ -1,6 +1,5 @@
 {
   "@context": {
-    "@import": "{{dial_service_schema_base_path}}/dialcode/context.json",
     "schema": "http://schema.org/",
     "framework": {
       "@id": "schema:name#framework",

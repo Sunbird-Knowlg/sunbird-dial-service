@@ -28,6 +28,11 @@
     "publishedOn": {
       "@id": "schema:name#publishedOn",
       "@type": "schema:name"
+    },
+    "contextInfo": {
+      "@id": "schema:CreativeWork#contextInfo",
+      "@type": "@id",
+      "@container": "@list"
     }
   }
 }
