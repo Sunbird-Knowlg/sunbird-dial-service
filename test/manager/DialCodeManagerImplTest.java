@@ -250,6 +250,7 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 		Response response = dialCodeMgr.generateDialCode(getRequestMap(dialCodeGenReq), channelId);
 	}
 
+	//Read DIAL code with dialCode as null - CLIENT ERROR
 	@Test
 	public void dialCodeTest_19() throws Exception {
 		String dialCodeId = null;
@@ -260,21 +261,66 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 	// Update Dial Code with Different Channel Id - CLIENT_ERROR
 	@Test
 	public void dialCodeTest_20() throws Exception {
-		String dialCodeUpdateReq = "{\"dialcode\": {\"publisher\": \"testPublisheUpdated\",\"metadata\": {\"class\":\"std2\",\"subject\":\"Math\",\"board\":\"AP CBSE\"}}}";
-		String channelId = "channelABC";
+		String dialCodeGenReq = "{\"count\":1,\"publisher\": \"mock_pub01\",\"batchCode\":\"v4_check\"}";
+		String channelId = "channelTest";
+		Response resp = dialCodeMgr.generateDialCode(getRequestMap(dialCodeGenReq), channelId);
+
+		Collection<String> obj = (Collection) resp.getResult().get("dialcodes");
+		for (String s : obj) {
+			dialCode = s;
+		}
+		String dialCodeUpdateReq = "{\"dialcode\": {\"publisher\": \"testPublisherUpdated\",\"metadata\": {\"class\":\"std2\",\"subject\":\"Math\",\"board\":\"AP CBSE\"}}}";
+		String channelIdWrong = "channelABC";
+		Response response = dialCodeMgr.updateDialCodeV4(dialCode, channelIdWrong, getRequestMap(dialCodeUpdateReq));
+		Assert.assertEquals("CLIENT_ERROR", response.getResponseCode().toString());
+	}
+
+
+	// Update Dial Code with status Live - CLIENT_ERROR
+	@Test
+	public void dialCodeTest_21() throws Exception {
+		String channelId = "channelTest";
+		dialCodeMgr.publishDialCode(dialCode, channelId);
+		String dialCodeUpdateReq = "{\"dialcode\": {\"publisher\": \"testPublisheUpdated\",\"contextInfo\": {\"class\":\"std2\",\"subject\":\"Math\",\"board\":\"AP CBSE\"}}}";
 		Response response = dialCodeMgr.updateDialCodeV4(dialCode, channelId, getRequestMap(dialCodeUpdateReq));
 		Assert.assertEquals("CLIENT_ERROR", response.getResponseCode().toString());
 	}
 
-	// Update Dial Code having Live Status - CLIENT_ERROR
+
+	// Update Dial Code without contextInfo - CLIENT_ERROR
 	@Test
-	public void dialCodeTest_21() throws Exception {
-		String dialCodeUpdateReq = "{\"dialcode\": {\"publisher\": \"testPublisheUpdated\",\"metadata\": {\"class\":\"std2\",\"subject\":\"Math\",\"board\":\"AP CBSE\"}}}";
+	public void dialCodeTest_22() throws Exception {
+		String dialCodeGenReq = "{\"count\":1,\"publisher\": \"mock_pub01\",\"batchCode\":\"v4_check\"}";
+		String channelId = "channelTest";
+		Response resp = dialCodeMgr.generateDialCode(getRequestMap(dialCodeGenReq), channelId);
+
+		Collection<String> obj = (Collection) resp.getResult().get("dialcodes");
+		for (String s : obj) {
+			dialCode = s;
+		}
+
+		String dialCodeUpdateReq = "{\"dialcode\": {\"publisher\": \"testPublisherUpdated\",\"metadata\": {\"class\":\"std2\",\"subject\":\"Math\",\"board\":\"AP CBSE\"}}}";
+		Response response = dialCodeMgr.updateDialCodeV4(dialCode, channelId, getRequestMap(dialCodeUpdateReq));
+		Assert.assertEquals("CLIENT_ERROR", response.getResponseCode().toString());
+	}
+
+	// Update Dial Code without type in contextInfo - CLIENT_ERROR
+	@Test
+	public void dialCodeTest_23() throws Exception {
+		String dialCodeUpdateReq = "{\"dialcode\": {\"publisher\": \"testPublisherUpdated\",\"contextInfo\": {\"class\":\"std2\",\"subject\":\"Math\",\"board\":\"AP CBSE\"}}}";
 		String channelId = "channelTest";
 		Response response = dialCodeMgr.updateDialCodeV4(dialCode, channelId, getRequestMap(dialCodeUpdateReq));
 		Assert.assertEquals("CLIENT_ERROR", response.getResponseCode().toString());
 	}
 
+	// Update Dial Code with type schema not available - CLIENT_ERROR
+	@Test
+	public void dialCodeTest_24() throws Exception {
+		String dialCodeUpdateReq = "{\"dialcode\": {\"publisher\": \"testPublisherUpdated\",\"contextInfo\": {\"type\":\"test\", \"class\":\"std2\",\"subject\":\"Math\",\"board\":\"AP CBSE\"}}}";
+		String channelId = "channelTest";
+		Response response = dialCodeMgr.updateDialCodeV4(dialCode, channelId, getRequestMap(dialCodeUpdateReq));
+		Assert.assertEquals("CLIENT_ERROR", response.getResponseCode().toString());
+	}
 
 	@Test
 	public void generateDialCodeExpectValidUniqueDialCodes() throws Exception {
