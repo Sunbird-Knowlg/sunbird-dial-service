@@ -135,16 +135,39 @@ public class DialcodeManager extends BaseManager {
                     DialCodeErrorMessage.ERR_INVALID_DIALCODE_REQUEST, ResponseCode.CLIENT_ERROR);
         DialCode dialCode = dialCodeStore.read(dialCodeId);
         Response resp = getSuccessResponse();
+        resp.put(DialCodeEnum.dialcode.name(), dialCode);
+        return resp;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.ekstep.dialcode.mgr.IDialCodeManager#readDialCodeV4(java.lang.String)
+     */
+    public Response readDialCodeV4(String dialCodeId) throws Exception {
+        if (StringUtils.isBlank(dialCodeId))
+            return ERROR(DialCodeErrorCodes.ERR_INVALID_DIALCODE_REQUEST,
+                    DialCodeErrorMessage.ERR_INVALID_DIALCODE_REQUEST, ResponseCode.CLIENT_ERROR);
+        DialCode dialCode = dialCodeStore.read(dialCodeId);
+        Response resp = getSuccessResponse();
         Map<String, Object> dialCodeMap = new HashMap<>();
-        if( dialCode.getMetadata() != null && dialCode.getMetadata().get("type") !=null ) {
+        Map<String, Object> contextInfoMap = new HashMap<>();
+        ArrayList<Map<String, Object>> contextInfoList = new ArrayList<Map<String, Object>>();
+        contextInfoList.add(contextInfoMap);
+        if( dialCode.getMetadata() != null && dialCode.getMetadata().get("type") != null ) {
             String contextType = dialCode.getMetadata().get("type").toString();
             String contextJson = schemaBasePath + File.separator + contextType + File.separator + "context.json";
-            dialCodeMap.put("@context", contextJson);
-            dialCodeMap.put("@id", AppConfig.getString("dial_id", "").replaceAll("\\{dialcode\\}", dialCodeId));
-            dialCodeMap.put("@type", AppConfig.getString("dial_type", "") + dialCode.getMetadata().get("type"));
+            contextInfoMap.put("@context", contextJson);
+            contextInfoMap.put("@type", AppConfig.getString("dial_type", "") + dialCode.getMetadata().get("type"));
             Map<String, Object> contextMap = dialCode.getMetadata();
             contextMap.remove("type");
-            dialCodeMap.putAll(contextMap);
+            contextInfoMap.putAll(contextMap);
+            dialCodeMap.put(DialCodeEnum.contextInfo.name(), contextInfoList);
+            String dialContextJson = schemaBasePath + File.separator + DialCodeEnum.dialcode.name() + File.separator + "context.json";
+            dialCodeMap.put("@context", dialContextJson);
+            dialCodeMap.put("@id", AppConfig.getString("dial_id", "").replaceAll("\\{dialcode\\}", dialCodeId));
+            dialCodeMap.put("@type", AppConfig.getString("dial_type", "") + "DIAL");
         }
         dialCodeMap.put("identifier", dialCode.getIdentifier());
         dialCodeMap.put("channel", dialCode.getChannel());
@@ -175,6 +198,35 @@ public class DialcodeManager extends BaseManager {
         if (dialCode.getStatus().equalsIgnoreCase(DialCodeEnum.Live.name()))
             return ERROR(DialCodeErrorCodes.ERR_DIALCODE_UPDATE, DialCodeErrorMessage.ERR_DIALCODE_UPDATE,
                     ResponseCode.CLIENT_ERROR);
+        String metaData = new Gson().toJson(map.get(DialCodeEnum.metadata.name()));
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put(DialCodeEnum.metadata.name(), metaData);
+        dialCodeStore.update(dialCodeId, data, null);
+        Response resp = getSuccessResponse();
+        resp.put(DialCodeEnum.identifier.name(), dialCode.getIdentifier());
+        TelemetryManager.info("DIAL code updated", resp.getResult());
+        return resp;
+    }
+
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.ekstep.dialcode.mgr.IDialCodeManager#updateDialCode(java.lang.String,
+     * java.lang.String, java.utils.Map)
+     */
+    public Response updateDialCodeV4(String dialCodeId, String channelId, Map<String, Object> map) throws Exception {
+        if (null == map)
+            return ERROR(DialCodeErrorCodes.ERR_INVALID_DIALCODE_REQUEST,
+                    DialCodeErrorMessage.ERR_INVALID_DIALCODE_REQUEST, ResponseCode.CLIENT_ERROR);
+        DialCode dialCode = dialCodeStore.read(dialCodeId);
+        if (!channelId.equalsIgnoreCase(dialCode.getChannel()))
+            return ERROR(DialCodeErrorCodes.ERR_INVALID_CHANNEL_ID, DialCodeErrorMessage.ERR_INVALID_CHANNEL_ID,
+                    ResponseCode.CLIENT_ERROR);
+        if (dialCode.getStatus().equalsIgnoreCase(DialCodeEnum.Live.name()))
+            return ERROR(DialCodeErrorCodes.ERR_DIALCODE_UPDATE, DialCodeErrorMessage.ERR_DIALCODE_UPDATE,
+                    ResponseCode.CLIENT_ERROR);
         if(!AppConfig.config.hasPath("schema.basePath"))
             return ERROR(DialCodeErrorCodes.ERR_SCHEMA_BASEPATH_CONFIG_MISSING, DialCodeErrorMessage.ERR_SCHEMA_BASEPATH_CONFIG_MISSING,
                     ResponseCode.CLIENT_ERROR);
@@ -182,7 +234,11 @@ public class DialcodeManager extends BaseManager {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonSchemaFactory validatorFactory = JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7)).objectMapper(objectMapper).build();
 
-        String metaData = new Gson().toJson(map.get(DialCodeEnum.metadata.name()));
+        String metaData = new Gson().toJson(map.get(DialCodeEnum.contextInfo.name()));
+        if(metaData == null || metaData.trim().isEmpty() || metaData.equalsIgnoreCase("null"))
+            return ERROR(DialCodeErrorCodes.ERR_CONTEXT_INFO_MANDATORY, DialCodeErrorMessage.ERR_CONTEXT_INFO_MANDATORY,
+                    ResponseCode.CLIENT_ERROR);
+
         JsonNode metadataNode = objectMapper.readTree(metaData);
         if(metadataNode.get(DialCodeEnum.type.name()) == null || metadataNode.get(DialCodeEnum.type.name()).textValue().trim().isBlank() || metadataNode.get(DialCodeEnum.type.name()).textValue().trim().isEmpty()) {
             return ERROR(DialCodeErrorCodes.ERR_CONTEXT_TYPE_MANDATORY, DialCodeErrorMessage.ERR_CONTEXT_TYPE_MANDATORY,
