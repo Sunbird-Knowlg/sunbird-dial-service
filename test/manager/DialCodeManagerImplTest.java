@@ -300,7 +300,7 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 		for (String s : obj) {
 			dialCode = s;
 		}
-		String dialCodeUpdateReq = "{\"dialcode\": {\"publisher\": \"testPublisherUpdated\",\"metadata\": {\"class\":\"std2\",\"subject\":\"Math\",\"board\":\"AP CBSE\"}}}";
+		String dialCodeUpdateReq = "{\"dialcode\": {\"publisher\": \"testPublisherUpdated\",\"contextInfo\": {\"class\":\"std2\",\"subject\":\"Math\",\"board\":\"AP CBSE\"}}}";
 		String channelIdWrong = "channelABC";
 		Response response = dialCodeMgr.updateDialCodeV4(dialCode, channelIdWrong, getRequestMap(dialCodeUpdateReq));
 		Assert.assertEquals("CLIENT_ERROR", response.getResponseCode().toString());
@@ -330,7 +330,7 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 			dialCode = s;
 		}
 
-		String dialCodeUpdateReq = "{\"dialcode\": {\"publisher\": \"testPublisherUpdated\",\"metadata\": {\"class\":\"std2\",\"subject\":\"Math\",\"board\":\"AP CBSE\"}}}";
+		String dialCodeUpdateReq = "{\"publisher\": \"testPublisherUpdated\",\"metadata\": {\"class\":\"std2\",\"subject\":\"Math\",\"board\":\"AP CBSE\"}}";
 		Response response = dialCodeMgr.updateDialCodeV4(dialCode, channelId, getRequestMap(dialCodeUpdateReq));
 		Assert.assertEquals("CLIENT_ERROR", response.getResponseCode().toString());
 	}
@@ -338,7 +338,7 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 	// Update Dial Code without type in contextInfo - CLIENT_ERROR
 	@Test
 	public void dialCodeTest_23() throws Exception {
-		String dialCodeUpdateReq = "{\"dialcode\": {\"publisher\": \"testPublisherUpdated\",\"contextInfo\": {\"class\":\"std2\",\"subject\":\"Math\",\"board\":\"AP CBSE\"}}}";
+		String dialCodeUpdateReq = "{\"publisher\": \"testPublisherUpdated\",\"contextInfo\": {\"class\":\"std2\",\"subject\":\"Math\",\"board\":\"AP CBSE\"}}";
 		String channelId = "channelTest";
 		Response response = dialCodeMgr.updateDialCodeV4(dialCode, channelId, getRequestMap(dialCodeUpdateReq));
 		Assert.assertEquals("CLIENT_ERROR", response.getResponseCode().toString());
@@ -347,7 +347,7 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 	// Update Dial Code with type schema not available - CLIENT_ERROR
 	@Test
 	public void dialCodeTest_24() throws Exception {
-		String dialCodeUpdateReq = "{\"dialcode\": {\"publisher\": \"testPublisherUpdated\",\"contextInfo\": {\"type\":\"test\", \"class\":\"std2\",\"subject\":\"Math\",\"board\":\"AP CBSE\"}}}";
+		String dialCodeUpdateReq = "{\"publisher\": \"testPublisherUpdated\",\"contextInfo\": {\"type\":\"test\", \"class\":\"std2\",\"subject\":\"Math\",\"board\":\"AP CBSE\"}}";
 		String channelId = "channelTest";
 		Response response = dialCodeMgr.updateDialCodeV4(dialCode, channelId, getRequestMap(dialCodeUpdateReq));
 		Assert.assertEquals("CLIENT_ERROR", response.getResponseCode().toString());
@@ -365,7 +365,7 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 			dialCode = s;
 		}
 		System.out.println("dialCodeTest_25 dial code for contextInfo update:: " + dialCode);
-		String dialCodeUpdateReq = "{\"dialcode\": {\"contextInfo\": {\"type\":\"collection\", \"gradeLevel\":[\"Class 2\"],\"subject\":[\"Math\"],\"board\":\"CBSE\",\"medium\": [\"English\"]}}}";
+		String dialCodeUpdateReq = "{\"contextInfo\": {\"type\":\"collection\", \"gradeLevel\":[\"Class 2\"],\"subject\":[\"Math\"],\"board\":\"CBSE\",\"medium\": [\"English\"]}}";
 		System.out.println("dialCodeTest_25 requestMap:: " + getRequestMap(dialCodeUpdateReq).toString());
 		Response response = dialCodeMgr.updateDialCodeV4(dialCode, channelId, getRequestMap(dialCodeUpdateReq));
 		System.out.println("dialCodeTest_25 resp code:: " + response.getResponseCode().toString());
