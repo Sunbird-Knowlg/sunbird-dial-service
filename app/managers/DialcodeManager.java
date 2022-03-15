@@ -235,8 +235,10 @@ public class DialcodeManager extends BaseManager {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonSchemaFactory validatorFactory = JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7)).objectMapper(objectMapper).build();
 
+        System.out.println("DialcodeManager:: updateDialCodeV4::  DialCodeEnum.contextInfo.name:: " + DialCodeEnum.contextInfo.name());
+        System.out.println("DialcodeManager:: updateDialCodeV4:: contextInfo from map:: " + map.get(DialCodeEnum.contextInfo.name()));
         String metaData = new Gson().toJson(map.get(DialCodeEnum.contextInfo.name()));
-        System.out.println("DialcodeManager:: updateDialCodeV4:: contextInfo:: " + metaData);
+        System.out.println("DialcodeManager:: updateDialCodeV4:: contextInfo to json :: " + metaData);
         if(metaData == null || metaData.trim().isEmpty() || metaData.equalsIgnoreCase("null"))
             return ERROR(DialCodeErrorCodes.ERR_CONTEXT_INFO_MANDATORY, DialCodeErrorMessage.ERR_CONTEXT_INFO_MANDATORY,
                     ResponseCode.CLIENT_ERROR);
