@@ -94,6 +94,13 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 	}
 
 	@Test
+	public void dialCodeTest_27() throws Exception {
+		Response response = dialCodeMgr.readPublisher("mock_pub01");
+		assertTrue(response.getResponseCode().toString().equals("OK"));
+		assertTrue(response.getResponseCode().code() == 200);
+	}
+
+	@Test
 	public void dialCodeTest_01() throws Exception {
 		String dialCodeGenReq = "{\"count\":1,\"publisher\": \"mock_pub01\"}";
 		String channelId = "channelTest";
@@ -132,6 +139,12 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 		String dialCodeId = null;
 		Response response = dialCodeMgr.readDialCode(dialCodeId);
 		Assert.assertEquals("CLIENT_ERROR", response.getResponseCode().toString());
+	}
+
+	@Test
+	public void dialCodeTest_28() throws Exception {
+		Response response = dialCodeMgr.readDialCode(dialCode);
+		Assert.assertEquals("OK", response.getResponseCode().toString());
 	}
 
 	// Publish Dial Code with Different Channel Id - CLIENT_ERROR
@@ -320,6 +333,23 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 		String channelId = "channelTest";
 		Response response = dialCodeMgr.updateDialCodeV4(dialCode, channelId, getRequestMap(dialCodeUpdateReq));
 		Assert.assertEquals("CLIENT_ERROR", response.getResponseCode().toString());
+	}
+
+	// Update Dial Code with type collection and contextInfo - OK
+	@Test
+	public void dialCodeTest_25() throws Exception {
+		String dialCodeUpdateReq = "{\"dialcode\": {\"contextInfo\": {\"type\":\"collection\", \"gradeLevel\":[\"Class 2\"],\"subject\":[\"Math\"],\"board\":\"CBSE\",\"medium\": [\"English\"]}}}";
+		String channelId = "channelTest";
+		Response response = dialCodeMgr.updateDialCodeV4(dialCode, channelId, getRequestMap(dialCodeUpdateReq));
+		Assert.assertEquals("CLIENT_ERROR", response.getResponseCode().toString());
+	}
+
+	//Read DIAL code with valid dialCode having contextInfo - OK
+	@Test
+	public void dialCodeTest_26() throws Exception {
+		Response response = dialCodeMgr.readDialCodeV4(dialCode);
+		Assert.assertEquals("OK", response.getResponseCode().toString());
+		System.out.println(response.getResult());
 	}
 
 	@Test
