@@ -364,13 +364,9 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 		for (String s : obj) {
 			dialCode = s;
 		}
-		System.out.println("dialCodeTest_25 dial code for contextInfo update:: " + dialCode);
+
 		String dialCodeUpdateReq = "{\"contextInfo\": {\"type\":\"collection\", \"gradeLevel\":[\"Class 2\"],\"subject\":[\"Math\"],\"board\":\"CBSE\",\"medium\": [\"English\"]}}";
-		System.out.println("dialCodeTest_25 requestMap:: " + getRequestMap(dialCodeUpdateReq).toString());
 		Response response = dialCodeMgr.updateDialCodeV4(dialCode, channelId, getRequestMap(dialCodeUpdateReq));
-		System.out.println("dialCodeTest_25 resp code:: " + response.getResponseCode().toString());
-		System.out.println("dialCodeTest_25 params:: " + response.getParams());
-		System.out.println("dialCodeTest_25 result:: " + response.getResult());
 		Assert.assertEquals("OK", response.getResponseCode().toString());
 	}
 
@@ -378,7 +374,6 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 	@Test
 	public void dialCodeTest_26() throws Exception {
 		Response response = dialCodeMgr.readDialCodeV4(dialCode);
-		System.out.println("dialCodeTest_26 result:: " + response.getResult());
 		Assert.assertEquals("OK", response.getResponseCode().toString());
 	}
 
