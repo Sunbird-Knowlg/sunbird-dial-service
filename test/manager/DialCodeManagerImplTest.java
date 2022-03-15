@@ -263,6 +263,24 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 		Response response = dialCodeMgr.generateDialCode(getRequestMap(dialCodeGenReq), channelId);
 	}
 
+	// Update Dial Code with metadata - OK
+	@Test
+	public void dialCodeTest_29() throws Exception {
+		String dialCodeGenReq = "{\"count\":1,\"publisher\": \"mock_pub01\",\"batchCode\":\"v4_check\"}";
+		String channelId = "channelTest";
+		Response resp = dialCodeMgr.generateDialCode(getRequestMap(dialCodeGenReq), channelId);
+
+		Collection<String> obj = (Collection) resp.getResult().get("dialcodes");
+		for (String s : obj) {
+			dialCode = s;
+		}
+		String dialCodeUpdateReq = "{\"dialcode\": {\"publisher\": \"testPublisherUpdated\",\"metadata\": {\"class\":\"std2\",\"subject\":\"Math\",\"board\":\"AP CBSE\"}}}";
+		String channelIdWrong = "channelTest";
+		Response response = dialCodeMgr.updateDialCode(dialCode, channelIdWrong, getRequestMap(dialCodeUpdateReq));
+		Assert.assertEquals("OK", response.getResponseCode().toString());
+	}
+
+
 	//Read DIAL code with dialCode as null - CLIENT ERROR
 	@Test
 	public void dialCodeTest_19() throws Exception {
@@ -341,15 +359,15 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 		String dialCodeUpdateReq = "{\"dialcode\": {\"contextInfo\": {\"type\":\"collection\", \"gradeLevel\":[\"Class 2\"],\"subject\":[\"Math\"],\"board\":\"CBSE\",\"medium\": [\"English\"]}}}";
 		String channelId = "channelTest";
 		Response response = dialCodeMgr.updateDialCodeV4(dialCode, channelId, getRequestMap(dialCodeUpdateReq));
-		Assert.assertEquals("CLIENT_ERROR", response.getResponseCode().toString());
+		Assert.assertEquals("OK", response.getResponseCode().toString());
 	}
 
 	//Read DIAL code with valid dialCode having contextInfo - OK
 	@Test
 	public void dialCodeTest_26() throws Exception {
 		Response response = dialCodeMgr.readDialCodeV4(dialCode);
-		Assert.assertEquals("OK", response.getResponseCode().toString());
 		System.out.println(response.getResult());
+		Assert.assertEquals("OK", response.getResponseCode().toString());
 	}
 
 	@Test
