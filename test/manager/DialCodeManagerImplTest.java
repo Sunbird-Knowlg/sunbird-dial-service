@@ -356,10 +356,19 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 	// Update Dial Code with type 'collection' and contextInfo - OK
 	@Test
 	public void dialCodeTest_25() throws Exception {
-		String dialCodeUpdateReq = "{\"dialcode\": {\"contextInfo\": {\"type\":\"collection\", \"gradeLevel\":[\"Class 2\"],\"subject\":[\"Math\"],\"board\":\"CBSE\",\"medium\": [\"English\"]}}}";
+		String dialCodeGenReq = "{\"count\":1,\"publisher\": \"mock_pub01\",\"batchCode\":\"v4_check\"}";
 		String channelId = "channelTest";
+		Response resp = dialCodeMgr.generateDialCode(getRequestMap(dialCodeGenReq), channelId);
+
+		Collection<String> obj = (Collection) resp.getResult().get("dialcodes");
+		for (String s : obj) {
+			dialCode = s;
+		}
+		System.out.println("dialCodeTest_25 dial code for contextInfo update:: " + dialCode);
+		String dialCodeUpdateReq = "{\"dialcode\": {\"contextInfo\": {\"type\":\"collection\", \"gradeLevel\":[\"Class 2\"],\"subject\":[\"Math\"],\"board\":\"CBSE\",\"medium\": [\"English\"]}}}";
 		Response response = dialCodeMgr.updateDialCodeV4(dialCode, channelId, getRequestMap(dialCodeUpdateReq));
 		System.out.println("dialCodeTest_25 resp code:: " + response.getResponseCode().toString());
+		System.out.println("dialCodeTest_25 params:: " + response.getParams());
 		System.out.println("dialCodeTest_25 result:: " + response.getResult());
 		Assert.assertEquals("OK", response.getResponseCode().toString());
 	}
