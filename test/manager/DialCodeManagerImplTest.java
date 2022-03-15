@@ -274,7 +274,7 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 		for (String s : obj) {
 			dialCode = s;
 		}
-		String dialCodeUpdateReq = "{\"dialcode\": {\"publisher\": \"testPublisherUpdated\",\"metadata\": {\"class\":\"std2\",\"subject\":\"Math\",\"board\":\"AP CBSE\"}}}";
+		String dialCodeUpdateReq = "{\"publisher\": \"testPublisherUpdated\",\"metadata\": {\"class\":\"std2\",\"subject\":\"Math\",\"board\":\"AP CBSE\"}}";
 		String channelIdWrong = "channelTest";
 		Response response = dialCodeMgr.updateDialCode(dialCode, channelIdWrong, getRequestMap(dialCodeUpdateReq));
 		Assert.assertEquals("OK", response.getResponseCode().toString());

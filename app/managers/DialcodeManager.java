@@ -217,7 +217,6 @@ public class DialcodeManager extends BaseManager {
      * java.lang.String, java.utils.Map)
      */
     public Response updateDialCodeV4(String dialCodeId, String channelId, Map<String, Object> map) throws Exception {
-        System.out.println("DialcodeManager:: updateDialCodeV4:: map:: " + map);
         if (null == map)
             return ERROR(DialCodeErrorCodes.ERR_INVALID_DIALCODE_REQUEST,
                     DialCodeErrorMessage.ERR_INVALID_DIALCODE_REQUEST, ResponseCode.CLIENT_ERROR);
@@ -235,10 +234,7 @@ public class DialcodeManager extends BaseManager {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonSchemaFactory validatorFactory = JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7)).objectMapper(objectMapper).build();
 
-        System.out.println("DialcodeManager:: updateDialCodeV4::  DialCodeEnum.contextInfo.name:: " + DialCodeEnum.contextInfo.name());
-        System.out.println("DialcodeManager:: updateDialCodeV4:: contextInfo from map:: " + map.get(DialCodeEnum.contextInfo.name()));
         String metaData = new Gson().toJson(map.get(DialCodeEnum.contextInfo.name()));
-        System.out.println("DialcodeManager:: updateDialCodeV4:: contextInfo to json :: " + metaData);
         if(metaData == null || metaData.trim().isEmpty() || metaData.equalsIgnoreCase("null"))
             return ERROR(DialCodeErrorCodes.ERR_CONTEXT_INFO_MANDATORY, DialCodeErrorMessage.ERR_CONTEXT_INFO_MANDATORY,
                     ResponseCode.CLIENT_ERROR);
