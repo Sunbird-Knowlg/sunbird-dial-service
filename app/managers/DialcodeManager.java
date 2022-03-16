@@ -174,7 +174,7 @@ public class DialcodeManager extends BaseManager {
             dialCodeMap.put("@context", dialContextJson);
             dialCodeMap.put("@id", AppConfig.getString("dial_id", "").replaceAll("\\{dialcode\\}", dialCodeId));
             dialCodeMap.put("@type", AppConfig.getString("dial_type", "") + "DIAL");
-        }
+        } else dialCodeMap.put(DialCodeEnum.contextInfo.name(), null);
         dialCodeMap.put("identifier", dialCode.getIdentifier());
         dialCodeMap.put("channel", dialCode.getChannel());
         dialCodeMap.put("publisher", dialCode.getPublisher());
