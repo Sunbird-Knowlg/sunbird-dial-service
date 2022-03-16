@@ -151,10 +151,15 @@ public class DialcodeManager extends BaseManager {
                     DialCodeErrorMessage.ERR_INVALID_DIALCODE_REQUEST, ResponseCode.CLIENT_ERROR);
         DialCode dialCode = dialCodeStore.read(dialCodeId);
         Response resp = getSuccessResponse();
+        Map<String, Object> dialCodeMap = prepareDialCodeContext(dialCode, dialCodeId);
+        resp.put(DialCodeEnum.dialcode.name(), dialCodeMap);
+        return resp;
+    }
+
+    private Map<String, Object> prepareDialCodeContext(DialCode dialCode, String dialCodeId) {
         Map<String, Object> dialCodeMap = new HashMap<>();
         Map<String, Object> contextInfoMap = new HashMap<>();
         ArrayList<Map<String, Object>> contextInfoList = new ArrayList<Map<String, Object>>();
-        contextInfoList.add(contextInfoMap);
         if( dialCode.getMetadata() != null && dialCode.getMetadata().get("type") != null ) {
             String contextType = dialCode.getMetadata().get("type").toString();
             String contextJson = schemaBasePath + File.separator + contextType + File.separator + "context.json";
@@ -163,6 +168,7 @@ public class DialcodeManager extends BaseManager {
             Map<String, Object> contextMap = dialCode.getMetadata();
             contextMap.remove("type");
             contextInfoMap.putAll(contextMap);
+            contextInfoList.add(contextInfoMap);
             dialCodeMap.put(DialCodeEnum.contextInfo.name(), contextInfoList);
             String dialContextJson = schemaBasePath + File.separator + DialCodeEnum.dialcode.name() + File.separator + "context.json";
             dialCodeMap.put("@context", dialContextJson);
@@ -176,8 +182,7 @@ public class DialcodeManager extends BaseManager {
         dialCodeMap.put("status", dialCode.getStatus());
         dialCodeMap.put("generatedOn", dialCode.getGeneratedOn());
         dialCodeMap.put("publishedOn", dialCode.getPublishedOn());
-        resp.put(DialCodeEnum.dialcode.name(), dialCodeMap);
-        return resp;
+        return dialCodeMap;
     }
 
     /*
