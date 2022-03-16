@@ -7,9 +7,6 @@
     "content"
   ],
   "properties": {
-    "code": {
-      "type": "string"
-    },
     "framework": {
       "type": "string"
     },

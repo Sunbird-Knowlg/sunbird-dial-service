@@ -4,9 +4,6 @@
   "title": "collection",
   "type": "object",
   "properties": {
-    "code": {
-      "type": "string"
-    },
     "framework": {
       "type": "string"
     },
