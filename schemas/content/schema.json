@@ -1,15 +1,12 @@
 {
   "$id": "file:./schemas/content/schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "textbook",
+  "title": "content",
   "type": "object",
   "required": [
     "content"
   ],
   "properties": {
-    "code": {
-      "type": "string"
-    },
     "framework": {
       "type": "string"
     },

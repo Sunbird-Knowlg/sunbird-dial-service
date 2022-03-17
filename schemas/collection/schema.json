@@ -1,12 +1,9 @@
 {
   "$id": "file:./schemas/collection/schema.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "textbook",
+  "title": "collection",
   "type": "object",
   "properties": {
-    "code": {
-      "type": "string"
-    },
     "framework": {
       "type": "string"
     },
