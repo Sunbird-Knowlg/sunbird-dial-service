@@ -68,7 +68,7 @@ public class JsonUtilsTest {
         Assert.assertNotNull(deserialized);
         Map responseParams = JsonUtils.convert((Map<String, Object>)deserialized.get("params"), Map.class );
         Assert.assertNotNull(responseParams);
-        Assert.assertEquals("71ca0432-1320-4dc3-a7db-2d72b6e3fc46", responseParams.get("msgid"));
+        Assert.assertEquals("71ca0432-1320-4dc3-a7db-2d72b6e3fc46", responseParams.get("msgid").toString());
     }
 
     @Test
