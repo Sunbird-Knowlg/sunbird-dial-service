@@ -9,7 +9,6 @@ import commons.dto.Response;
 import commons.exception.ClientException;
 import elasticsearch.ElasticSearchUtil;
 import managers.DialcodeManager;
-import org.apache.commons.collections.SetUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -23,7 +22,6 @@ import utils.Constants;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
