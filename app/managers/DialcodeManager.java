@@ -55,6 +55,7 @@ public class DialcodeManager extends BaseManager {
 
     private static final JsonValidationService service = JsonValidationService.newInstance();
     private JsonSchemaReaderFactory schemaReaderFactory = service.createSchemaReaderFactoryBuilder().build();
+    SchemaCacheLoader schemaCache = SchemaCacheLoader.getInstance();
 
     Map<String, String> typeToSchemaPathMap  = new HashMap<String, String>();
 
@@ -284,8 +285,7 @@ public class DialcodeManager extends BaseManager {
                     ResponseCode.CLIENT_ERROR);
         }
 
-        if(!typeToSchemaPathMap.containsKey(type)) downloadSchemaFile(schemaJson, type);
-        String localSchemaPath = typeToSchemaPathMap.get(type);
+        String localSchemaPath = schemaCache.getSchemaPath(type);
         JsonSchema schema = readSchema(Paths.get(localSchemaPath));
         String dataWithDefaults = withDefaultValues(metaData, schema);
         Map<String, Object> validationDataWithDefaults = cleanEmptyKeys(JsonUtils.deserialize(dataWithDefaults, Map.class));
