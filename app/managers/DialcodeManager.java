@@ -2,14 +2,9 @@ package managers;
 
 import akka.util.Timeout;
 import com.datastax.driver.core.Row;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import com.networknt.schema.JsonSchema;
-import com.networknt.schema.JsonSchemaFactory;
-import com.networknt.schema.SpecVersion;
-import com.networknt.schema.ValidationMessage;
 import commons.AppConfig;
+import commons.CustomProblemHandler;
 import commons.DialCodeErrorCodes;
 import commons.DialCodeErrorMessage;
 import commons.dto.HeaderParam;
@@ -23,9 +18,15 @@ import dto.Publisher;
 import dto.SearchDTO;
 import elasticsearch.ElasticSearchUtil;
 import elasticsearch.SearchProcessor;
+import jakarta.json.JsonReader;
+import jakarta.json.JsonReaderFactory;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.search.SearchResponse;
+import org.leadpony.justify.api.*;
+import org.sunbird.common.JsonUtils;
 import scala.concurrent.Await;
 import scala.concurrent.Future;
 import scala.concurrent.duration.Duration;
@@ -37,13 +38,15 @@ import utils.DialCodeGenerator;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class DialcodeManager extends BaseManager {
     private PublisherStore publisherStore = new PublisherStore();
@@ -52,8 +55,10 @@ public class DialcodeManager extends BaseManager {
 
     private DialCodeGenerator dialCodeGenerator =  new DialCodeGenerator();
 
-    private ObjectMapper objectMapper = new ObjectMapper();
-    JsonSchemaFactory validatorFactory = JsonSchemaFactory.builder(JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7)).objectMapper(objectMapper).build();
+    private CustomProblemHandler customHandler = new CustomProblemHandler();
+
+    private static final JsonValidationService service = JsonValidationService.newInstance();
+    private JsonSchemaReaderFactory schemaReaderFactory = service.createSchemaReaderFactoryBuilder().build();
 
     Map<String, String> typeToSchemaPathMap  = new HashMap<String, String>();
 
@@ -262,13 +267,14 @@ public class DialcodeManager extends BaseManager {
         return resp;
     }
 
-    private Response validateInputWithSchema(String metaData) throws IOException {
-        JsonNode metadataNode = objectMapper.readTree(metaData);
-        if(metadataNode.get(DialCodeEnum.type.name()) == null || metadataNode.get(DialCodeEnum.type.name()).textValue().trim().isBlank() || metadataNode.get(DialCodeEnum.type.name()).textValue().trim().isEmpty()) {
+    private Response validateInputWithSchema(String metaData) throws Exception {
+        Map metadataNode = JsonUtils.deserialize(metaData, Map.class);
+
+        if(metadataNode.get(DialCodeEnum.type.name()) == null || metadataNode.get(DialCodeEnum.type.name()).toString().trim().isBlank() || metadataNode.get(DialCodeEnum.type.name()).toString().trim().isEmpty()) {
             return ERROR(DialCodeErrorCodes.ERR_CONTEXT_TYPE_MANDATORY, DialCodeErrorMessage.ERR_CONTEXT_TYPE_MANDATORY,
                     ResponseCode.CLIENT_ERROR);
         }
-        String type = metadataNode.get(DialCodeEnum.type.name()).textValue();
+        String type = metadataNode.get(DialCodeEnum.type.name()).toString();
 
         String schemaJson = schemaBasePath+File.separator+type+File.separator+"schema.json";
         if(!verifySchemaAndContextPaths(schemaJson)) {
@@ -284,27 +290,63 @@ public class DialcodeManager extends BaseManager {
 
         if(!typeToSchemaPathMap.containsKey(type)) downloadSchemaFile(schemaJson, type);
         String localSchemaPath = typeToSchemaPathMap.get(type);
+        JsonSchema schema = readSchema(Paths.get(localSchemaPath));
+        String dataWithDefaults = withDefaultValues(metaData, schema);
+        Map<String, Object> validationDataWithDefaults = cleanEmptyKeys(JsonUtils.deserialize(dataWithDefaults, Map.class));
 
         // Schema validation
-        File jsonSchemaFile = new File(localSchemaPath);
-        final URI schemaUri = jsonSchemaFile.toURI();
-        JsonSchema schema = validatorFactory.getSchema(schemaUri);
-
-        Set<ValidationMessage> errorMessage = schema.validate(metadataNode);
-        if(!errorMessage.isEmpty()) {
-            StringBuilder finalErrorMsg = new StringBuilder();
-            for (ValidationMessage error: errorMessage) {
-                finalErrorMsg.append(error.getMessage().replaceAll("\\$.", ""));
-                finalErrorMsg.append(" | ");
-            }
-            return ERROR(DialCodeErrorCodes.ERR_SCHEMA_VALIDATION_FAILED, DialCodeErrorMessage.ERR_SCHEMA_VALIDATION_FAILED + finalErrorMsg, ResponseCode.CLIENT_ERROR);
+        try (JsonReader reader = service.createReader(new StringReader(JsonUtils.serialize(validationDataWithDefaults)), schema, customHandler)) {
+            reader.readValue();
+            System.out.println("Error Messages:: " + customHandler.getProblemMessages());
+            if(customHandler.getProblemMessages().size()!=0)
+                return ERROR(DialCodeErrorCodes.ERR_SCHEMA_VALIDATION_FAILED, DialCodeErrorMessage.ERR_SCHEMA_VALIDATION_FAILED + customHandler.getProblemMessages(), ResponseCode.CLIENT_ERROR);
+            else return null;
         }
 
         // do compact of response and do dial code schema validation. - START
 
         // do compact of response and do dial code schema validation. - END
-        return null;
     }
+
+
+    private JsonSchema readSchema(Path path) {
+        try (JsonSchemaReader reader = schemaReaderFactory.createSchemaReader(path)) {
+            return reader.read();
+        }
+    }
+
+
+    public String withDefaultValues(String data, JsonSchema schema) {
+        ValidationConfig config = service.createValidationConfig();
+        config.withSchema(schema).withDefaultValues(true);
+        JsonReaderFactory readerFactory = service.createReaderFactory(config.getAsMap());
+        JsonReader reader = readerFactory.createReader(new StringReader(data));
+        return reader.readValue().toString();
+    }
+
+
+    private Map<String, Object> cleanEmptyKeys(Map<String, Object> input) {
+        return input.entrySet().stream().filter(entry -> {
+            Object value = entry.getValue();
+            if(value == null){
+                return false;
+            }else if(value instanceof String) {
+                return StringUtils.isNotBlank((String) value);
+            } else if (value instanceof List) {
+                return CollectionUtils.isNotEmpty((List) value);
+            } else if (value instanceof String[]) {
+                return CollectionUtils.isNotEmpty(Arrays.asList((String[]) value));
+            } else if(value instanceof Map[]) {
+                return CollectionUtils.isNotEmpty(Arrays.asList((Map[])value));
+            } else if (value instanceof Map) {
+                return MapUtils.isNotEmpty((Map) value);
+            } else {
+                return true;
+            }
+            // TODO: Here we are filtering the system converted properties to ignore the JSON Schema validation.
+        }).filter(e -> !Arrays.asList("objectType", "identifier").contains(e.getKey())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
 
     /*
      * (non-Javadoc)
