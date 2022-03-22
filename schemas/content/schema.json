@@ -42,5 +42,6 @@
       "additionalProperties": false,
       "required": ["@id","identifier"]
     }
-  }
+  },
+  "additionalProperties": false
 }
