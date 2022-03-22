@@ -4,9 +4,12 @@
   "title": "content",
   "type": "object",
   "required": [
-    "content"
+    "type","content"
   ],
   "properties": {
+    "type" : {
+      "type": "string"
+    },
     "framework": {
       "type": "string"
     },
