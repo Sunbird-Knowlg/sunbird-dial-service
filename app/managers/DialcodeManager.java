@@ -275,8 +275,7 @@ public class DialcodeManager extends BaseManager {
 
         String schemaJson = schemaBasePath+File.separator+type+File.separator+"schema.json";
         if(!verifySchemaAndContextPaths(schemaJson)) {
-            return ERROR(DialCodeErrorCodes.ERR_TYPE_SCHEMA_MISSING, DialCodeErrorMessage.ERR_TYPE_SCHEMA_MISSING,
-                    ResponseCode.CLIENT_ERROR);
+            return null;
         }
 
         String contextJson = schemaBasePath+File.separator+type+File.separator+"context.json";
