@@ -5,6 +5,7 @@
 package managers;
 
 import commons.dto.Response;
+import commons.exception.ResponseCode;
 import telemetry.TelemetryManager;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 public class HealthCheckManager extends BaseManager implements IHealthCheckManager {
     public static boolean health = false;
+    public static boolean dialMaxIndexHealth = true;
     public static String CONNECTION_SUCCESS ="connection check is Successful";
     public static String CONNECTION_FAIL ="connection check has Failed";
 
@@ -63,7 +65,16 @@ public class HealthCheckManager extends BaseManager implements IHealthCheckManag
             TelemetryManager.error("cassandra db "+CONNECTION_FAIL,e);
         }
         allChecks.add(check);
+
+        check = generateCheck("DIAL Max Index", check, dialMaxIndexHealth);
+        if (!dialMaxIndexHealth) {
+            overAllHealth = false;
+        }
+        allChecks.add(check);
+
         Response response = OK("checks",allChecks);
+        if(!overAllHealth)
+            response.setResponseCode(ResponseCode.SERVICE_UNAVAILABLE);
         response.put("healthy",overAllHealth);
         health = overAllHealth;
         return response;
@@ -81,5 +92,11 @@ public class HealthCheckManager extends BaseManager implements IHealthCheckManag
             check.put("errmsg", db+" connection unavailable");
         }
         return check;
+    }
+
+    public Response getServiceHealth() {
+        Response response = OK();
+        response.put("healthy",true);
+        return response;
     }
 }

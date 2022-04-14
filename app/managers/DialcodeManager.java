@@ -206,7 +206,7 @@ public class DialcodeManager extends BaseManager {
         int offset = defaultOffset;
         try {
             if (map.containsKey("offset"))
-                offset = (int) map.get("offset");
+                offset = ((Number) map.get("offset")).intValue();
         } catch (Exception e) {
             throw new ClientException(errCode, "Please provide valid offset.");
         }
