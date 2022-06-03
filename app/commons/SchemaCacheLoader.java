@@ -26,10 +26,10 @@ public class SchemaCacheLoader {
                 build(new CacheLoader<String, String>(){
                           @Override
                           public String load(String type) throws Exception {
-                              String schemaJson = schemaBasePath+File.separator+type+File.separator+"schema.json";
+                              String schemaJson = schemaBasePath+File.separator+type+File.separator+"contextSchema.json";
                               File localDir = new File(schemaLocalPath);
                               if (!localDir.exists()) localDir.mkdirs();
-                              String localSchemaPath = localDir.getAbsolutePath() + File.separator + type + File.separator + "schema.json";
+                              String localSchemaPath = localDir.getAbsolutePath() + File.separator + type + File.separator + "contextSchema.json";
                               FileUtils.copyURLToFile(new URL(schemaJson), new File(localSchemaPath));
                               return localSchemaPath;
                           }
