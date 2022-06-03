@@ -345,9 +345,11 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 	// Update Dial Code with type schema not available - CLIENT_ERROR
 	@Test
 	public void dialCodeTest_24() throws Exception {
-		String dialCodeUpdateReq = "{\"publisher\": \"testPublisherUpdated\",\"contextInfo\": {\"type\":\"test\", \"class\":\"std2\",\"subject\":\"Math\",\"board\":\"AP CBSE\"}}";
+		String dialCodeUpdateReq = "{\"contextInfo\":{\"@type\":\"sb-ed:TextBookUnit\",\"identifier\":\"do_31307361357558579213961\",\"name\":\"1-झूला\",\"parentInfo\":{\"name\":\"(NEW) रिमझिम\",\"identifier\":\"do_31307361357388185614238\",\"primaryCategory\":\"Digital Textbook\",\"framework\":{\"subject\":[\"Hindi\"],\"identifier\":\"do_31307361357388185614238\",\"medium\":[\"English\",\"Hindi\"]},\"@type\":\"sb-ed:TextBook\"}}}";
 		String channelId = "channelTest";
-		Response response = dialCodeMgr.updateDialCodeV4(dialCode, channelId, getRequestMap(dialCodeUpdateReq));
+		Map<String, Object> requestMap = getRequestMap(dialCodeUpdateReq);
+		System.out.println("requestMap:: " + requestMap);
+		Response response = dialCodeMgr.updateDialCodeV4(dialCode, channelId, requestMap);
 		Assert.assertEquals("OK", response.getResponseCode().toString());
 	}
 
