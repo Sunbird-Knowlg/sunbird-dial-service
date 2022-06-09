@@ -234,7 +234,7 @@ public class DialcodeManager extends BaseManager {
         if (dialCode.getStatus().equalsIgnoreCase(DialCodeEnum.Live.name()))
             return ERROR(DialCodeErrorCodes.ERR_DIALCODE_UPDATE, DialCodeErrorMessage.ERR_DIALCODE_UPDATE,
                     ResponseCode.CLIENT_ERROR);
-        if(!AppConfig.config.hasPath("schema.basePath"))
+        if(!AppConfig.config.hasPath("jsonld.basePath"))
             return ERROR(DialCodeErrorCodes.ERR_SCHEMA_BASEPATH_CONFIG_MISSING, DialCodeErrorMessage.ERR_SCHEMA_BASEPATH_CONFIG_MISSING,
                     ResponseCode.CLIENT_ERROR);
 
