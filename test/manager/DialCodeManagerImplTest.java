@@ -313,7 +313,7 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 
 		String dialCodeUpdateReq = "{\"publisher\": \"testPublisherUpdated\",\"metadata\": {\"class\":\"std2\",\"subject\":\"Math\",\"board\":\"AP CBSE\"}}";
 		Response response = dialCodeMgr.updateDialCodeV4(dialCode, channelId, getRequestMap(dialCodeUpdateReq));
-		Assert.assertEquals("CLIENT_ERROR", response.getResponseCode().toString());
+		Assert.assertEquals("OK", response.getResponseCode().toString());
 	}
 
 	// Update Dial Code without type in contextInfo - CLIENT_ERROR
