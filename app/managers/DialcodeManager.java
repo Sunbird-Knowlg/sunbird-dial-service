@@ -179,11 +179,11 @@ public class DialcodeManager extends BaseManager {
         } else dialCodeMap.put(DialCodeEnum.contextInfo.name(), null);
         dialCodeMap.put("identifier", dialCode.getIdentifier());
         dialCodeMap.put("channel", dialCode.getChannel());
-        dialCodeMap.put("publisher", dialCode.getPublisher());
-        dialCodeMap.put("batchCode", dialCode.getBatchCode());
+        if(dialCode.getPublisher() != null) dialCodeMap.put("publisher", dialCode.getPublisher());
+        if(dialCode.getBatchCode() != null) dialCodeMap.put("batchCode", dialCode.getBatchCode());
         dialCodeMap.put("status", dialCode.getStatus());
-        dialCodeMap.put("generatedOn", dialCode.getGeneratedOn());
-        dialCodeMap.put("publishedOn", dialCode.getPublishedOn());
+        if(dialCode.getGeneratedOn() != null) dialCodeMap.put("generatedOn", dialCode.getGeneratedOn());
+        if(dialCode.getPublishedOn() != null) dialCodeMap.put("publishedOn", dialCode.getPublishedOn());
         return dialCodeMap;
     }
 
