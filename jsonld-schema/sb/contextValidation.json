@@ -1,7 +1,7 @@
 {
   "$id": "file:./schemas/dialcode/contextValidation.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "contextSchema",
+  "title": "contextValidation",
   "type": "object",
   "required": [
     "@type",
