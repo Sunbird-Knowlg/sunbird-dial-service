@@ -26,10 +26,10 @@ public class SchemaCacheLoader {
                 build(new CacheLoader<>() {
                           @Override
                           public String load(String type) throws Exception {
-                              String schemaJson = jsonldBasePath + File.separator + "contextValidation.json";
+                              String schemaJson = jsonldBasePath + File.separator + type + File.separator + "contextValidation.json";
                               File localDir = new File(jsonldLocalPath);
                               if (!localDir.exists()) localDir.mkdirs();
-                              String localSchemaPath = localDir.getAbsolutePath() + File.separator + "contextValidation.json";
+                              String localSchemaPath = localDir.getAbsolutePath() + File.separator + type + File.separator + "contextValidation.json";
                               FileUtils.copyURLToFile(new URL(schemaJson), new File(localSchemaPath));
                               return localSchemaPath;
                           }
