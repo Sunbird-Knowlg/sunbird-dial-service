@@ -12,8 +12,8 @@ import org.apache.commons.io.FileUtils;
 
 public class SchemaCacheLoader {
     private static SchemaCacheLoader gt = new SchemaCacheLoader();
-    private final String jsonldBasePath = AppConfig.getString("schema.basePath","");
-    private final String jsonldLocalPath = AppConfig.getString("schema.localPath","");
+    private final String jsonldBasePath = AppConfig.getString("jsonld.basePath","");
+    private final String jsonldLocalPath = AppConfig.getString("jsonld.localPath","");
 
     public static SchemaCacheLoader getInstance(){
         return gt;
