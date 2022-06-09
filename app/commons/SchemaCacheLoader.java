@@ -12,8 +12,8 @@ import org.apache.commons.io.FileUtils;
 
 public class SchemaCacheLoader {
     private static SchemaCacheLoader gt = new SchemaCacheLoader();
-    private final String schemaBasePath = AppConfig.getString("schema.basePath","");
-    private final String schemaLocalPath = AppConfig.getString("schema.localPath","");
+    private final String jsonldBasePath = AppConfig.getString("schema.basePath","");
+    private final String jsonldLocalPath = AppConfig.getString("schema.localPath","");
 
     public static SchemaCacheLoader getInstance(){
         return gt;
@@ -23,13 +23,13 @@ public class SchemaCacheLoader {
     private SchemaCacheLoader() {
         long ttlCacheRefresh = AppConfig.getLong("schema.ttl", 43200L);
         cache = CacheBuilder.newBuilder().refreshAfterWrite(ttlCacheRefresh,TimeUnit.SECONDS).
-                build(new CacheLoader<String, String>(){
+                build(new CacheLoader<>() {
                           @Override
                           public String load(String type) throws Exception {
-                              String schemaJson = schemaBasePath+File.separator+type+File.separator+"contextSchema.json";
-                              File localDir = new File(schemaLocalPath);
+                              String schemaJson = jsonldBasePath + File.separator + "contextValidation.json";
+                              File localDir = new File(jsonldLocalPath);
                               if (!localDir.exists()) localDir.mkdirs();
-                              String localSchemaPath = localDir.getAbsolutePath() + File.separator + type + File.separator + "contextSchema.json";
+                              String localSchemaPath = localDir.getAbsolutePath() + File.separator + "contextValidation.json";
                               FileUtils.copyURLToFile(new URL(schemaJson), new File(localSchemaPath));
                               return localSchemaPath;
                           }

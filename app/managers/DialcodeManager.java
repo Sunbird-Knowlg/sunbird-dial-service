@@ -66,7 +66,8 @@ public class DialcodeManager extends BaseManager {
     private String connectionInfo = "localhost:9300";
     private SearchProcessor processor = null;
 
-    private String schemaBasePath = AppConfig.getString("schema.basePath","");
+    private String jsonldBasePath = AppConfig.getString("jsonld.basePath","");
+    private String jsonldType = AppConfig.getString("jsonld.type","");
 
     public SearchProcessor getProcessor() {
         return processor;
@@ -171,7 +172,7 @@ public class DialcodeManager extends BaseManager {
             Map<String, Object> contextInfoMap = dialCode.getMetadata();
             contextInfoList.add(contextInfoMap);
             dialCodeMap.put(DialCodeEnum.contextInfo.name(), contextInfoList);
-            String dialContextJson = schemaBasePath + File.separator + DialCodeEnum.dialcode.name() + File.separator + "context.json";
+            String dialContextJson = jsonldBasePath + File.separator + jsonldType + File.separator + "context.json";
             dialCodeMap.put("@context", dialContextJson);
             dialCodeMap.put("@id", AppConfig.getString("dial_id", "").replaceAll("\\{dialcode\\}", dialCodeId));
             dialCodeMap.put("@type", AppConfig.getString("dial_type", "") + "DIAL");
@@ -242,8 +243,8 @@ public class DialcodeManager extends BaseManager {
             return ERROR(DialCodeErrorCodes.ERR_CONTEXT_INFO_MANDATORY, DialCodeErrorMessage.ERR_CONTEXT_INFO_MANDATORY,
                     ResponseCode.CLIENT_ERROR);
 
-        // validation of the input contextInfo with the DIAL code contextSchema.json
-        Response validationResp = validateInputWithSchema(metaData);
+        // validation of the input contextInfo with the DIAL code contextValidation.json
+        Response validationResp = validateInput(metaData);
 
         if(validationResp != null) return validationResp;
 
@@ -257,20 +258,20 @@ public class DialcodeManager extends BaseManager {
         return resp;
     }
 
-    private Response validateInputWithSchema(String metaData) throws Exception {
+    private Response validateInput(String metaData) throws Exception {
 
-        String schemaJson = schemaBasePath+File.separator+"dialcode"+File.separator+"contextSchema.json";
+        String schemaJson = jsonldBasePath+File.separator+jsonldType+File.separator+"contextValidation.json";
         if(!verifySchemaAndContextPaths(schemaJson)) {
             return null;
         }
 
-        String contextJson = schemaBasePath+File.separator+"dialcode"+File.separator+"context.json";
+        String contextJson = jsonldBasePath+File.separator+jsonldType+File.separator+"context.json";
         if(!verifySchemaAndContextPaths(contextJson)) {
             return ERROR(DialCodeErrorCodes.ERR_TYPE_CONTEXT_MISSING, DialCodeErrorMessage.ERR_TYPE_CONTEXT_MISSING,
                     ResponseCode.CLIENT_ERROR);
         }
 
-        String contextSchemaPath = schemaCache.getSchemaPath("dialcode");
+        String contextSchemaPath = schemaCache.getSchemaPath(jsonldType);
         JsonSchema schema = readSchema(Paths.get(contextSchemaPath));
         String dataWithDefaults = withDefaultValues(metaData, schema);
         Map<String, Object> validationDataWithDefaults = cleanEmptyKeys(JsonUtils.deserialize(dataWithDefaults, Map.class));
@@ -336,15 +337,6 @@ public class DialcodeManager extends BaseManager {
             return ERROR(DialCodeErrorCodes.ERR_INVALID_SEARCH_REQUEST, DialCodeErrorMessage.ERR_INVALID_SEARCH_REQUEST,
                     ResponseCode.CLIENT_ERROR);
         return searchDialCode(requestContext, map);
-    }
-
-
-    private void downloadSchemaFile(String schemaJson, String type) throws IOException {
-        File theDir = new File(AppConfig.config.getString("schema.localPath"));
-        if (!theDir.exists()) theDir.mkdirs();
-        String localSchemaPath = theDir.getAbsolutePath()+File.separator+type+File.separator+"schema.json";
-        FileUtils.copyURLToFile(new URL(schemaJson), new File(localSchemaPath));
-        typeToSchemaPathMap.put(type,localSchemaPath);
     }
 
 
