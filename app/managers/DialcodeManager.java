@@ -66,7 +66,8 @@ public class DialcodeManager extends BaseManager {
     private String connectionInfo = "localhost:9300";
     private SearchProcessor processor = null;
 
-    private String schemaBasePath = AppConfig.getString("schema.basePath","");
+    private String jsonldBasePath = AppConfig.getString("jsonld.basePath","");
+    private String jsonldType = AppConfig.getString("jsonld.type","");
 
     public SearchProcessor getProcessor() {
         return processor;
@@ -171,18 +172,18 @@ public class DialcodeManager extends BaseManager {
             Map<String, Object> contextInfoMap = dialCode.getMetadata();
             contextInfoList.add(contextInfoMap);
             dialCodeMap.put(DialCodeEnum.contextInfo.name(), contextInfoList);
-            String dialContextJson = schemaBasePath + File.separator + DialCodeEnum.dialcode.name() + File.separator + "context.json";
+            String dialContextJson = jsonldBasePath + File.separator + jsonldType + File.separator + "context.json";
             dialCodeMap.put("@context", dialContextJson);
             dialCodeMap.put("@id", AppConfig.getString("dial_id", "").replaceAll("\\{dialcode\\}", dialCodeId));
             dialCodeMap.put("@type", AppConfig.getString("dial_type", "") + "DIAL");
         } else dialCodeMap.put(DialCodeEnum.contextInfo.name(), null);
         dialCodeMap.put("identifier", dialCode.getIdentifier());
         dialCodeMap.put("channel", dialCode.getChannel());
-        dialCodeMap.put("publisher", dialCode.getPublisher());
-        dialCodeMap.put("batchCode", dialCode.getBatchCode());
+        if(dialCode.getPublisher() != null) dialCodeMap.put("publisher", dialCode.getPublisher());
+        if(dialCode.getBatchCode() != null) dialCodeMap.put("batchCode", dialCode.getBatchCode());
         dialCodeMap.put("status", dialCode.getStatus());
-        dialCodeMap.put("generatedOn", dialCode.getGeneratedOn());
-        dialCodeMap.put("publishedOn", dialCode.getPublishedOn());
+        if(dialCode.getGeneratedOn() != null) dialCodeMap.put("generatedOn", dialCode.getGeneratedOn());
+        if(dialCode.getPublishedOn() != null) dialCodeMap.put("publishedOn", dialCode.getPublishedOn());
         return dialCodeMap;
     }
 
@@ -233,7 +234,7 @@ public class DialcodeManager extends BaseManager {
         if (dialCode.getStatus().equalsIgnoreCase(DialCodeEnum.Live.name()))
             return ERROR(DialCodeErrorCodes.ERR_DIALCODE_UPDATE, DialCodeErrorMessage.ERR_DIALCODE_UPDATE,
                     ResponseCode.CLIENT_ERROR);
-        if(!AppConfig.config.hasPath("schema.basePath"))
+        if(!AppConfig.config.hasPath("jsonld.basePath"))
             return ERROR(DialCodeErrorCodes.ERR_SCHEMA_BASEPATH_CONFIG_MISSING, DialCodeErrorMessage.ERR_SCHEMA_BASEPATH_CONFIG_MISSING,
                     ResponseCode.CLIENT_ERROR);
 
@@ -242,8 +243,8 @@ public class DialcodeManager extends BaseManager {
             return ERROR(DialCodeErrorCodes.ERR_CONTEXT_INFO_MANDATORY, DialCodeErrorMessage.ERR_CONTEXT_INFO_MANDATORY,
                     ResponseCode.CLIENT_ERROR);
 
-        // validation of the input contextInfo with the DIAL code contextSchema.json
-        Response validationResp = validateInputWithSchema(metaData);
+        // validation of the input contextInfo with the DIAL code contextValidation.json
+        Response validationResp = validateInput(metaData);
 
         if(validationResp != null) return validationResp;
 
@@ -257,20 +258,20 @@ public class DialcodeManager extends BaseManager {
         return resp;
     }
 
-    private Response validateInputWithSchema(String metaData) throws Exception {
+    private Response validateInput(String metaData) throws Exception {
 
-        String schemaJson = schemaBasePath+File.separator+"dialcode"+File.separator+"contextSchema.json";
+        String schemaJson = jsonldBasePath+File.separator+jsonldType+File.separator+"contextValidation.json";
         if(!verifySchemaAndContextPaths(schemaJson)) {
             return null;
         }
 
-        String contextJson = schemaBasePath+File.separator+"dialcode"+File.separator+"context.json";
+        String contextJson = jsonldBasePath+File.separator+jsonldType+File.separator+"context.json";
         if(!verifySchemaAndContextPaths(contextJson)) {
             return ERROR(DialCodeErrorCodes.ERR_TYPE_CONTEXT_MISSING, DialCodeErrorMessage.ERR_TYPE_CONTEXT_MISSING,
                     ResponseCode.CLIENT_ERROR);
         }
 
-        String contextSchemaPath = schemaCache.getSchemaPath("dialcode");
+        String contextSchemaPath = schemaCache.getSchemaPath(jsonldType);
         JsonSchema schema = readSchema(Paths.get(contextSchemaPath));
         String dataWithDefaults = withDefaultValues(metaData, schema);
         Map<String, Object> validationDataWithDefaults = cleanEmptyKeys(JsonUtils.deserialize(dataWithDefaults, Map.class));
@@ -336,15 +337,6 @@ public class DialcodeManager extends BaseManager {
             return ERROR(DialCodeErrorCodes.ERR_INVALID_SEARCH_REQUEST, DialCodeErrorMessage.ERR_INVALID_SEARCH_REQUEST,
                     ResponseCode.CLIENT_ERROR);
         return searchDialCode(requestContext, map);
-    }
-
-
-    private void downloadSchemaFile(String schemaJson, String type) throws IOException {
-        File theDir = new File(AppConfig.config.getString("schema.localPath"));
-        if (!theDir.exists()) theDir.mkdirs();
-        String localSchemaPath = theDir.getAbsolutePath()+File.separator+type+File.separator+"schema.json";
-        FileUtils.copyURLToFile(new URL(schemaJson), new File(localSchemaPath));
-        typeToSchemaPathMap.put(type,localSchemaPath);
     }
 
 

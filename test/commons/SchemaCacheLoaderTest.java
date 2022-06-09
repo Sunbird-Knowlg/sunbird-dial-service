@@ -7,6 +7,6 @@ public class SchemaCacheLoaderTest {
     @Test
     public void getSchemaCachePath() throws Exception {
         SchemaCacheLoader cacheLoader = SchemaCacheLoader.getInstance();
-        Assert.assertNotNull(cacheLoader.getSchemaPath("dialcode"));
+        Assert.assertNotNull(cacheLoader.getSchemaPath("sb"));
     }
 }
