@@ -1,0 +1,269 @@
+{
+    "@context": {
+        "brick": "https://brickschema.org/schema/Brick#",
+        "csvw": "http://www.w3.org/ns/csvw#",
+        "dc": "http://purl.org/dc/elements/1.1/",
+        "dcam": "http://purl.org/dc/dcam/",
+        "dcat": "http://www.w3.org/ns/dcat#",
+        "dcmitype": "http://purl.org/dc/dcmitype/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "doap": "http://usefulinc.com/ns/doap#",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "odrl": "http://www.w3.org/ns/odrl/2/",
+        "org": "http://www.w3.org/ns/org#",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "prof": "http://www.w3.org/ns/dx/prof/",
+        "prov": "http://www.w3.org/ns/prov#",
+        "qb": "http://purl.org/linked-data/cube#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "https://schema.org/",
+        "sh": "http://www.w3.org/ns/shacl#",
+        "skos": "http://www.w3.org/2004/02/skos/core#",
+        "sosa": "http://www.w3.org/ns/sosa/",
+        "ssn": "http://www.w3.org/ns/ssn/",
+        "time": "http://www.w3.org/2006/time#",
+        "vann": "http://purl.org/vocab/vann/",
+        "voaf": "http://purl.org/vocommons/voaf#",
+        "void": "http://rdfs.org/ns/void#",
+        "sb": "https://sunbird.org/dial#",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "sb:",
+            "@type": [
+                "voaf:Vocabulary",
+                "owl:Ontology"
+            ],
+            "schema:license": "data:text/html;charset=UTF-8,<p>GS1&reg;, under its IP Policy, seeks to avoid uncertainty regarding intellectual property claims by requiring the participants in the Work Groups that developed this vocabulary to agree to grant to GS1 members a royalty-free licence or a RAND licence to Necessary Claims, as that term is defined in the GS1 IP Policy. Furthermore, attention is drawn to the possibility that an implementation of one or more features of this vocabulary may be the subject of a patent or other intellectual property     right that does not involve a Necessary Claim. Any such patent or other intellectual property right is not subject to the licencing obligations of GS1. Moreover, the agreement to grant licences provided under the GS1 IP Policy does not include IP rights and any claims of third parties who were not participants in the Work Groups. Accordingly, GS1 recommends that any organisation developing an implementation designed to be in conformance with this vocabulary should determine whether there are any     patents that may encompass a specific implementation that the organisation is developing in compliance with the vocabulary and whether a licence under a patent or other intellectual property right is needed. Such a determination of a need for licencing should be made in view of the details of the specific system designed by the organisation in consultation with their own patent counsel. THIS DOCUMENT IS PROVIDED &quot;AS IS&quot; WITH NO WARRANTIES WHATSOEVER, INCLUDING ANY WARRANTY OF MERCHANTABILITY, NONINFRINGMENT, FITNESS FOR PARTICULAR PURPOSE, OR ANY WARRANTY OTHER WISE ARISING OUT OF THIS SPECIFICATION. GS1 disclaims all liability for any damages arising from use or misuse of this vocabulary, whether special, indirect, consequential, or compensatory damages, and including liability for infringement of any intellectual property     rights, relating to use of information in or reliance upon this document. GS1 retains the right to make changes to this vocabulary at any time, without notice. GS1 makes no warranty for the use of this vocabulary and assumes no responsibility for any errors which may appear in the vocabulary, nor does it make a commitment to update the     information contained herein. GS1 and the GS1 logo are registered trademarks of GS1 AISBL.</p><p>Copyright 2015-2019 GS1 AISBL</p><p>Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not use this file except in compliance with the License. You may obtain a copy of the License at <a href=&quot;http://www.apache.org/licenses/LICENSE-2.0&quot; target=&quot;blank&quot;>http://www.apache.org/licenses/LICENSE-2.0</a>.<p><p>Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</p>",
+            "dc:contributors": "Vinu, Rayulu",
+            "dc:creator": {
+                "@id": "https://sunbird.org/DIAL"
+            },
+            "dc:description:": {
+                "@language": "en",
+                "@value": "The Sunbird RDF vocabulary, described using W3C RDF Schema and the Web Ontology Language. The vocabulary builds on and refers to schema.org where appropriate."
+            },
+            "dc:identifier:": "Sunbird Vocabulary",
+            "dc11:title": "Sunbird Vocabulary",
+            "dc:issued:": {
+                "@type": "xsd:date",
+                "@value": "2022-05-15"
+            },
+            "dc:lastModified": {
+                "@type": "xsd:date",
+                "@value": "2022-05-18"
+            },
+            "owl:versionInfo": "1.0",
+            "voaf:extends": {
+                "@id": "schema:"
+            },
+            "voaf:hasEquivalencesWith": {
+                "@id": "schema:"
+            },
+            "voaf:specializes": {
+                "@id": "schema:"
+            }
+        },
+        {
+            "@id": "sb:DIALcode",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "The DIAL code for phygital discovery.",
+            "rdfs:label": "DIALcode",
+            "rdfs:subClassOf": {
+                "@id": "schema:Barcode"
+            }
+        },
+        {
+            "@id": "sb:DIALcontext",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "The context information to which DIAL code has linked. ex: Content, Book, Course, Quiz etc",
+            "rdfs:label": "DIALcontext",
+            "rdfs:subClassOf": {
+                "@id": "schema:CreativeWork"
+            }
+        },
+        {
+            "@id": "sb:AdditionalInfo",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "The additional information about the context item/entity like framework.",
+            "rdfs:label": "AdditionalInfo",
+            "rdfs:subClassOf": {
+                "@id": "schema:CreativeWork"
+            }
+        },
+        {
+            "@id": "sb:context",
+            "@type": "rdf:Property",
+            "rdfs:comment": "The item/entity is part of some other item/Entity. Ex: Lesson/Chapter parentInfo some Textbook or Course",
+            "rdfs:label": "context",
+            "rdfs:subPropertyOf": {
+                "@id": "schema:about"
+            },
+            "rdfs:domain": [
+                {
+                    "@id": "sb:DIALcode"
+                }
+            ],
+            "rdfs:range": {
+                "@id": "sb:DIALcontext"
+            }
+        },
+        {
+            "@id": "sb:parentInfo",
+            "@type": "rdf:Property",
+            "rdfs:comment": "The item/entity is part of some other item/Entity. Ex: Lesson/Chapter parent information of some Textbook or Course",
+            "rdfs:label": "parentInfo",
+            "rdfs:subPropertyOf": {
+                "@id": "schema:hasPart"
+            },
+            "rdfs:domain": [
+                {
+                    "@id": "sb:DIALcontext"
+                },
+                {
+                    "@id": "sb:Collection"
+                }
+            ],
+            "rdfs:range": {
+                "@id": "sb:DIALcontext"
+            }
+        },
+        {
+            "@id": "sb:childInfo",
+            "@type": "rdf:Property",
+            "rdfs:comment": "The item/entity has part of some other item/Entity. Inverse of `IsPartOf`. Ex: Textbook or Course child information of Lesson/Chapter whitn it",
+            "rdfs:label": "childInfo",
+            "rdfs:subPropertyOf": {
+                "@id": "schema:isPartOf"
+            },
+            "rdfs:domain": [
+                {
+                    "@id": "sb:DIALcontext"
+                },
+                {
+                    "@id": "sb:Content"
+                }
+            ],
+            "rdfs:range": {
+                "@id": "sb:DIALcontext"
+            }
+        },
+        {
+            "@id": "sb:Content",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "The content/asset of sunbird platform.",
+            "rdfs:label": "Content",
+            "rdfs:subClassOf": {
+                "@id": "sb:DIALcontext"
+            }
+        },
+        {
+            "@id": "sb:Collection",
+            "@type": "rdfs:Class",
+            "rdfs:comment": "The content/asset of sunbird platform.",
+            "rdfs:label": "Collection",
+            "rdfs:subClassOf": {
+                "@id": "sb:Content"
+            }
+        },
+        {
+            "@id": "sb:attachedTo",
+            "@type": "rdf:Property",
+            "rdfs:comment": "The item/entity is linked/attached to some other item/Entity. Ex: Textbook or Course is attached to some other entity/item of type educational framework(CBSE, ICSE etc)",
+            "rdfs:label": "attachedTo",
+            "rdfs:subPropertyOf": {
+                "@id": "schema:mainEntity"
+            },
+            "rdfs:domain": [
+                {
+                    "@id": "sb:DIALcontext"
+                }
+            ],
+            "rdfs:range": [
+                {
+                    "@id": "sb:AdditionalInfo"
+                },
+                {
+                    "@id": "schema:ListItem"
+                }
+            ]
+        },
+        {
+            "@id": "sb:identifier",
+            "@type": "rdf:Property",
+            "rdfs:comment": "Unique ID to represent an Item/Entity.",
+            "rdfs:label": "identifier",
+            "rdfs:subPropertyOf": {
+                "@id": "schema:identifier"
+            },
+            "rdfs:domain": [
+                {
+                    "@id": "sb:DIALcode"
+                },
+                {
+                    "@id": "sb:DIALcontext"
+                },
+                {
+                    "@id": "sb:AdditionalInfo"
+                }
+            ],
+            "rdfs:range": {
+                "@id": "schema:Text"
+            }
+        },
+        {
+            "@id": "sb:status",
+            "@type": "rdf:Property",
+            "rdfs:comment": "The publisher batch code to indentify the dial print batch.",
+            "rdfs:label": "status",
+            "rdfs:domain": [
+                {
+                    "@id": "sb:DIALcode"
+                },
+                {
+                    "@id": "sb:DIALcontext"
+                },
+                {
+                    "@id": "sb:AdditionalInfo"
+                }
+            ],
+            "rdfs:range": {
+                "@id": "schema:Text"
+            }
+        },
+        {
+            "@id": "sb:name",
+            "@type": "rdf:Property",
+            "rdfs:comment": "Name of the item/entity.",
+            "rdfs:label": "name",
+            "rdfs:domain": [
+                {
+                    "@id": "sb:DIALcode"
+                },
+                {
+                    "@id": "sb:DIALcontext"
+                },
+                {
+                    "@id": "sb:AdditionalInfo"
+                }
+            ],
+            "rdfs:range": {
+                "@id": "schema:Text"
+            }
+        },
+        {
+            "@id": "sb:batchCode",
+            "@type": "rdf:Property",
+            "rdfs:comment": "The publisher batch code to indentify the dial print batch.",
+            "rdfs:label": "batchCode",
+            "rdfs:domain": {
+                "@id": "sb:DIALcode"
+            },
+            "rdfs:range": {
+                "@id": "schema:Text"
+            }
+        }
+    ]
+}
