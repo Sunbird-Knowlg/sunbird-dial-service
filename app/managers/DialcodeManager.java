@@ -239,14 +239,15 @@ public class DialcodeManager extends BaseManager {
                     ResponseCode.CLIENT_ERROR);
 
         String metaData = new Gson().toJson(map.get(DialCodeEnum.contextInfo.name()));
-        if(metaData == null || metaData.trim().isEmpty() || metaData.equalsIgnoreCase("null"))
-            return ERROR(DialCodeErrorCodes.ERR_CONTEXT_INFO_MANDATORY, DialCodeErrorMessage.ERR_CONTEXT_INFO_MANDATORY,
-                    ResponseCode.CLIENT_ERROR);
+        if(metaData == null || metaData.trim().isEmpty() || metaData.equalsIgnoreCase("null")) metaData = null;
+//            return ERROR(DialCodeErrorCodes.ERR_CONTEXT_INFO_MANDATORY, DialCodeErrorMessage.ERR_CONTEXT_INFO_MANDATORY,
+//                    ResponseCode.CLIENT_ERROR);
 
-        // validation of the input contextInfo with the DIAL code contextValidation.json
-        Response validationResp = validateInput(metaData);
-
-        if(validationResp != null) return validationResp;
+        if(metaData != null) {
+            // validation of the input contextInfo with the DIAL code contextValidation.json
+            Response validationResp = validateInput(metaData);
+            if (validationResp != null) return validationResp;
+        }
 
         Map<String, Object> data = new HashMap<String, Object>();
         data.put(DialCodeEnum.metadata.name(), metaData);
