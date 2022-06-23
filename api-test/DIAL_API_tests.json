@@ -22,7 +22,7 @@
 							"    const responseJson = pm.response.json();",
 							"    const dialcodes = responseJson.result.dialcodes;",
 							"    pm.globals.set(\"dial_count\", dialcodes.count);",
-							"    console.log(pm.globals.get(\"dial_count\"));",
+							"    console.log(\"Total dial counts: \" + pm.globals.get(\"dial_count\"));",
 							"    // pm.expect(dialcodes.count).to.be.eq(pm.globals.get(\"dial_count\"));",
 							"});"
 						],
