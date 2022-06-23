@@ -733,16 +733,11 @@
 							}
 						},
 						"url": {
-							"raw": "https://dev.sunbirded.org/api//api/dialcode/v1/read",
-							"protocol": "https",
+							"raw": "{{host}}/api/dialcode/v1/read",
 							"host": [
-								"dev",
-								"sunbirded",
-								"org"
+								"{{host}}"
 							],
 							"path": [
-								"api",
-								"",
 								"api",
 								"dialcode",
 								"v1",
@@ -1534,8 +1529,8 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
-					"// pm.globals.set(\"host\", \"https://dev.sunbirded.org\");",
-					"// pm.globals.set(\"auth\", \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIyZThlNmU5MjA4YjI0MjJmOWFlM2EzNjdiODVmNWQzNiJ9.gvpNN7zEl28ZVaxXWgFmCL6n65UJfXZikUWOKSE8vJ8\");",
+					"pm.globals.set(\"host\", \"https://dev.sunbirded.org\");",
+					"pm.globals.set(\"auth\", \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIyZThlNmU5MjA4YjI0MjJmOWFlM2EzNjdiODVmNWQzNiJ9.gvpNN7zEl28ZVaxXWgFmCL6n65UJfXZikUWOKSE8vJ8\");",
 					"pm.globals.set(\"X_Channel_ID\", \"0125805318613565447\");"
 				]
 			}
