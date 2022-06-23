@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "bdc4ef41-70e3-4b00-aba4-f81420aa1f12",
 		"name": "DIAL",
-		"description": "**DIAL** refers to *Digital Infrastructure for Augmented learning*. DIAL powers the discovery of digital resources using physical  \nartefacts like QR codes, can be extended to other physical artefacts.  \nDIAL code does the loose binding of digital assets with physical  \nartefacts.\n\n## DIAL code usage workflow\n\n*   **Reserve**: Reserve the DIAL codes by requesting/blocking specific number.\n*   **Link**: Link the DIAL code to any digital or physical asset.\n*   **Update:** Update the DIAL code with context, publisher etc.\n*   **Generate:** Generate the QR codes for the linked DIAL codes.\n*   **Scan:** Scan the physical/digital QR code to discover the specific assets linked to it.\n    \n\n## Schema\n\n| **Property** | **Description** |\n| --- | --- |\n| Identifier | Unique DIAL code generated |\n| publisher | Publisher of the DIAL code who is going to print this DIAL code on physical/digital |\n| batchCode | The DIAL codes are generated against the batch to identify on what process it was generated |\n| status | Status of the DIAL code.  <br>ex: Draft, Live |\n| generatedOn | Time when the DIAL code is generated in the system |\n| publishedOn | Time when the DIAL code status is changed to \"Live\". |",
+		"description": "**DIAL** refers to *Digital Infrastructure for Augmented learning*. DIAL powers the discovery of digital resources using physical  \nartefacts like QR codes, can be extended to other physical artefacts.  \nDIAL code does the loose binding of digital assets with physical  \nartefacts.  \n  \nNote: Give the reference link to DIAL API tests here.\n\n## DIAL code usage workflow\n\n*   **Reserve**: Reserve the DIAL codes by requesting/blocking specific number.\n*   **Link**: Link the DIAL code to any digital or physical asset.\n*   **Update:** Update the DIAL code with context, publisher etc.\n*   **Generate:** Generate the QR codes for the linked DIAL codes.\n*   **Scan:** Scan the physical/digital QR code to discover the specific assets linked to it.\n    \n\n## Schema\n\n| **Property** | **Description** |\n| --- | --- |\n| Identifier | Unique DIAL code generated |\n| publisher | Publisher of the DIAL code who is going to print this DIAL code on physical/digital |\n| batchCode | The DIAL codes are generated against the batch to identify on what process it was generated |\n| status | Status of the DIAL code.  <br>ex: Draft, Live |\n| generatedOn | Time when the DIAL code is generated in the system |\n| publishedOn | Time when the DIAL code status is changed to \"Live\". |",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
 	"item": [
@@ -30,7 +30,7 @@
 					}
 				}
 			],
-			"_postman_id": "5bd60085-36f4-44c4-a8fe-c9e5242ef2e3",
+			"id": "5bd60085-36f4-44c4-a8fe-c9e5242ef2e3",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -55,10 +55,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"request\": {\n        \"search\": {\n        \t\"status\":[\"Draft\"],\n        \t\"offset\": 0,\n            \"limit\": 10\n        }\n    }\n}",
-					"options": {
-						"raw": {}
-					}
+					"raw": "{\n    \"request\": {\n        \"search\": {\n        \t\"status\":[\"Draft\"],\n        \t\"offset\": 0,\n            \"limit\": 10\n        }\n    }\n}"
 				},
 				"url": "{{host}}/api/dialcode/v1/list"
 			},
@@ -87,10 +84,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"request\": {\n        \"search\": {\n        \t\"status\":[\"Draft\"],\n        \t\"offset\": 0\n        }\n    }\n}",
-							"options": {
-								"raw": {}
-							}
+							"raw": "{\n    \"request\": {\n        \"search\": {\n        \t\"status\":[\"Draft\"],\n        \t\"offset\": 0\n        }\n    }\n}"
 						},
 						"url": "{{host}}/api/dialcode/v1/list"
 					},
@@ -219,7 +213,7 @@
 					}
 				}
 			],
-			"_postman_id": "fbaa0207-fd84-4619-a1b6-5e36a2880ce0",
+			"id": "fbaa0207-fd84-4619-a1b6-5e36a2880ce0",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -620,7 +614,7 @@
 					}
 				}
 			],
-			"_postman_id": "8cc224bf-aa74-47aa-ad04-c463396236fb",
+			"id": "8cc224bf-aa74-47aa-ad04-c463396236fb",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -877,6 +871,112 @@
 					"body": "{\n    \"id\": \"api.dialcode.read\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2022-04-06T17:43:49.974Z\",\n    \"params\": {\n        \"resmsgid\": \"1e1e5760-b5d1-11ec-a8b6-8b6d917b3a2a\",\n        \"msgid\": null,\n        \"status\": \"failed\",\n        \"err\": \"ERR_REQUEST_FIELDS_CHANNEL_ID_MISSING\",\n        \"errmsg\": \"Required field channel id is missing\"\n    },\n    \"responseCode\": \"CLIENT_ERROR\",\n    \"result\": {}\n}"
 				},
 				{
+					"id": "c4074368-f402-42c4-a6a1-b8c07914de4e",
+					"name": "400 - Required field missing: dialcode",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Channel-Id",
+								"value": "{{x_channel_id}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"request\": {\n        \"dialcode\": {\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{host}}/api/dialcode/v1/read"
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Wed, 06 Apr 2022 17:45:48 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "300"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "X-RateLimit-Limit-hour",
+							"value": "30000"
+						},
+						{
+							"key": "X-RateLimit-Remaining-hour",
+							"value": "29995"
+						},
+						{
+							"key": "x-powered-by",
+							"value": "Express"
+						},
+						{
+							"key": "vary",
+							"value": "X-HTTP-Method-Override, Accept-Encoding"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+						},
+						{
+							"key": "access-control-allow-headers",
+							"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+						},
+						{
+							"key": "etag",
+							"value": "W/\"12c-3q66Da3Vkw5kMHuoOvHpD/ZgcT8\""
+						},
+						{
+							"key": "x-envoy-upstream-service-time",
+							"value": "3"
+						},
+						{
+							"key": "X-Kong-Upstream-Latency",
+							"value": "6"
+						},
+						{
+							"key": "X-Kong-Proxy-Latency",
+							"value": "11"
+						},
+						{
+							"key": "Via",
+							"value": "kong/0.14.1"
+						}
+					],
+					"cookie": [],
+					"responseTime": null,
+					"body": "{\n    \"id\": \"api.dialcode.read\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2022-04-06T17:45:48.463Z\",\n    \"params\": {\n        \"resmsgid\": \"64be53f0-b5d1-11ec-a8b6-8b6d917b3a2a\",\n        \"msgid\": null,\n        \"status\": \"failed\",\n        \"err\": \"ERR_DIALCODE_GET_FIELDS_MISSING\",\n        \"errmsg\": \"Required fields for get dialcode are missing\"\n    },\n    \"responseCode\": \"CLIENT_ERROR\",\n    \"result\": {}\n}"
+				},
+				{
 					"id": "3d101414-a265-4860-a31a-21ae0baa59a8",
 					"name": "404 - DIAL code not found",
 					"originalRequest": {
@@ -989,112 +1089,6 @@
 					"cookie": [],
 					"responseTime": null,
 					"body": "{\n    \"id\": \"api.dialcode.read\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2022-04-06T17:44:54.403Z\",\n    \"params\": {\n        \"resmsgid\": \"44856d30-b5d1-11ec-a8b6-8b6d917b3a2a\",\n        \"msgid\": null,\n        \"status\": \"failed\",\n        \"err\": \"ERR_DIALCODE_INFO\",\n        \"errmsg\": \"Dial Code Not Found With Id: I9Z2W9\"\n    },\n    \"responseCode\": \"RESOURCE_NOT_FOUND\",\n    \"result\": {}\n}"
-				},
-				{
-					"id": "c4074368-f402-42c4-a6a1-b8c07914de4e",
-					"name": "400 - Required field missing: dialcode",
-					"originalRequest": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "X-Channel-Id",
-								"value": "{{x_channel_id}}",
-								"type": "text"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth}}",
-								"type": "text"
-							},
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"request\": {\n        \"dialcode\": {\n        }\n    }\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{host}}/api/dialcode/v1/read"
-					},
-					"status": "Bad Request",
-					"code": 400,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "Date",
-							"value": "Wed, 06 Apr 2022 17:45:48 GMT"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "300"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "X-RateLimit-Limit-hour",
-							"value": "30000"
-						},
-						{
-							"key": "X-RateLimit-Remaining-hour",
-							"value": "29995"
-						},
-						{
-							"key": "x-powered-by",
-							"value": "Express"
-						},
-						{
-							"key": "vary",
-							"value": "X-HTTP-Method-Override, Accept-Encoding"
-						},
-						{
-							"key": "access-control-allow-origin",
-							"value": "*"
-						},
-						{
-							"key": "access-control-allow-methods",
-							"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
-						},
-						{
-							"key": "access-control-allow-headers",
-							"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
-						},
-						{
-							"key": "etag",
-							"value": "W/\"12c-3q66Da3Vkw5kMHuoOvHpD/ZgcT8\""
-						},
-						{
-							"key": "x-envoy-upstream-service-time",
-							"value": "3"
-						},
-						{
-							"key": "X-Kong-Upstream-Latency",
-							"value": "6"
-						},
-						{
-							"key": "X-Kong-Proxy-Latency",
-							"value": "11"
-						},
-						{
-							"key": "Via",
-							"value": "kong/0.14.1"
-						}
-					],
-					"cookie": [],
-					"responseTime": null,
-					"body": "{\n    \"id\": \"api.dialcode.read\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2022-04-06T17:45:48.463Z\",\n    \"params\": {\n        \"resmsgid\": \"64be53f0-b5d1-11ec-a8b6-8b6d917b3a2a\",\n        \"msgid\": null,\n        \"status\": \"failed\",\n        \"err\": \"ERR_DIALCODE_GET_FIELDS_MISSING\",\n        \"errmsg\": \"Required fields for get dialcode are missing\"\n    },\n    \"responseCode\": \"CLIENT_ERROR\",\n    \"result\": {}\n}"
 				}
 			]
 		},
@@ -1140,7 +1134,7 @@
 					}
 				}
 			],
-			"_postman_id": "3b4b0546-7948-434e-8c6f-f0a4bef175d5",
+			"id": "3b4b0546-7948-434e-8c6f-f0a4bef175d5",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
