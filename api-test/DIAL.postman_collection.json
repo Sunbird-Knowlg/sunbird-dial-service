@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "bdc4ef41-70e3-4b00-aba4-f81420aa1f12",
 		"name": "DIAL",
-		"description": "**DIAL** refers to *Digital Infrastructure for Augmented learning*. DIAL powers the discovery of digital resources using physical  \nartefacts like QR codes, can be extended to other physical artefacts.  \nDIAL code does the loose binding of digital assets with physical  \nartefacts.\n\n## DIAL code usage workflow\n\n*   **Reserve**: Reserve the DIAL codes by requesting/blocking specific number.\n*   **Link**: Link the DIAL code to any digital or physical asset.\n*   **Update:** Update the DIAL code with context, publisher etc.\n*   **Generate:** Generate the QR codes for the linked DIAL codes.\n*   **Scan:** Scan the physical/digital QR code to discover the specific assets linked to it.\n    \n\n## Schema\n\n| **Property** | **Description** |\n| --- | --- |\n| Identifier | Unique DIAL code generated |\n| publisher | Publisher of the DIAL code who is going to print this DIAL code on physical/digital |\n| batchCode | The DIAL codes are generated against the batch to identify on what process it was generated |\n| status | Status of the DIAL code.  <br>ex: Draft, Live |\n| generatedOn | Time when the DIAL code is generated in the system |\n| publishedOn | Time when the DIAL code status is changed to \"Live\". |",
+		"description": "**DIAL** refers to *Digital Infrastructure for Augmented learning*. DIAL powers the discovery of digital resources using physical  \nartefacts like QR codes, can be extended to other physical artefacts.  \nDIAL code does the loose binding of digital assets with physical  \nartefacts.\n\nNote: Give the reference link to DIAL API tests here. Before we update this, we have to publish the DIAL API tests documentation.\n\n## DIAL code usage workflow\n\n*   **Reserve**: Reserve the DIAL codes by requesting/blocking specific number.\n*   **Link**: Link the DIAL code to any digital or physical asset.\n*   **Update:** Update the DIAL code with context, publisher etc.\n*   **Generate:** Generate the QR codes for the linked DIAL codes.\n*   **Scan:** Scan the physical/digital QR code to discover the specific assets linked to it.\n    \n\n## Schema\n\n| **Property** | **Description** |\n| --- | --- |\n| Identifier | Unique DIAL code generated |\n| publisher | Publisher of the DIAL code who is going to print this DIAL code on physical/digital |\n| batchCode | The DIAL codes are generated against the batch to identify on what process it was generated |\n| status | Status of the DIAL code.  <br>ex: Draft, Live |\n| generatedOn | Time when the DIAL code is generated in the system |\n| publishedOn | Time when the DIAL code status is changed to \"Live\". |\n\n### DIAL API tests\n\n[https://documenter.getpostman.com/view/4214340/UzBvGNaX](https://documenter.getpostman.com/view/4214340/UzBvGNaX)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "4214340"
 	},
@@ -22,7 +22,7 @@
 							"    const responseJson = pm.response.json();",
 							"    const dialcodes = responseJson.result.dialcodes;",
 							"    pm.globals.set(\"dial_count\", dialcodes.count);",
-							"    console.log(pm.globals.get(\"dial_count\"));",
+							"    console.log(\"Total dial counts: \" + pm.globals.get(\"dial_count\"));",
 							"    // pm.expect(dialcodes.count).to.be.eq(pm.globals.get(\"dial_count\"));",
 							"});"
 						],
@@ -79,7 +79,7 @@
 							},
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIyZThlNmU5MjA4YjI0MjJmOWFlM2EzNjdiODVmNWQzNiJ9.gvpNN7zEl28ZVaxXWgFmCL6n65UJfXZikUWOKSE8vJ8",
+								"value": "Bearer {{auth}}",
 								"type": "text"
 							},
 							{
@@ -93,16 +93,11 @@
 							"raw": "{\n    \"request\": {\n        \"search\": {\n        \t\"status\":[\"Draft\"],\n        \t\"offset\": 0\n        }\n    }\n}"
 						},
 						"url": {
-							"raw": "https://dev.sunbirded.org/api//api/dialcode/v1/list",
-							"protocol": "https",
+							"raw": "{{host}}/api/dialcode/v1/list",
 							"host": [
-								"dev",
-								"sunbirded",
-								"org"
+								"{{host}}"
 							],
 							"path": [
-								"api",
-								"",
 								"api",
 								"dialcode",
 								"v1",
@@ -298,7 +293,7 @@
 							},
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIyZThlNmU5MjA4YjI0MjJmOWFlM2EzNjdiODVmNWQzNiJ9.gvpNN7zEl28ZVaxXWgFmCL6n65UJfXZikUWOKSE8vJ8"
+								"value": "Bearer {{auth}}"
 							}
 						],
 						"body": {
@@ -311,16 +306,11 @@
 							}
 						},
 						"url": {
-							"raw": "https://dev.sunbirded.org/api//api/dialcode/v1/generate",
-							"protocol": "https",
+							"raw": "{{host}}/api/dialcode/v1/generate",
 							"host": [
-								"dev",
-								"sunbirded",
-								"org"
+								"{{host}}"
 							],
 							"path": [
-								"api",
-								"",
 								"api",
 								"dialcode",
 								"v1",
@@ -733,16 +723,11 @@
 							}
 						},
 						"url": {
-							"raw": "https://dev.sunbirded.org/api//api/dialcode/v1/read",
-							"protocol": "https",
+							"raw": "{{host}}/api/dialcode/v1/read",
 							"host": [
-								"dev",
-								"sunbirded",
-								"org"
+								"{{host}}"
 							],
 							"path": [
-								"api",
-								"",
 								"api",
 								"dialcode",
 								"v1",
@@ -1286,7 +1271,7 @@
 							},
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIyZThlNmU5MjA4YjI0MjJmOWFlM2EzNjdiODVmNWQzNiJ9.gvpNN7zEl28ZVaxXWgFmCL6n65UJfXZikUWOKSE8vJ8",
+								"value": "Bearer {{auth}}",
 								"type": "text"
 							},
 							{
@@ -1305,16 +1290,11 @@
 							}
 						},
 						"url": {
-							"raw": "https://dev.sunbirded.org/api//api/dialcode/v1/search",
-							"protocol": "https",
+							"raw": "{{host}}/api/dialcode/v1/search",
 							"host": [
-								"dev",
-								"sunbirded",
-								"org"
+								"{{host}}"
 							],
 							"path": [
-								"api",
-								"",
 								"api",
 								"dialcode",
 								"v1",
@@ -1526,6 +1506,66 @@
 					"body": "{\n    \"id\": \"api.dialcode.search\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2022-04-07T06:11:38.070Z\",\n    \"params\": {\n        \"resmsgid\": \"95967760-b639-11ec-a8b6-8b6d917b3a2a\",\n        \"msgid\": \"95936a20-b639-11ec-9b27-9d4d54fedc3d\",\n        \"status\": \"successful\",\n        \"err\": null,\n        \"errmsg\": null\n    },\n    \"responseCode\": \"OK\",\n    \"result\": {\n        \"dialcodes\": [],\n        \"count\": 0\n    }\n}"
 				}
 			]
+		},
+		{
+			"name": "Link DIAL code",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Channel-ID",
+						"value": "{{X_Channel_ID}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"request\": {\n    \"content\": {\n      \"identifier\": [\n        \"do_12345\"\n      ],\n      \"dialcode\": [\n        \"J5V8Z9\"\n      ]\n    }\n  }\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/dialcode/v1/content/link",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"dialcode",
+						"v1",
+						"content",
+						"link"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
@@ -1534,8 +1574,6 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
-					"// pm.globals.set(\"host\", \"https://dev.sunbirded.org\");",
-					"// pm.globals.set(\"auth\", \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIyZThlNmU5MjA4YjI0MjJmOWFlM2EzNjdiODVmNWQzNiJ9.gvpNN7zEl28ZVaxXWgFmCL6n65UJfXZikUWOKSE8vJ8\");",
 					"pm.globals.set(\"X_Channel_ID\", \"0125805318613565447\");"
 				]
 			}
