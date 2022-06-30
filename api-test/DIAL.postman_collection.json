@@ -18,12 +18,12 @@
 							"    pm.response.to.have.status(200);",
 							"});",
 							"",
+							"// Get intial DIAL code counts",
 							"pm.test(\"Get DIAL count\", function () {",
 							"    const responseJson = pm.response.json();",
 							"    const dialcodes = responseJson.result.dialcodes;",
 							"    pm.globals.set(\"dial_count\", dialcodes.count);",
 							"    console.log(\"Total dial counts: \" + pm.globals.get(\"dial_count\"));",
-							"    // pm.expect(dialcodes.count).to.be.eq(pm.globals.get(\"dial_count\"));",
 							"});"
 						],
 						"type": "text/javascript"
@@ -51,7 +51,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"request\": {\n        \"search\": {\n        \t\"status\":[\"Draft\"],\n        \t\"offset\": 0,\n            \"limit\": 10\n        }\n    }\n}"
+					"raw": "{\n    \"request\": {\n        \"search\": {\n        \t\"status\":[\"Draft\"],\n        \t\"offset\": 0,\n            \"limit\": 100\n        }\n    }\n}"
 				},
 				"url": {
 					"raw": "{{host}}/api/dialcode/v1/list",
@@ -195,6 +195,7 @@
 							"    pm.response.to.have.status(200);",
 							"});",
 							"",
+							"// Multiple scenarios handled at one place",
 							"pm.test(\"Response contains DIAL code\", function () {",
 							"    const responseJson = pm.response.json();",
 							"",
