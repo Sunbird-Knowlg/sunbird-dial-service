@@ -51,7 +51,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"request\": {\n        \"search\": {\n        \t\"status\":[\"Draft\"],\n        \t\"offset\": 0,\n            \"limit\": 100\n        }\n    }\n}"
+					"raw": "{\n    \"request\": {\n        \"search\": {\n        \t\"status\":[\"Draft\", \"Live\"],\n        \t\"offset\": 0,\n            \"limit\": 100\n        }\n    }\n}"
 				},
 				"url": {
 					"raw": "{{host}}/api/dialcode/v1/list",
