@@ -2,6 +2,7 @@ package managers;
 
 import akka.util.Timeout;
 import com.datastax.driver.core.Row;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import commons.*;
 import commons.dto.HeaderParam;
@@ -19,7 +20,6 @@ import jakarta.json.JsonReader;
 import jakarta.json.JsonReaderFactory;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.search.SearchResponse;
 import org.leadpony.justify.api.*;
@@ -272,7 +272,9 @@ public class DialcodeManager extends BaseManager {
                     ResponseCode.CLIENT_ERROR);
         }
 
-        String contextSchemaPath = schemaCache.getSchemaPath(jsonldType);
+        if(!jsonldType.equalsIgnoreCase("sb")) validateContextVocabulary(contextJson);
+
+        String contextSchemaPath = schemaCache.getSchemaPath("contextValidation.json");
         JsonSchema schema = readSchema(Paths.get(contextSchemaPath));
         String dataWithDefaults = withDefaultValues(metaData, schema);
         Map<String, Object> validationDataWithDefaults = cleanEmptyKeys(JsonUtils.deserialize(dataWithDefaults, Map.class));
@@ -739,5 +741,16 @@ public class DialcodeManager extends BaseManager {
         huc.connect() ;
         return huc.getResponseCode() == HttpURLConnection.HTTP_OK;
     }
+
+    public Response validateContextVocabulary(String contextFile) throws IOException {
+        HashMap contextFileMap = new ObjectMapper().readValue(new URL(contextFile), HashMap.class);
+        HashMap contextMap = (HashMap) contextFileMap.get("@context");
+        if(!contextMap.values().contains(AppConfig.getString("jsonld.sb_schema",""))) {
+            return ERROR(DialCodeErrorCodes.ERR_TYPE_SB_VOCAB_MISSING, DialCodeErrorMessage.ERR_TYPE_SB_VOCAB_MISSING,
+                    ResponseCode.CLIENT_ERROR);
+        };
+        return null;
+    }
+
 
 }

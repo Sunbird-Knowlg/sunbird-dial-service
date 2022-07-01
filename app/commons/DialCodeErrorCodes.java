@@ -31,4 +31,5 @@ public class DialCodeErrorCodes {
 	public static final String ERR_TYPE_SCHEMA_MISSING = "ERR_TYPE_SCHEMA_MISSING";
 	public static final String ERR_TYPE_CONTEXT_MISSING = "ERR_TYPE_CONTEXT_MISSING";
 	public static final String ERR_SCHEMA_BASEPATH_CONFIG_MISSING = "ERR_SCHEMA_BASEPATH_CONFIG_MISSING";
+	public static final String ERR_TYPE_SB_VOCAB_MISSING = "ERR_TYPE_SB_VOCAB_MISSING";
 }
