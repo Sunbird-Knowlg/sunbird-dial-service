@@ -18,9 +18,6 @@ public class DialCodeErrorMessage {
 	public static final String ERR_DIALCODE_UPDATE = "Dial Code with Live status can't be updated.";
 	public static final String ERR_INVALID_SEARCH_REQUEST = "Invalid Search Request";
 	public static final String ERR_DIALCODE_INFO = "Dial Code Not Found With Id: ";
-	public static final String ERR_INVALID_DIALCODE_LINK_REQUEST = "Invalid Request. Multiple Dial Codes Can Not be Linked With Multiple Contents";
-	public static final String ERR_DIALCODE_LINK_REQUEST = "Invalid Request.";
-	public static final String ERR_DIALCODE_LINK = "Internal Server Error.";
 	public static final String ERR_INVALID_SYNC_REQUEST = "Please specify the Dial Code IDs to be synced";
 	public static final String ERR_SCHEMA_VALIDATION_FAILED = "ContentInfo schema validation failed: ";
 	public static final String ERR_TYPE_CONTEXT_MISSING = "Please provide valid url of context type's context.json.";
