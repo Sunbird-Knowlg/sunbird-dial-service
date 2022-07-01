@@ -1,0 +1,30 @@
+{
+  "@context": {
+    "scheme": "http://schema.org",
+    "sb": "https://raw.githubusercontent.com/vinukumar-vs/json-ld/dial/schema/sb/schema.jsonld#",
+    "sbed": "https://raw.githubusercontent.com/vinukumar-vs/json-ld/dial/schema/sbed/schema.jsonld#",
+    "dialcode": {
+      "@id": "sb:DIALcode#DIAL",
+      "@type": "sb:DIALcode"
+    },
+    "context": {
+      "@id": "sb:DIALContext#TextbookUnit",
+      "@type": "sb:DIALContext"
+    },
+    "childInfo": {
+      "@id": "sb:isChildOf#TextbookUnit",
+      "@type": "sb:isChildOf"
+    },
+    "parentInfo": {
+      "@id": "sb:parentInfo#Textbook",
+      "@type": "sbed:parentInfo"
+    },
+    "framework": "sbed:framework",
+    "identifier": "sb:identifier",
+    "name": "schema:name",
+    "board": "sbed:board",
+    "medium": "sbed:medium",
+    "gradeLevel": "sbed:gradeLevel",
+    "subject": "sbed:subject"
+  }
+}
