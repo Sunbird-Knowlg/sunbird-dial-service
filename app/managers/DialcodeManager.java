@@ -745,10 +745,18 @@ public class DialcodeManager extends BaseManager {
     public Response validateContextVocabulary(String contextFile) throws IOException {
         HashMap contextFileMap = new ObjectMapper().readValue(new URL(contextFile), HashMap.class);
         HashMap contextMap = (HashMap) contextFileMap.get("@context");
-        if(!contextMap.values().contains(AppConfig.getString("jsonld.sb_schema",""))) {
-            return ERROR(DialCodeErrorCodes.ERR_TYPE_SB_VOCAB_MISSING, DialCodeErrorMessage.ERR_TYPE_SB_VOCAB_MISSING,
+
+        if(!AppConfig.config.hasPath("jsonld.sb_schema"))
+            return ERROR(DialCodeErrorCodes.ERR_TYPE_SB_VOCAB_CONFIG_MISSING, DialCodeErrorMessage.ERR_TYPE_SB_VOCAB_CONFIG_MISSING,
                     ResponseCode.CLIENT_ERROR);
-        };
+
+        List<String> vocabList = AppConfig.config.getStringList("jsonld.sb_schema");
+        for (String vocabulary : vocabList) {
+            if (!contextMap.values().contains(vocabulary)) {
+                return ERROR(DialCodeErrorCodes.ERR_TYPE_SB_VOCAB_MISSING, DialCodeErrorMessage.ERR_TYPE_SB_VOCAB_MISSING,
+                        ResponseCode.CLIENT_ERROR);
+            }
+        }
         return null;
     }
 
