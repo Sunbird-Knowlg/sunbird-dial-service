@@ -1,8 +1,8 @@
 {
   "@context": {
     "scheme": "http://schema.org",
-    "sb": "https://raw.githubusercontent.com/vinukumar-vs/json-ld/dial/schema/sb/schema.jsonld#",
-    "sbed": "https://raw.githubusercontent.com/vinukumar-vs/json-ld/dial/schema/sbed/schema.jsonld#",
+    "sb": "https://raw.githubusercontent.com/json-ld/dial/schema/sb/schema.jsonld#",
+    "sbed": "https://raw.githubusercontent.com/json-ld/dial/schema/sbed/schema.jsonld#",
     "dialcode": {
       "@id": "sb:DIALcode#DIAL",
       "@type": "sb:DIALcode"
