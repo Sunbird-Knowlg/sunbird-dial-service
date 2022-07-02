@@ -134,3 +134,13 @@ mvn play2:run
 ```shell
 curl http://localhost:9000/health
 ```
+
+
+
+# DIAL code Custom Context Setup
+
+1. 'jsonld-schema' folder is used to save context and json-ld files. 
+2. For implementing custom context, you can create a folder under 'jsonld-schema'. Folder should contain 'context.json' file. Specify the folder name in 'jsonld.type' attribute in 'application.conf' file for application to refer to new context.
+3. 'contextValidation.json' file is optional. If available, context data input validation will happen when dial code update v2 API call is made with 'contextInfo'.
+4. Reference of 'sb' vocabulary (schema.jsonld) in the custom 'context.json' is a must.
+

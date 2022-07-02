@@ -1,5 +1,5 @@
 {
-  "$id": "file:./jsonld-schema/sb/contextValidation.json",
+  "$id": "file:./jsonld-schema/sbed/contextValidation.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "contextValidation",
   "type": "object",
