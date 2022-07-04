@@ -390,6 +390,12 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 	}
 
 	@Test
+	public void validateAdopterContext () throws Exception {
+		Response response = dialCodeMgr.validateContextVocabulary("https://raw.githubusercontent.com/project-sunbird/sunbird-dial-service/release-5.0.0/test/resources/context.json");
+		Assert.assertEquals("CLIENT_ERROR", response.getResponseCode().toString());
+	}
+
+	@Test
 	public void generateDialCodeExpectValidUniqueDialCodes() throws Exception {
 		String dialCodeGenReq = "{\"count\":900}";
 		String channelId = "channelTest";

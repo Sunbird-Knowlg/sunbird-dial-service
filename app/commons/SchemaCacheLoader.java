@@ -14,6 +14,7 @@ public class SchemaCacheLoader {
     private static SchemaCacheLoader gt = new SchemaCacheLoader();
     private final String jsonldBasePath = AppConfig.getString("jsonld.basePath","");
     private final String jsonldLocalPath = AppConfig.getString("jsonld.localPath","");
+    private final String jsonldType = AppConfig.getString("jsonld.type","");
 
     public static SchemaCacheLoader getInstance(){
         return gt;
@@ -25,11 +26,11 @@ public class SchemaCacheLoader {
         cache = CacheBuilder.newBuilder().refreshAfterWrite(ttlCacheRefresh,TimeUnit.SECONDS).
                 build(new CacheLoader<>() {
                           @Override
-                          public String load(String type) throws Exception {
-                              String schemaJson = jsonldBasePath + File.separator + type + File.separator + "contextValidation.json";
+                          public String load(String fileName) throws Exception {
+                              String schemaJson = jsonldBasePath + File.separator + jsonldType + File.separator + fileName;
                               File localDir = new File(jsonldLocalPath);
                               if (!localDir.exists()) localDir.mkdirs();
-                              String localSchemaPath = localDir.getAbsolutePath() + File.separator + type + File.separator + "contextValidation.json";
+                              String localSchemaPath = localDir.getAbsolutePath() + File.separator + jsonldType + File.separator + fileName;
                               FileUtils.copyURLToFile(new URL(schemaJson), new File(localSchemaPath));
                               return localSchemaPath;
                           }
@@ -37,7 +38,7 @@ public class SchemaCacheLoader {
                 );
     }
 
-    public String getSchemaPath(String type) throws ExecutionException{
-        return cache.get(type);
+    public String getSchemaPath(String fileName) throws ExecutionException{
+        return cache.get(fileName);
     }
 }
