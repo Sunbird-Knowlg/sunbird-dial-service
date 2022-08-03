@@ -127,7 +127,7 @@ public class DialcodeManager extends BaseManager {
         resp.put(DialCodeEnum.batchcode.name(), batchCode);
         resp.put(DialCodeEnum.publisher.name(), publisher);
         resp.put(DialCodeEnum.dialcodes.name(), dialCodeMap.values());
-        TelemetryManager.info("DIAL codes generated", resp.getResult());
+        System.out.println("DIAL codes generated" + resp.getResult());
         return resp;
     }
 
@@ -211,7 +211,7 @@ public class DialcodeManager extends BaseManager {
         dialCodeStore.update(dialCodeId, data, null);
         Response resp = getSuccessResponse();
         resp.put(DialCodeEnum.identifier.name(), dialCode.getIdentifier());
-        TelemetryManager.info("DIAL code updated", resp.getResult());
+        System.out.println("DIAL code updated" + resp.getResult());
         return resp;
     }
 
@@ -255,7 +255,7 @@ public class DialcodeManager extends BaseManager {
 
         Response resp = getSuccessResponse();
         resp.put(DialCodeEnum.identifier.name(), dialCode.getIdentifier());
-        TelemetryManager.info("DIAL code updated", resp.getResult());
+        System.out.println("DIAL code updated" + resp.getResult());
         return resp;
     }
 
@@ -267,16 +267,16 @@ public class DialcodeManager extends BaseManager {
         }
 
         String contextJson = jsonldBasePath+File.separator+jsonldType+File.separator+"context.json";
-        TelemetryManager.info("DialcodeManager:: validateInput:: contextJson:: " + contextJson);
+        System.out.println("DialcodeManager:: validateInput:: contextJson:: " + contextJson);
         if(!verifySchemaAndContextPaths(contextJson)) {
             return ERROR(DialCodeErrorCodes.ERR_TYPE_CONTEXT_MISSING, DialCodeErrorMessage.ERR_TYPE_CONTEXT_MISSING,
                     ResponseCode.CLIENT_ERROR);
         }
-        TelemetryManager.info("DialcodeManager:: validateInput:: jsonldType:: " + jsonldType);
+        System.out.println("DialcodeManager:: validateInput:: jsonldType:: " + jsonldType);
         if(!jsonldType.equalsIgnoreCase("sb")) validateContextVocabulary(contextJson);
 
         String contextSchemaPath = schemaCache.getSchemaPath("contextValidation.json");
-        TelemetryManager.info("DialcodeManager:: validateInput:: contextSchemaPath:: " + contextSchemaPath);
+        System.out.println("DialcodeManager:: validateInput:: contextSchemaPath:: " + contextSchemaPath);
         JsonSchema schema = readSchema(Paths.get(contextSchemaPath));
         String dataWithDefaults = withDefaultValues(metaData, schema);
         Map<String, Object> validationDataWithDefaults = cleanEmptyKeys(JsonUtils.deserialize(dataWithDefaults, Map.class));
@@ -422,7 +422,7 @@ public class DialcodeManager extends BaseManager {
         dialCodeStore.update(dialCodeId, data, extEventData);
         resp = getSuccessResponse();
         resp.put(DialCodeEnum.identifier.name(), dialCode.getIdentifier());
-        TelemetryManager.info("DIAL code published", resp.getResult());
+        System.out.println("DIAL code published" + resp.getResult());
         return resp;
     }
 
@@ -451,7 +451,7 @@ public class DialcodeManager extends BaseManager {
         int rowsSynced = dialCodeStore.sync(requestMap);
         Response response = getSuccessResponse();
         response.put(DialCodeEnum.count.name(), rowsSynced);
-        TelemetryManager.info("DIAL code are successfully synced", response.getResult());
+        System.out.println("DIAL code are successfully synced" + response.getResult());
         return response;
     }
 
@@ -751,11 +751,11 @@ public class DialcodeManager extends BaseManager {
         if(!AppConfig.config.hasPath("jsonld.sb_schema"))
             return ERROR(DialCodeErrorCodes.ERR_TYPE_SB_VOCAB_CONFIG_MISSING, DialCodeErrorMessage.ERR_TYPE_SB_VOCAB_CONFIG_MISSING,
                     ResponseCode.CLIENT_ERROR);
-        TelemetryManager.info("DialcodeManager:: validateContextVocabulary:: ");
+        System.out.println("DialcodeManager:: validateContextVocabulary:: ");
         List<String> vocabList = AppConfig.config.getStringList("jsonld.sb_schema");
         for (String vocabulary : vocabList) {
-            TelemetryManager.info("DialcodeManager:: validateContextVocabulary:: vocabulary:: " + vocabulary);
-            TelemetryManager.info("DialcodeManager:: validateContextVocabulary:: contextMap:: " + contextMap);
+            System.out.println("DialcodeManager:: validateContextVocabulary:: vocabulary:: " + vocabulary);
+            System.out.println("DialcodeManager:: validateContextVocabulary:: contextMap:: " + contextMap);
             if (!contextMap.values().contains(vocabulary)) {
                 return ERROR(DialCodeErrorCodes.ERR_TYPE_SB_VOCAB_MISSING, DialCodeErrorMessage.ERR_TYPE_SB_VOCAB_MISSING,
                         ResponseCode.CLIENT_ERROR);
