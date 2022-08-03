@@ -242,7 +242,7 @@ public class DialcodeManager extends BaseManager {
         if(metaData == null || metaData.trim().isEmpty() || metaData.equalsIgnoreCase("null")) metaData = null;
 //            return ERROR(DialCodeErrorCodes.ERR_CONTEXT_INFO_MANDATORY, DialCodeErrorMessage.ERR_CONTEXT_INFO_MANDATORY,
 //                    ResponseCode.CLIENT_ERROR);
-        
+
         if(metaData != null) {
             // validation of the input contextInfo with the DIAL code contextValidation.json
             Response validationResp = validateInput(metaData);
@@ -265,9 +265,12 @@ public class DialcodeManager extends BaseManager {
             return ERROR(DialCodeErrorCodes.ERR_TYPE_CONTEXT_MISSING, DialCodeErrorMessage.ERR_TYPE_CONTEXT_MISSING,
                     ResponseCode.CLIENT_ERROR);
         }
-        
-        if(!jsonldType.equalsIgnoreCase("sb")) validateContextVocabulary(contextJson);
-        
+
+        Response contextValidationResponse = null;
+        if(!jsonldType.equalsIgnoreCase("sb")) contextValidationResponse = validateContextVocabulary(contextJson);
+
+        if(contextValidationResponse != null) return contextValidationResponse;
+
         String schemaJson = jsonldBasePath+File.separator+jsonldType+File.separator+"contextValidation.json";
         if(!verifySchemaAndContextPaths(schemaJson)) {
             return null;
