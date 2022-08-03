@@ -267,14 +267,16 @@ public class DialcodeManager extends BaseManager {
         }
 
         String contextJson = jsonldBasePath+File.separator+jsonldType+File.separator+"context.json";
+        TelemetryManager.info("DialcodeManager:: validateInput:: contextJson:: " + contextJson);
         if(!verifySchemaAndContextPaths(contextJson)) {
             return ERROR(DialCodeErrorCodes.ERR_TYPE_CONTEXT_MISSING, DialCodeErrorMessage.ERR_TYPE_CONTEXT_MISSING,
                     ResponseCode.CLIENT_ERROR);
         }
-
+        TelemetryManager.info("DialcodeManager:: validateInput:: jsonldType:: " + jsonldType);
         if(!jsonldType.equalsIgnoreCase("sb")) validateContextVocabulary(contextJson);
 
         String contextSchemaPath = schemaCache.getSchemaPath("contextValidation.json");
+        TelemetryManager.info("DialcodeManager:: validateInput:: contextSchemaPath:: " + contextSchemaPath);
         JsonSchema schema = readSchema(Paths.get(contextSchemaPath));
         String dataWithDefaults = withDefaultValues(metaData, schema);
         Map<String, Object> validationDataWithDefaults = cleanEmptyKeys(JsonUtils.deserialize(dataWithDefaults, Map.class));
@@ -749,9 +751,11 @@ public class DialcodeManager extends BaseManager {
         if(!AppConfig.config.hasPath("jsonld.sb_schema"))
             return ERROR(DialCodeErrorCodes.ERR_TYPE_SB_VOCAB_CONFIG_MISSING, DialCodeErrorMessage.ERR_TYPE_SB_VOCAB_CONFIG_MISSING,
                     ResponseCode.CLIENT_ERROR);
-
+        TelemetryManager.info("DialcodeManager:: validateContextVocabulary:: ");
         List<String> vocabList = AppConfig.config.getStringList("jsonld.sb_schema");
         for (String vocabulary : vocabList) {
+            TelemetryManager.info("DialcodeManager:: validateContextVocabulary:: vocabulary:: " + vocabulary);
+            TelemetryManager.info("DialcodeManager:: validateContextVocabulary:: contextMap:: " + contextMap);
             if (!contextMap.values().contains(vocabulary)) {
                 return ERROR(DialCodeErrorCodes.ERR_TYPE_SB_VOCAB_MISSING, DialCodeErrorMessage.ERR_TYPE_SB_VOCAB_MISSING,
                         ResponseCode.CLIENT_ERROR);
