@@ -299,7 +299,7 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 	}
 
 
-	// Update Dial Code without contextInfo - CLIENT_ERROR
+	// Update Dial Code without contextInfo - OK
 	@Test
 	public void dialCodeTest_22() throws Exception {
 		String dialCodeGenReq = "{\"count\":1,\"publisher\": \"mock_pub01\",\"batchCode\":\"v4_check\"}";
@@ -331,7 +331,7 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 		String dialCodeUpdateReq = "{\"contextInfo\":{\"@type\":\"sb-ed:TextBookUnit\",\"identifier\":\"do_31307361357558579213961\",\"name\":\"1-झूला\",\"parentInfo\":{\"name\":\"(NEW) रिमझिम\",\"identifier\":\"do_31307361357388185614238\",\"primaryCategory\":\"Digital Textbook\",\"framework\":{\"subject\":[\"Hindi\"],\"identifier\":\"do_31307361357388185614238\",\"medium\":[\"English\",\"Hindi\"]},\"@type\":\"sb-ed:TextBook\"}}}";
 		String channelId = "channelTest";
 		Map<String, Object> requestMap = getRequestMap(dialCodeUpdateReq);
-		System.out.println("requestMap:: " + requestMap);
+
 		Response response = dialCodeMgr.updateDialCodeV4(dialCode, channelId, requestMap);
 		Assert.assertEquals("OK", response.getResponseCode().toString());
 	}
@@ -384,7 +384,7 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 		String channelId = "channelTest";
 		Map<String, Object> requestMap = new HashMap<String, Object>();
 		requestMap.put("contextInfo", null);
-		System.out.println("requestMap:: " + requestMap);
+
 		Response response = dialCodeMgr.updateDialCodeV4(dialCode, channelId, requestMap);
 		Assert.assertEquals("OK", response.getResponseCode().toString());
 	}
