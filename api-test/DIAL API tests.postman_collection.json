@@ -981,6 +981,133 @@
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "Update DIAL code Context",
+					"item": [
+						{
+							"name": "Update DIAL Code Context",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "X-Channel-ID",
+										"value": "{{x_channel_id}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"dialcode\": {\n            \"contextInfo\": {\n                \"@type\": \"sb-ed:TextBookUnit\",\n                \"identifier\": \"{{unit_id}}\",\n                \"name\": \"Textbook Unit\",\n                \"parentInfo\": {\n                    \"name\": \"Test Context\",\n                    \"channel\": \"{{X_Channel_ID}}\",\n                    \"identifier\": \"{{collection_id}}\",\n                    \"primaryCategory\": \"Digital Textbook\",\n                    \"framework\": {\n                        \"subject\": [\n                            \"Mathematics\"\n                        ],\n                        \"identifier\": \"tn_k-12\",\n                        \"medium\": [\n                            \"English\"\n                        ],\n                        \"board\": \"CBSE\"\n                    },\n                    \"status\": \"Live\",\n                    \"@type\": \"sb-ed:TextBook\"\n                }\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{host}}/api/dialcode/v2/update/{{new_dialcode}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v2",
+										"update",
+										"{{new_dialcode}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get DIAL code Context",
+					"item": [
+						{
+							"name": "Get DIAL Code Context",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response contains DIAL code\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    const dialcodeData = responseJson.result.dialcode;",
+											"    pm.expect(dialcodeData.identifier).to.be.eq(pm.globals.get(\"new_dialcode\"));",
+											"    pm.expect(dialcodeData.contextInfo).to.be.not.null",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Channel-Id",
+										"value": "{{x_channel_id}}",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/api/dialcode/v2/read/{{new_dialcode}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v2",
+										"read",
+										"{{new_dialcode}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		},
@@ -2400,6 +2527,250 @@
 									"body": "{\n    \"id\": \"api.dialcode.read\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2022-04-06T17:44:54.403Z\",\n    \"params\": {\n        \"resmsgid\": \"44856d30-b5d1-11ec-a8b6-8b6d917b3a2a\",\n        \"msgid\": null,\n        \"status\": \"failed\",\n        \"err\": \"ERR_DIALCODE_INFO\",\n        \"errmsg\": \"Dial Code Not Found With Id: I9Z2W9\"\n    },\n    \"responseCode\": \"RESOURCE_NOT_FOUND\",\n    \"result\": {}\n}"
 								}
 							]
+						}
+					]
+				},
+				{
+					"name": "Update DIAL code context",
+					"item": [
+						{
+							"name": "Invalid content id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "X-Channel-ID",
+										"value": "{{x_channel_id}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"dialcode\": {\n            \"contextInfo\": {\n                \"@type\": \"sb-ed:TextBookUnit\",\n                \"identifier\": \"do_123456\",\n                \"name\": \"Textbook Unit\",\n                \"parentInfo\": {\n                    \"name\": \"Test Context\",\n                    \"channel\": \"{{X_Channel_ID}}\",\n                    \"identifier\": \"do_12345\",\n                    \"primaryCategory\": \"Digital Textbook\",\n                    \"framework\": {\n                        \"subject\": [\n                            \"Mathematics\"\n                        ],\n                        \"identifier\": \"tn_k-12\",\n                        \"medium\": [\n                            \"English\"\n                        ],\n                        \"board\": \"CBSE\"\n                    },\n                    \"status\": \"Live\",\n                    \"@type\": \"sb-ed:TextBook\"\n                }\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{host}}/api/dialcode/v2/update/{{new_dialcode}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v2",
+										"update",
+										"{{new_dialcode}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Invalid channel content",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "X-Channel-ID",
+										"value": "{{x_channel_id}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"dialcode\": {\n            \"contextInfo\": {\n                \"@type\": \"sb-ed:TextBookUnit\",\n                \"identifier\": \"do_123456\",\n                \"name\": \"Textbook Unit\",\n                \"parentInfo\": {\n                    \"name\": \"Test Context\",\n                    \"channel\": \"{{X_Channel_ID}}\",\n                    \"identifier\": \"do_12345\",\n                    \"primaryCategory\": \"Digital Textbook\",\n                    \"framework\": {\n                        \"subject\": [\n                            \"Mathematics\"\n                        ],\n                        \"identifier\": \"tn_k-12\",\n                        \"medium\": [\n                            \"English\"\n                        ],\n                        \"board\": \"CBSE\"\n                    },\n                    \"status\": \"Live\",\n                    \"@type\": \"sb-ed:TextBook\"\n                }\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{host}}/api/dialcode/v2/update/{{new_dialcode}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v2",
+										"update",
+										"{{new_dialcode}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get DIAL code context",
+					"item": [
+						{
+							"name": "invalid dial code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response contains DIAL code\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    const dialcodeData = responseJson.result.dialcode;",
+											"    pm.expect(dialcodeData.identifier).to.be.eq(pm.globals.get(\"new_dialcode\"));",
+											"    pm.expect(dialcodeData.contextInfo).to.be.not.null",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Channel-Id",
+										"value": "{{x_channel_id}}",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/api/dialcode/v2/read/abcdef",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v2",
+										"read",
+										"abcdef"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "invalid channel id in header",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response contains DIAL code\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    const dialcodeData = responseJson.result.dialcode;",
+											"    pm.expect(dialcodeData.identifier).to.be.eq(pm.globals.get(\"new_dialcode\"));",
+											"    pm.expect(dialcodeData.contextInfo).to.be.not.null",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Channel-Id",
+										"value": "x_channel_id_invalid",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/api/dialcode/v2/read/{{new_dialcode}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v2",
+										"read",
+										"{{new_dialcode}}"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				}
