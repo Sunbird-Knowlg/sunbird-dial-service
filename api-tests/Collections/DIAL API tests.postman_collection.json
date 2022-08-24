@@ -1,10 +1,9 @@
 {
 	"info": {
-		"_postman_id": "c506c361-8f86-45c3-999d-9e6ed7a2e28d",
+		"_postman_id": "0c822f3a-8a4b-4f1f-a4b6-8f97114099eb",
 		"name": "DIAL API tests",
 		"description": "Public API documentation of DIAL api's  \n  \n[DIAL API's](https://documenter.getpostman.com/view/4214340/UVsMv6Kd)\n\nHere we are writing all the different test cases for DIAL service.\n\nThe structure of the API test should be as below\n\n*   **{service name} tests**\n    *   **Postive** (folder)\n        *   {API name} (*folder*)\n            *   Different positive tests of the API\n        *   {API name} (*folder*)\n            *   Different positive tests of the API\n    *   **Negative** (folder)\n        *   {API name} (*folder*)\n            *   Different negative tests of the API\n        *   {API name} (*folder*)\n            *   Different positive tests of the API\n    *   **Scenarios**\n        *   Scenario 1 (*folder*)\n            *   {Sequence of API's part of the scenario}\n        *   Scenario 2 (*folder*)\n            *   {Sequence of API's part of the scenario}",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "4214340"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -72,7 +71,7 @@
 									},
 									{
 										"key": "Authorization",
-										"value": "Bearer {{auth}}"
+										"value": "{{kong_api_key}}"
 									}
 								],
 								"body": {
@@ -518,7 +517,7 @@
 									},
 									{
 										"key": "Authorization",
-										"value": "Bearer {{auth}}"
+										"value": "{{kong_api_key}}"
 									}
 								],
 								"body": {
@@ -947,7 +946,7 @@
 									},
 									{
 										"key": "Authorization",
-										"value": "Bearer {{auth}}",
+										"value": "{{kong_api_key}}",
 										"type": "text"
 									},
 									{
@@ -975,6 +974,129 @@
 										"dialcode",
 										"v1",
 										"read"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Update DIAL code Context",
+					"item": [
+						{
+							"name": "Update DIAL Code Context",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "X-Channel-ID",
+										"value": "{{x_channel_id}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"dialcode\": {\n            \"contextInfo\": {\n                \"@type\": \"sb-ed:TextBookUnit\",\n                \"identifier\": \"{{unit_id}}\",\n                \"name\": \"Textbook Unit\",\n                \"parentInfo\": {\n                    \"name\": \"Test Context\",\n                    \"channel\": \"{{X_Channel_ID}}\",\n                    \"identifier\": \"{{collection_id}}\",\n                    \"primaryCategory\": \"Digital Textbook\",\n                    \"framework\": {\n                        \"subject\": [\n                            \"Mathematics\"\n                        ],\n                        \"identifier\": \"tn_k-12\",\n                        \"medium\": [\n                            \"English\"\n                        ],\n                        \"board\": \"CBSE\"\n                    },\n                    \"status\": \"Live\",\n                    \"@type\": \"sb-ed:TextBook\"\n                }\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{host}}/api/dialcode/v2/update/{{new_dialcode}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v2",
+										"update",
+										"{{new_dialcode}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get DIAL code Context",
+					"item": [
+						{
+							"name": "Get DIAL Code Context",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response contains DIAL code\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    const dialcodeData = responseJson.result.dialcode;",
+											"    pm.expect(dialcodeData.identifier).to.be.eq(pm.globals.get(\"new_dialcode\"));",
+											"    pm.expect(dialcodeData.contextInfo).to.be.not.null",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Channel-Id",
+										"value": "{{x_channel_id}}",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/api/dialcode/v2/read/{{new_dialcode}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v2",
+										"read",
+										"{{new_dialcode}}"
 									]
 								}
 							},
@@ -1036,7 +1158,7 @@
 									},
 									{
 										"key": "Authorization",
-										"value": "Bearer {{auth}}"
+										"value": "{{kong_api_key}}"
 									}
 								],
 								"body": {
@@ -1468,7 +1590,7 @@
 									},
 									{
 										"key": "Authorization",
-										"value": "Bearer {{auth}}"
+										"value": "{{kong_api_key}}"
 									}
 								],
 								"body": {
@@ -1890,7 +2012,7 @@
 									},
 									{
 										"key": "Authorization",
-										"value": "Bearer {{auth}}",
+										"value": "{{kong_api_key}}",
 										"type": "text"
 									},
 									{
@@ -2402,6 +2524,236 @@
 							]
 						}
 					]
+				},
+				{
+					"name": "Update DIAL code context",
+					"item": [
+						{
+							"name": "Invalid content id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "X-Channel-ID",
+										"value": "{{x_channel_id}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"dialcode\": {\n            \"contextInfo\": {\n                \"@type\": \"sb-ed:TextBookUnit\",\n                \"identifier\": \"do_123456\",\n                \"name\": \"Textbook Unit\",\n                \"parentInfo\": {\n                    \"name\": \"Test Context\",\n                    \"channel\": \"{{X_Channel_ID}}\",\n                    \"identifier\": \"do_12345\",\n                    \"primaryCategory\": \"Digital Textbook\",\n                    \"framework\": {\n                        \"subject\": [\n                            \"Mathematics\"\n                        ],\n                        \"identifier\": \"tn_k-12\",\n                        \"medium\": [\n                            \"English\"\n                        ],\n                        \"board\": \"CBSE\"\n                    },\n                    \"status\": \"Live\",\n                    \"@type\": \"sb-ed:TextBook\"\n                }\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{host}}/api/dialcode/v2/update/{{new_dialcode}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v2",
+										"update",
+										"{{new_dialcode}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Invalid channel content",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "X-Channel-ID",
+										"value": "{{x_channel_id}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"dialcode\": {\n            \"contextInfo\": {\n                \"@type\": \"sb-ed:TextBookUnit\",\n                \"identifier\": \"do_123456\",\n                \"name\": \"Textbook Unit\",\n                \"parentInfo\": {\n                    \"name\": \"Test Context\",\n                    \"channel\": \"{{X_Channel_ID}}\",\n                    \"identifier\": \"do_12345\",\n                    \"primaryCategory\": \"Digital Textbook\",\n                    \"framework\": {\n                        \"subject\": [\n                            \"Mathematics\"\n                        ],\n                        \"identifier\": \"tn_k-12\",\n                        \"medium\": [\n                            \"English\"\n                        ],\n                        \"board\": \"CBSE\"\n                    },\n                    \"status\": \"Live\",\n                    \"@type\": \"sb-ed:TextBook\"\n                }\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{host}}/api/dialcode/v2/update/{{new_dialcode}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v2",
+										"update",
+										"{{new_dialcode}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get DIAL code context",
+					"item": [
+						{
+							"name": "invalid dial code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 404\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Channel-Id",
+										"value": "{{x_channel_id}}",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/api/dialcode/v2/read/abcdef",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v2",
+										"read",
+										"abcdef"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "invalid channel id in header",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response contains DIAL code\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    const dialcodeData = responseJson.result.dialcode;",
+											"    pm.expect(dialcodeData.identifier).to.be.eq(pm.globals.get(\"new_dialcode\"));",
+											"    pm.expect(dialcodeData.contextInfo).to.be.not.null",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Channel-Id",
+										"value": "x_channel_id_invalid",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/api/dialcode/v2/read/{{new_dialcode}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v2",
+										"read",
+										"{{new_dialcode}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		},
@@ -2444,7 +2796,7 @@
 									},
 									{
 										"key": "Authorization",
-										"value": "Bearer {{auth}}",
+										"value": "{{kong_api_key}}",
 										"type": "text"
 									},
 									{
@@ -2646,7 +2998,7 @@
 									},
 									{
 										"key": "Authorization",
-										"value": "Bearer {{auth}}"
+										"value": "{{kong_api_key}}"
 									}
 								],
 								"body": {
@@ -3070,7 +3422,7 @@
 									},
 									{
 										"key": "Authorization",
-										"value": "Bearer {{auth}}",
+										"value": "{{kong_api_key}}",
 										"type": "text"
 									},
 									{
@@ -3262,7 +3614,7 @@
 									},
 									{
 										"key": "Authorization",
-										"value": "Bearer {{auth}}",
+										"value": "{{kong_api_key}}",
 										"type": "text"
 									},
 									{
@@ -3811,7 +4163,7 @@
 									},
 									{
 										"key": "Authorization",
-										"value": "Bearer {{auth}}",
+										"value": "{{kong_api_key}}",
 										"type": "text"
 									},
 									{
