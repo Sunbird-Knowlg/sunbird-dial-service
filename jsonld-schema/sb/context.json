@@ -1,7 +1,7 @@
 {
   "@context": {
     "scheme": "http://schema.org",
-    "sb": "https://sunbirdstagingpublic.blob.core.windows.net/sunbird-dial-staging/jsonld-schema/local/sb/schema.jsonld",
+    "sb": "http://store.knowlg.sunbird.org/dial/specs/sb/schema.jsonld",
     "dialcode": {
       "@id": "sb:DIALcode#DIAL",
       "@type": "sb:DIALcode"
