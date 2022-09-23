@@ -19,7 +19,7 @@
       "@id": "sb:parentInfo#Textbook",
       "@type": "sbed:parentInfo"
     },
-    "framework": "sbed:framework",
+    "framework": "sbed:Framework",
     "identifier": "sb:identifier",
     "name": "schema:name",
     "board": "sbed:board",
