@@ -60,7 +60,9 @@ public class QRCodesStore extends CassandraStore {
 		qrCodesBatchObj.setStatus(row.getString(DialCodeEnum.status.name()));
 		qrCodesBatchObj.setCreatedOn(row.getString(DialCodeEnum.created_on.name()));
 		String strURL = row.getString(DialCodeEnum.url.name());
-		strURL = StringUtils.replace(strURL, AppConfig.config.getString("cloudstorage.relative_path_prefix"), AppConfig.config.getString("cloudstorage.read_base_path"));
+		if(AppConfig.config.getBoolean("cloudstorage.metadata.replace_absolute_path")) {
+			strURL = StringUtils.replace(strURL, AppConfig.config.getString("cloudstorage.relative_path_prefix"), AppConfig.config.getString("cloudstorage.read_base_path"));
+		}
 		qrCodesBatchObj.setUrl(strURL);
 		String config = row.getString(DialCodeEnum.config.name());
 		Map<String, String> configMap = null;
