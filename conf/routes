@@ -15,3 +15,4 @@ GET    /dialcode/v3/publisher/read/:id             @controllers.dialcode.Dialcod
 PATCH  /dialcode/v3/publisher/update/:id           @controllers.dialcode.DialcodeV3Controller.updatePublisher(id: String)
 PATCH  /dialcode/v4/update/:id                     @controllers.dialcode.DialcodeV4Controller.updateDialCode(id: String)
 GET    /dialcode/v4/read/:id					    @controllers.dialcode.DialcodeV4Controller.readDialCode(id: String)
+GET    /dialcode/v4/batch/read/:processid           @controllers.dialcode.DialcodeV4Controller.readQRCodesBatchInfo(processid: String)
