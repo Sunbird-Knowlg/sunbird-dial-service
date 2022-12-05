@@ -42,7 +42,7 @@ public class QRCodesStore extends CassandraStore {
 	public QRCodesBatch read(String processId) throws Exception {
 		QRCodesBatch qrCodesBatchObj = null;
 		try {
-			List<Row> rows = read(DialCodeEnum.processid.name(), processId);
+			List<Row> rows = readByUUID(DialCodeEnum.processid.name(), processId);
 			Row row = rows.get(0);
 			qrCodesBatchObj = setQRCodesBatchData(row);
 		} catch (Exception e) {
