@@ -46,6 +46,7 @@ public class QRCodesStore extends CassandraStore {
 			Row row = rows.get(0);
 			qrCodesBatchObj = setQRCodesBatchData(row);
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new ResourceNotFoundException(DialCodeErrorCodes.ERR_QRCODES_BATCH_INFO,
 					DialCodeErrorMessage.ERR_QRCODES_BATCH_INFO + processId);
 		}
@@ -54,26 +55,27 @@ public class QRCodesStore extends CassandraStore {
 
 	private static QRCodesBatch setQRCodesBatchData(Row row) throws Exception {
 		QRCodesBatch qrCodesBatchObj = new QRCodesBatch();
-		qrCodesBatchObj.setProcessid(row.getUUID(DialCodeEnum.processid.name()));
-		qrCodesBatchObj.setChannel(row.getString(DialCodeEnum.channel.name()));
-		qrCodesBatchObj.setPublisher(row.getString(DialCodeEnum.publisher.name()));
-		qrCodesBatchObj.setDialcodes(row.getList(DialCodeEnum.dialcodes.name(), String.class));
-		qrCodesBatchObj.setStatus(row.getString(DialCodeEnum.status.name()));
-		qrCodesBatchObj.setCreatedOn(row.getString(DialCodeEnum.created_on.name()));
-		String strURL = row.getString(DialCodeEnum.url.name());
-		if(AppConfig.config.getBoolean("cloudstorage.metadata.replace_absolute_path")) {
-			strURL = StringUtils.replace(strURL, AppConfig.config.getString("cloudstorage.relative_path_prefix"),
-					AppConfig.config.getString("cloudstorage.read_base_path") + File.separator +
-							AppConfig.config.getString("cloud_storage_container"));
+		try {
+			qrCodesBatchObj.setProcessid(row.getUUID(DialCodeEnum.processid.name()));
+			qrCodesBatchObj.setChannel(row.getString(DialCodeEnum.channel.name()));
+			qrCodesBatchObj.setPublisher(row.getString(DialCodeEnum.publisher.name()));
+			qrCodesBatchObj.setDialcodes(row.getList(DialCodeEnum.dialcodes.name(), String.class));
+			qrCodesBatchObj.setStatus(row.getInt(DialCodeEnum.status.name()));
+			qrCodesBatchObj.setCreatedOn(row.getTimestamp(DialCodeEnum.created_on.name()));
+			String strURL = row.getString(DialCodeEnum.url.name());
+			if (AppConfig.config.getBoolean("cloudstorage.metadata.replace_absolute_path")) {
+				strURL = StringUtils.replace(strURL, AppConfig.config.getString("cloudstorage.relative_path_prefix"),
+						AppConfig.config.getString("cloudstorage.read_base_path") + File.separator +
+								AppConfig.config.getString("cloud_storage_container"));
+			}
+			qrCodesBatchObj.setUrl(strURL);
+			Map<String, String> configMap = row.getMap(DialCodeEnum.config.name(), String.class, String.class);
+			qrCodesBatchObj.setConfig(configMap);
 		}
-		qrCodesBatchObj.setUrl(strURL);
-		String config = row.getString(DialCodeEnum.config.name());
-		Map<String, String> configMap = null;
-		if (!StringUtils.isBlank(config)) {
-			configMap = mapper.readValue(config, new TypeReference<Map<String, String>>() {
-			});
+		catch (Exception ex) {
+			ex.printStackTrace();
+			throw ex;
 		}
-		qrCodesBatchObj.setConfig(configMap);
 		return qrCodesBatchObj;
 	}
 
