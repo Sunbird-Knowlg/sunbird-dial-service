@@ -11,8 +11,10 @@ import commons.exception.ClientException;
 import commons.exception.ResponseCode;
 import dbstore.DialCodeStore;
 import dbstore.PublisherStore;
+import dbstore.QRCodesStore;
 import dto.DialCode;
 import dto.Publisher;
+import dto.QRCodesBatch;
 import dto.SearchDTO;
 import elasticsearch.ElasticSearchUtil;
 import elasticsearch.SearchProcessor;
@@ -48,6 +50,8 @@ public class DialcodeManager extends BaseManager {
     private PublisherStore publisherStore = new PublisherStore();
 
     private DialCodeStore dialCodeStore = new DialCodeStore();
+
+    private QRCodesStore qrCodesStore = new QRCodesStore();
 
     private DialCodeGenerator dialCodeGenerator =  new DialCodeGenerator();
 
@@ -146,6 +150,23 @@ public class DialcodeManager extends BaseManager {
         resp.put(DialCodeEnum.dialcode.name(), dialCode);
         return resp;
     }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.ekstep.dialcode.mgr.DialCodeManager#readQRCodesBatchInfo(java.lang.String)
+     */
+    public Response readQRCodesBatchInfo(String processId) throws Exception {
+        if (StringUtils.isBlank(processId))
+            return ERROR(DialCodeErrorCodes.ERR_INVALID_PROCESS_ID_REQUEST,
+                    DialCodeErrorMessage.ERR_INVALID_PROCESS_ID_REQUEST, ResponseCode.CLIENT_ERROR);
+        QRCodesBatch qrCodesBatch = qrCodesStore.read(processId);
+        Response resp = getSuccessResponse();
+        resp.put(DialCodeEnum.batchInfo.name(), qrCodesBatch);
+        return resp;
+    }
+
 
     /*
      * (non-Javadoc)

@@ -5,6 +5,7 @@ package dbstore;
 
 import com.datastax.driver.core.Row;
 import commons.AppConfig;
+import utils.DialCodeEnum;
 
 import java.util.List;
 import java.util.Map;
@@ -18,10 +19,13 @@ public class PublisherStore extends CassandraStore {
 
 	public PublisherStore() {
 		super();
-		String keyspace = "dialcode_store";
-		if (AppConfig.config.hasPath("publisher.keyspace.name"))
-			keyspace = AppConfig.config.getString("publisher.keyspace.name");
-		initialise(keyspace, "publisher", "Publisher");
+		String keyspace = AppConfig.config.hasPath("publisher.keyspace.name")
+				? AppConfig.config.getString("publisher.keyspace.name") : "dialcode_store";
+		String table = AppConfig.config.hasPath("publisher.keyspace.table")
+				? AppConfig.config.getString("publisher.keyspace.table") : "publisher";
+		String objectType = AppConfig.config.hasPath("publisher.object_type")
+				? AppConfig.config.getString("publisher.object_type") : DialCodeEnum.Publisher.name();
+		initialise(keyspace, table, objectType);
 	}
 
 

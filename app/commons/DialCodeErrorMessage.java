@@ -24,4 +24,6 @@ public class DialCodeErrorMessage {
 	public static final String ERR_SCHEMA_BASEPATH_CONFIG_MISSING = "Please configure valid url in schema.basePath.";
 	public static final String ERR_TYPE_SB_VOCAB_MISSING = "Please extend sunbird jsonld vocabulary in your context file";
 	public static final String ERR_TYPE_SB_VOCAB_CONFIG_MISSING = "Please ensure jsonld.sb_schema property is configured.";
+	public static final String ERR_INVALID_PROCESS_ID_REQUEST = "Invalid Process Id in the Request";
+	public static final String ERR_QRCODES_BATCH_INFO = "QRCodes Batch not found with processid: ";
 }
