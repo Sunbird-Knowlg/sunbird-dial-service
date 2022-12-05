@@ -1,6 +1,7 @@
 package dto;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -18,7 +19,7 @@ public class QRCodesBatch implements Serializable {
 	private UUID processid;
 	private String channel;
 	private Map<String,String> config;
-	private String createdOn;
+	private Date createdOn;
 	private List<String> dialcodes;
 	private String publisher;
 	private int status;
@@ -53,11 +54,11 @@ public class QRCodesBatch implements Serializable {
 		this.config = config;
 	}
 
-	public String getCreatedOn() {
+	public Date getCreatedOn() {
 		return createdOn;
 	}
 
-	public void setCreatedOn(String createdOn) {
+	public void setCreatedOn(Date createdOn) {
 		this.createdOn = createdOn;
 	}
 
