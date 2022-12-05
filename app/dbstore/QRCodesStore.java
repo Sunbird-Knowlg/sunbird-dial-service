@@ -74,6 +74,7 @@ public class QRCodesStore extends CassandraStore {
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
+			throw ex;
 		}
 		return qrCodesBatchObj;
 	}
