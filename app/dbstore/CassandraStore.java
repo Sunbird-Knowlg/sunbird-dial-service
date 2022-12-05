@@ -150,6 +150,7 @@ public abstract class CassandraStore {
             String selectQuery = "select * from " + keyspace+"."+table + " where " + key + "=" + value + ";";
             TelemetryManager.log("Cassandra store:: readByUUID query: " + selectQuery);
             ResultSet results = CassandraConnector.getSession().execute(selectQuery);
+            TelemetryManager.log("Cassandra store:: readByUUID results: " + results.all());
             return results.all();
         } catch (Exception e) {
             throw new ServerException(CassandraStoreParam.ERR_SERVER_ERROR.name(),
