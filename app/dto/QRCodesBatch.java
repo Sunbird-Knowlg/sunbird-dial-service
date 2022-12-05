@@ -21,7 +21,7 @@ public class QRCodesBatch implements Serializable {
 	private String createdOn;
 	private List<String> dialcodes;
 	private String publisher;
-	private String status;
+	private int status;
 	private String url;
 
 
@@ -77,11 +77,11 @@ public class QRCodesBatch implements Serializable {
 		this.publisher = publisher;
 	}
 
-	public String getStatus() {
+	public int getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 
