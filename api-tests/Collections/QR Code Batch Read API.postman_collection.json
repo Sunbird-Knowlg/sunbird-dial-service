@@ -1,0 +1,125 @@
+{
+	"info": {
+		"_postman_id": "8fe30813-55bf-4419-82cb-bf8b28ea11e0",
+		"name": "QR Code Batch Read API",
+		"description": "API used to get information of QR codes Batch. QR codes Batch information is generated and stored in dialcodes.dialcode_batch table in cassandra database via 'qrcode-image-generator' knowlg job for a collection's 'reservedDIALCodes'.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Positive",
+			"item": [
+				{
+					"name": "QR Code Batch Read",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response returns with url of QR code Batch Zip\", function () {",
+									"    const responseJson = pm.response.json(); ",
+									"    var batchInfoObj = responseJson.result.batchInfo;",
+									"",
+									"    pm.expect(batchInfoObj.url != null);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{kong_api_key}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/dialcode/v2/read/batch/{{qr_process_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"dialcode",
+								"v2",
+								"read",
+								"batch",
+								"{{qr_process_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Negative",
+			"item": [
+				{
+					"name": "QR code batch with invalid collection Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Response throws RESOURCE_NOT_FOUND\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.responseCode).equals(\"RESOURCE_NOT_FOUND\")",
+									"        ",
+									"    const params = responseJson.params;",
+									"    pm.expect(params.status).equals(\"failed\")",
+									"    pm.expect(params.err).equals(\"ERR_QRCODES_BATCH_INFO\")   ",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{kong_api_key}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/dialcode/v2/read/batch/do_dummy_id",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"dialcode",
+								"v2",
+								"read",
+								"batch",
+								"do_dummy_id"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

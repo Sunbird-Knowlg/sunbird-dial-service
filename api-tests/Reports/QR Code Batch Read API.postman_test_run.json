@@ -1,0 +1,92 @@
+{
+	"id": "24700701-bbe2-45fb-822a-6c1b652d2bae",
+	"name": "QR Code Batch Read API",
+	"timestamp": "2022-12-06T06:31:58.328Z",
+	"collection_id": "13387833-8fe30813-55bf-4419-82cb-bf8b28ea11e0",
+	"folder_id": 0,
+	"environment_id": "a2ba5390-5b58-4db5-b00d-c957be7cb64a",
+	"totalPass": 4,
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "4678a17b-e369-4fb6-b732-7560f0d66369",
+			"name": "QR Code Batch Read",
+			"url": "https://dev.knowlg.sunbird.org/api/dialcode/v2/read/batch/711fb39a-9fa7-4287-8be0-ecb912561f76",
+			"time": 38,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response returns with url of QR code Batch Zip": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response returns with url of QR code Batch Zip": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				38
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response returns with url of QR code Batch Zip": true
+				}
+			]
+		},
+		{
+			"id": "0cf377e5-9f6b-429a-a5c0-5fea25ec8334",
+			"name": "QR code batch with invalid collection Id",
+			"url": "https://dev.knowlg.sunbird.org/api/dialcode/v2/read/batch/do_dummy_id",
+			"time": 22,
+			"responseCode": {
+				"code": 404,
+				"name": "Not Found"
+			},
+			"tests": {
+				"Status code is 404": true,
+				"Response throws RESOURCE_NOT_FOUND": true
+			},
+			"testPassFailCounts": {
+				"Status code is 404": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response throws RESOURCE_NOT_FOUND": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				22
+			],
+			"allTests": [
+				{
+					"Status code is 404": true,
+					"Response throws RESOURCE_NOT_FOUND": true
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 60,
+	"collection": {
+		"requests": [
+			{
+				"id": "4678a17b-e369-4fb6-b732-7560f0d66369",
+				"method": "GET"
+			},
+			{
+				"id": "0cf377e5-9f6b-429a-a5c0-5fea25ec8334",
+				"method": "GET"
+			}
+		]
+	}
+}
