@@ -2,6 +2,7 @@
 	"info": {
 		"_postman_id": "8fe30813-55bf-4419-82cb-bf8b28ea11e0",
 		"name": "QR Code Batch Read API",
+		"description": "API used to get information of QR codes Batch. QR codes Batch information is generated and stored in dialcodes.dialcode_batch table in cassandra database via 'qrcode-image-generator' knowlg job for a collection's 'reservedDIALCodes'.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
