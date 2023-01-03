@@ -1,0 +1,880 @@
+{
+	"id": "2ceadefc-e067-4af5-a9ba-ec9e81fad375",
+	"name": "DIAL API tests",
+	"timestamp": "2022-09-23T11:38:34.845Z",
+	"collection_id": "19432603-7a21d798-338c-4774-80e9-258aecb18c16",
+	"folder_id": 0,
+	"environment_id": "19432603-99a00c6f-a3ab-4e03-b5d7-c36504a38116",
+	"totalPass": 40,
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "436a4465-8168-4f94-844d-49ad3f39d522",
+			"name": "DIAL code count is >1",
+			"url": "https://dev.knowlg.sunbird.org//api/dialcode/v1/generate",
+			"time": 1073,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Verify status code  200": true,
+				"Response contains DIAL code": true
+			},
+			"testPassFailCounts": {
+				"Verify status code  200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response contains DIAL code": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				1073
+			],
+			"allTests": [
+				{
+					"Verify status code  200": true,
+					"Response contains DIAL code": true
+				}
+			]
+		},
+		{
+			"id": "bedce3fe-91be-42b8-a5b6-0e72c0e14ca5",
+			"name": "Request for Max DIAL codes",
+			"url": "https://dev.knowlg.sunbird.org//api/dialcode/v1/generate",
+			"time": 8889,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Verify status code  200": true,
+				"Response contains DIAL code": true
+			},
+			"testPassFailCounts": {
+				"Verify status code  200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response contains DIAL code": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				8889
+			],
+			"allTests": [
+				{
+					"Verify status code  200": true,
+					"Response contains DIAL code": true
+				}
+			]
+		},
+		{
+			"id": "423f13b3-2e13-4821-a3ec-f44b381e6873",
+			"name": "Get DIAL code details",
+			"url": "https://dev.knowlg.sunbird.org//api/dialcode/v1/read",
+			"time": 176,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				176
+			],
+			"allTests": [
+				{
+					"Status code is 200": true
+				}
+			]
+		},
+		{
+			"id": "dceda91d-269c-4557-bceb-8ef0a88142c9",
+			"name": "Update DIAL Code Context",
+			"url": "https://dev.knowlg.sunbird.org//api/dialcode/v2/update/P1M5F7",
+			"time": 390,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				390
+			],
+			"allTests": [
+				{
+					"Status code is 200": true
+				}
+			]
+		},
+		{
+			"id": "4596eb1a-2f4a-4453-9b5c-1cf974b5f697",
+			"name": "Get DIAL Code Context",
+			"url": "https://dev.knowlg.sunbird.org//api/dialcode/v2/read/P1M5F7",
+			"time": 86,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response contains DIAL code": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response contains DIAL code": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				86
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response contains DIAL code": true
+				}
+			]
+		},
+		{
+			"id": "2aa7c899-5759-45b3-8591-24b9ee3b9a07",
+			"name": "Without channel",
+			"url": "https://dev.knowlg.sunbird.org//api/dialcode/v1/generate",
+			"time": 51,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Verify status code  400": true,
+				"Body matches string": true
+			},
+			"testPassFailCounts": {
+				"Verify status code  400": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Body matches string": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				51
+			],
+			"allTests": [
+				{
+					"Verify status code  400": true,
+					"Body matches string": true
+				}
+			]
+		},
+		{
+			"id": "d6ce4dfe-1d9f-494b-8684-4178e9b698c7",
+			"name": "request with count=0",
+			"url": "https://dev.knowlg.sunbird.org//api/dialcode/v1/generate",
+			"time": 55,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Verify status code  400": true,
+				"Body matches string": true
+			},
+			"testPassFailCounts": {
+				"Verify status code  400": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Body matches string": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				55
+			],
+			"allTests": [
+				{
+					"Verify status code  400": true,
+					"Body matches string": true
+				}
+			]
+		},
+		{
+			"id": "1f89a5eb-d58b-4c15-b6a2-5766f39f1f4e",
+			"name": "invalid DIAL code",
+			"url": "https://dev.knowlg.sunbird.org//api/dialcode/v1/read",
+			"time": 77,
+			"responseCode": {
+				"code": 404,
+				"name": "Not Found"
+			},
+			"tests": {
+				"Status code is 404": true,
+				"Response contains DIAL code": true
+			},
+			"testPassFailCounts": {
+				"Status code is 404": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response contains DIAL code": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				77
+			],
+			"allTests": [
+				{
+					"Status code is 404": true,
+					"Response contains DIAL code": true
+				}
+			]
+		},
+		{
+			"id": "2704b5f2-d94b-439f-bff4-22ef348c7f00",
+			"name": "Invalid content id",
+			"url": "https://dev.knowlg.sunbird.org//api/dialcode/v2/update/P1M5F7",
+			"time": 395,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Status code is 400": true
+			},
+			"testPassFailCounts": {
+				"Status code is 400": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				395
+			],
+			"allTests": [
+				{
+					"Status code is 400": true
+				}
+			]
+		},
+		{
+			"id": "f16dfd52-51b5-4e00-9d74-181b7755bef8",
+			"name": "Invalid channel content",
+			"url": "https://dev.knowlg.sunbird.org//api/dialcode/v2/update/P1M5F7",
+			"time": 112,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Status code is 400": true
+			},
+			"testPassFailCounts": {
+				"Status code is 400": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				112
+			],
+			"allTests": [
+				{
+					"Status code is 400": true
+				}
+			]
+		},
+		{
+			"id": "6899bbd8-9413-435c-a13d-160f2b652e04",
+			"name": "invalid dial code",
+			"url": "https://dev.knowlg.sunbird.org//api/dialcode/v2/read/abcdef",
+			"time": 76,
+			"responseCode": {
+				"code": 404,
+				"name": "Not Found"
+			},
+			"tests": {
+				"Status code is 404": true
+			},
+			"testPassFailCounts": {
+				"Status code is 404": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				76
+			],
+			"allTests": [
+				{
+					"Status code is 404": true
+				}
+			]
+		},
+		{
+			"id": "4d6ca3aa-ab34-464b-9045-d22bead02fbc",
+			"name": "invalid channel id in header",
+			"url": "https://dev.knowlg.sunbird.org//api/dialcode/v2/read/P1M5F7",
+			"time": 70,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response contains DIAL code": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response contains DIAL code": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				70
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response contains DIAL code": true
+				}
+			]
+		},
+		{
+			"id": "653ad2e3-6370-4f7e-b06e-021e248579ce",
+			"name": "List DIAL codes",
+			"url": "https://dev.knowlg.sunbird.org//api/dialcode/v1/list",
+			"time": 85,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Get DIAL count": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Get DIAL count": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				85
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Get DIAL count": true
+				}
+			]
+		},
+		{
+			"id": "3f50a1e2-887c-4469-95c6-af6acfb85f2c",
+			"name": "Generate DIAL code",
+			"url": "https://dev.knowlg.sunbird.org//api/dialcode/v1/generate",
+			"time": 735,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response contains DIAL code": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response contains DIAL code": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				735
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response contains DIAL code": true
+				}
+			]
+		},
+		{
+			"id": "2eae7299-b5ec-4c0b-a0e7-647eb9cb51fd",
+			"name": "List DIAL codes - Verify new DIAL add",
+			"url": "https://dev.knowlg.sunbird.org//api/dialcode/v1/list",
+			"time": 69,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Verify newly generated DIAL is increased total count": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Verify newly generated DIAL is increased total count": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				69
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Verify newly generated DIAL is increased total count": true
+				}
+			]
+		},
+		{
+			"id": "b5488162-f701-40d8-adb1-1528a1a20561",
+			"name": "Get DIAL code",
+			"url": "https://dev.knowlg.sunbird.org//api/dialcode/v1/read",
+			"time": 66,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response contains DIAL code": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response contains DIAL code": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				66
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response contains DIAL code": true
+				}
+			]
+		},
+		{
+			"id": "32522b82-e69c-41ee-9a32-d22ec7f2de05",
+			"name": "Search DIAL code",
+			"url": "https://dev.knowlg.sunbird.org//api/dialcode/v1/search",
+			"time": 66,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response count is greather 0": true,
+				"Response is for the requested DIAL code": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response count is greather 0": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is for the requested DIAL code": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				66
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response count is greather 0": true,
+					"Response is for the requested DIAL code": true
+				}
+			]
+		},
+		{
+			"id": "30427db8-1361-4a9a-b54f-4ac5a1877ecf",
+			"name": "Collection Create",
+			"url": "https://dev.knowlg.sunbird.org//api/collection/v1/create",
+			"time": 162,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				162
+			],
+			"allTests": [
+				{
+					"Status code is 200": true
+				}
+			]
+		},
+		{
+			"id": "80a6dde2-8dee-4c00-b6ba-170ece0558f9",
+			"name": "Content publish",
+			"url": "https://dev.knowlg.sunbird.org//api/private/content/v3/publish/do_213596126019813376146",
+			"time": 182,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				182
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "028a918c-a29c-4dae-96ac-b2bc9198375a",
+			"name": "Search DIAL code",
+			"url": "https://dev.knowlg.sunbird.org//api/dialcode/v1/search",
+			"time": 85,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response count is greater 0": true,
+				"Response is for the requested DIAL code": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response count is greater 0": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is for the requested DIAL code": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				85
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response count is greater 0": true,
+					"Response is for the requested DIAL code": true
+				}
+			]
+		},
+		{
+			"id": "a9a9e1f1-bc25-4dcd-b29a-6b146c37e74a",
+			"name": "Collection create",
+			"url": "https://dev.knowlg.sunbird.org//api/collection/v1/create",
+			"time": 142,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				142
+			],
+			"allTests": [
+				{
+					"Status code is 200": true
+				}
+			]
+		},
+		{
+			"id": "5f5bb91f-4e63-413d-90d6-b8b1823a8c04",
+			"name": "Collection Hierarchy Update",
+			"url": "https://dev.knowlg.sunbird.org//api/collection/v1/hierarchy/update",
+			"time": 358,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				358
+			],
+			"allTests": [
+				{
+					"Status code is 200": true
+				}
+			]
+		},
+		{
+			"id": "b092d2f2-822b-4e82-8833-3075d4442945",
+			"name": "Dial reserve",
+			"url": "https://dev.knowlg.sunbird.org//api/collection/v1/dialcode/reserve/do_2136309400496455681176",
+			"time": 966,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				966
+			],
+			"allTests": [
+				{
+					"Status code is 200": true
+				}
+			]
+		},
+		{
+			"id": "660e740c-d3a7-4e46-ac1e-fbd43b215456",
+			"name": "Link dialcode",
+			"url": "https://dev.knowlg.sunbird.org//api/collection/v1/dialcode/link/do_2136309400496455681176",
+			"time": 218,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200, dialcodes linked successfully": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200, dialcodes linked successfully": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				218
+			],
+			"allTests": [
+				{
+					"Status code is 200, dialcodes linked successfully": true
+				}
+			]
+		},
+		{
+			"id": "c9e1ad6c-e5f3-465b-aa6b-4a1e8f66e0ef",
+			"name": "Collection read hierarchy when it is in draft",
+			"url": "https://dev.knowlg.sunbird.org//api/collection/v1/hierarchy/do_2136309400496455681176?mode=edit",
+			"time": 79,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Verify whether the dialcode is  linked successfully": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Verify whether the dialcode is  linked successfully": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				79
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Verify whether the dialcode is  linked successfully": true
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 14663,
+	"collection": {
+		"requests": [
+			{
+				"id": "436a4465-8168-4f94-844d-49ad3f39d522",
+				"method": "POST"
+			},
+			{
+				"id": "bedce3fe-91be-42b8-a5b6-0e72c0e14ca5",
+				"method": "POST"
+			},
+			{
+				"id": "423f13b3-2e13-4821-a3ec-f44b381e6873",
+				"method": "POST"
+			},
+			{
+				"id": "dceda91d-269c-4557-bceb-8ef0a88142c9",
+				"method": "PATCH"
+			},
+			{
+				"id": "4596eb1a-2f4a-4453-9b5c-1cf974b5f697",
+				"method": "GET"
+			},
+			{
+				"id": "2aa7c899-5759-45b3-8591-24b9ee3b9a07",
+				"method": "POST"
+			},
+			{
+				"id": "d6ce4dfe-1d9f-494b-8684-4178e9b698c7",
+				"method": "POST"
+			},
+			{
+				"id": "1f89a5eb-d58b-4c15-b6a2-5766f39f1f4e",
+				"method": "POST"
+			},
+			{
+				"id": "2704b5f2-d94b-439f-bff4-22ef348c7f00",
+				"method": "PATCH"
+			},
+			{
+				"id": "f16dfd52-51b5-4e00-9d74-181b7755bef8",
+				"method": "PATCH"
+			},
+			{
+				"id": "6899bbd8-9413-435c-a13d-160f2b652e04",
+				"method": "GET"
+			},
+			{
+				"id": "4d6ca3aa-ab34-464b-9045-d22bead02fbc",
+				"method": "GET"
+			},
+			{
+				"id": "653ad2e3-6370-4f7e-b06e-021e248579ce",
+				"method": "POST"
+			},
+			{
+				"id": "3f50a1e2-887c-4469-95c6-af6acfb85f2c",
+				"method": "POST"
+			},
+			{
+				"id": "2eae7299-b5ec-4c0b-a0e7-647eb9cb51fd",
+				"method": "POST"
+			},
+			{
+				"id": "b5488162-f701-40d8-adb1-1528a1a20561",
+				"method": "POST"
+			},
+			{
+				"id": "32522b82-e69c-41ee-9a32-d22ec7f2de05",
+				"method": "POST"
+			},
+			{
+				"id": "30427db8-1361-4a9a-b54f-4ac5a1877ecf",
+				"method": "POST"
+			},
+			{
+				"id": "80a6dde2-8dee-4c00-b6ba-170ece0558f9",
+				"method": "POST"
+			},
+			{
+				"id": "028a918c-a29c-4dae-96ac-b2bc9198375a",
+				"method": "POST"
+			},
+			{
+				"id": "a9a9e1f1-bc25-4dcd-b29a-6b146c37e74a",
+				"method": "POST"
+			},
+			{
+				"id": "5f5bb91f-4e63-413d-90d6-b8b1823a8c04",
+				"method": "PATCH"
+			},
+			{
+				"id": "b092d2f2-822b-4e82-8833-3075d4442945",
+				"method": "POST"
+			},
+			{
+				"id": "660e740c-d3a7-4e46-ac1e-fbd43b215456",
+				"method": "POST"
+			},
+			{
+				"id": "c9e1ad6c-e5f3-465b-aa6b-4a1e8f66e0ef",
+				"method": "GET"
+			}
+		]
+	}
+}
