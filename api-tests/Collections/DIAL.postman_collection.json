@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "1bbf20aa-f73b-4612-a9fa-bdc50abd43b5",
+		"_postman_id": "813f945f-8ee2-4a18-81c5-4710f3ecd0d2",
 		"name": "DIAL",
 		"description": "**DIAL** refers to *Digital Infrastructure for Augmented learning*. DIAL powers the discovery of digital resources using physical  \nartefacts like QR codes, can be extended to other physical artefacts.  \nDIAL code does the loose binding of digital assets with physical  \nartefacts.\n\nNote: Give the reference link to DIAL API tests here. Before we update this, we have to publish the DIAL API tests documentation.\n\n## DIAL code usage workflow\n\n*   **Reserve**: Reserve the DIAL codes by requesting/blocking specific number.\n*   **Link**: Link the DIAL code to any digital or physical asset.\n*   **Update:** Update the DIAL code with context, publisher etc.\n*   **Generate:** Generate the QR codes for the linked DIAL codes.\n*   **Scan:** Scan the physical/digital QR code to discover the specific assets linked to it.\n    \n\n## Schema\n\n| **Property** | **Description** |\n| --- | --- |\n| Identifier | Unique DIAL code generated |\n| publisher | Publisher of the DIAL code who is going to print this DIAL code on physical/digital |\n| batchCode | The DIAL codes are generated against the batch to identify on what process it was generated |\n| status | Status of the DIAL code.  <br>ex: Draft, Live |\n| generatedOn | Time when the DIAL code is generated in the system |\n| publishedOn | Time when the DIAL code status is changed to \"Live\". |\n\n### DIAL API tests\n\n[https://documenter.getpostman.com/view/4214340/UzBvGNaX](https://documenter.getpostman.com/view/4214340/UzBvGNaX)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -34,7 +34,7 @@
 				"header": [
 					{
 						"key": "X-Channel-Id",
-						"value": "{{X_Channel_ID}}",
+						"value": "{{channel_id}}",
 						"type": "text"
 					},
 					{
@@ -63,7 +63,8 @@
 						"v1",
 						"list"
 					]
-				}
+				},
+				"description": "his API is associated with listing the DIAL codes - The endpoint for List DIAL code is /dialcode/v1/list - It points to knowledge-mw-service - /v1/dialcode/list"
 			},
 			"response": [
 				{
@@ -232,7 +233,7 @@
 				"header": [
 					{
 						"key": "X-Channel-ID",
-						"value": "{{x_channel_id}}"
+						"value": "{{channel_id}}"
 					},
 					{
 						"key": "Content-Type",
@@ -655,7 +656,7 @@
 				"header": [
 					{
 						"key": "X-Channel-Id",
-						"value": "{{x_channel_id}}",
+						"value": "{{channel_id}}",
 						"type": "text"
 					},
 					{
@@ -689,7 +690,8 @@
 						"v1",
 						"read"
 					]
-				}
+				},
+				"description": "This API is associated with fetching/reading the DIAL code\n\nThe endpoint for Get DIAL code is /dialcode/v1/read/{dialcode}\nIt points to knowledge-mw-service - /v1/dialcode/read/{dialcode}"
 			},
 			"response": [
 				{
@@ -1216,7 +1218,7 @@
 				"header": [
 					{
 						"key": "X-Channel-Id",
-						"value": "{{x_channel_id}}",
+						"value": "{{channel_id}}",
 						"type": "text"
 					},
 					{
@@ -1256,7 +1258,8 @@
 						"v1",
 						"search"
 					]
-				}
+				},
+				"description": "This API is associated with searching a DIAL code.\n\nThe endpoint for Search DIAL code is /dialcode/v1/search\nIt points to knowledge-mw-service - /v1/dialcode/search"
 			},
 			"response": [
 				{
@@ -1508,7 +1511,1354 @@
 			]
 		},
 		{
-			"name": "Link DIAL code",
+			"name": "Publish DIAL code",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response returned contains published DIAL code\", function () {",
+							"    const responseJson = pm.response.json();",
+							"    const publishedDIALCode = responseJson.result.identifier;",
+							"    pm.expect(publishedDIALCode).to.be.eq(pm.globals.get(\"new_dialcode\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Channel-Id",
+						"value": "{{channel_id}}",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{kong_api_key}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"request\": {}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/dialcode/v1/publish/{{new_dialcode}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"dialcode",
+						"v1",
+						"publish",
+						"{{new_dialcode}}"
+					]
+				},
+				"description": "This API is associated with publishing the DIAL code.\n\nThe endpoint for Publish DIAL code is /dialcode/v1/publish\nIt points to knowledge-mw-service - /v1/dialcode/publish"
+			},
+			"response": [
+				{
+					"name": "200 - Success Response",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Channel-Id",
+								"value": "{{x_channel_id}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{kong_api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"request\": {}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/dialcode/v1/publish/{{new_dialcode}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"dialcode",
+								"v1",
+								"publish",
+								"{{new_dialcode}}"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 27 Jan 2023 06:13:39 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"key": "Vary",
+							"value": "X-HTTP-Method-Override, Accept-Encoding"
+						},
+						{
+							"key": "X-RateLimit-Limit-hour",
+							"value": "1000000"
+						},
+						{
+							"key": "X-RateLimit-Remaining-hour",
+							"value": "999998"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"119-ZQOopf3KKlBn7rBEemOcuvI/D9I\""
+						},
+						{
+							"key": "X-Kong-Upstream-Latency",
+							"value": "130"
+						},
+						{
+							"key": "X-Kong-Proxy-Latency",
+							"value": "58"
+						},
+						{
+							"key": "Via",
+							"value": "kong/0.14.1"
+						},
+						{
+							"key": "Content-Encoding",
+							"value": "gzip"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"api.dialcode.publish\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2023-01-27T06:13:39.348Z\",\n    \"params\": {\n        \"resmsgid\": \"bdbc4540-9e09-11ed-827a-edd2af60aa77\",\n        \"msgid\": \"bda8e450-9e09-11ed-a17d-b3ade16c7a73\",\n        \"status\": \"successful\",\n        \"err\": null,\n        \"errmsg\": null\n    },\n    \"responseCode\": \"OK\",\n    \"result\": {\n        \"identifier\": \"I8X2J8\"\n    }\n}"
+				},
+				{
+					"name": "400 - Invalid Input",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Channel-Id",
+								"value": "{{x_channel_id}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{kong_api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/dialcode/v1/publish/{{new_dialcode}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"dialcode",
+								"v1",
+								"publish",
+								"{{new_dialcode}}"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 27 Jan 2023 06:11:39 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "311"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "X-RateLimit-Limit-hour",
+							"value": "1000000"
+						},
+						{
+							"key": "X-RateLimit-Remaining-hour",
+							"value": "999999"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Vary",
+							"value": "X-HTTP-Method-Override, Accept-Encoding"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"137-zNtXqEtBNOXRi5UpFPKqpl7q/c8\""
+						},
+						{
+							"key": "X-Kong-Upstream-Latency",
+							"value": "4"
+						},
+						{
+							"key": "X-Kong-Proxy-Latency",
+							"value": "112"
+						},
+						{
+							"key": "Via",
+							"value": "kong/0.14.1"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"api.dialcode.publish\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2023-01-27T06:11:39.034Z\",\n    \"params\": {\n        \"resmsgid\": \"7605cfa0-9e09-11ed-827a-edd2af60aa77\",\n        \"msgid\": null,\n        \"status\": \"failed\",\n        \"err\": \"ERR_DIALCODE_PUBLISH_FIELDS_MISSING\",\n        \"errmsg\": \"Required fields for publish dialcode are missing\"\n    },\n    \"responseCode\": \"CLIENT_ERROR\",\n    \"result\": {}\n}"
+				}
+			]
+		},
+		{
+			"name": "Create Publisher",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Verify status code  200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Multiple scenarios handled at one place",
+							"pm.test(\"Response contains publisher Id\", function () {",
+							"    const responseJson = pm.response.json();",
+							"",
+							"    const publisherId = responseJson.result.identifier;",
+							"    pm.expect(publisherId).is.not.null;",
+							"    pm.globals.set(\"publisherId\", publisherId);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const randomNum = Math.floor((Math.random()*100 +1));",
+							"pm.variables.set(\"random_num\", randomNum);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Channel-ID",
+						"value": "{{channel_id}}"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{kong_api_key}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"request\": {\n        \"publisher\": {\n            \"identifier\": \"sunbird_test_publisher_{{random_num}}\",\n            \"name\": \"Sunbird Test Publisher\"\n        }\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/dialcode/v1/publisher/create",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"dialcode",
+						"v1",
+						"publisher",
+						"create"
+					]
+				},
+				"description": "This API is associated with creating a publisher. A publisher owns the DIAL code.\n\nThe endpoint for Create Publisher is /dialcode/v1/publisher/create\nIt points to knowledge-mw-service - v1/dialcode/publisher/create"
+			},
+			"response": [
+				{
+					"name": "200 - Success",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Channel-ID",
+								"value": "{{x_channel_id}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{kong_api_key}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"request\": {\n        \"publisher\": {\n            \"identifier\": \"sunbird_test_publisher\",\n            \"name\": \"Sunbird Test Publisher\"\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/dialcode/v1/publisher/create",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"dialcode",
+								"v1",
+								"publisher",
+								"create"
+							],
+							"query": [
+								{
+									"key": "new_dialcodes_to_generate",
+									"value": "2",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 27 Jan 2023 06:03:02 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"key": "Vary",
+							"value": "X-HTTP-Method-Override, Accept-Encoding"
+						},
+						{
+							"key": "X-RateLimit-Limit-hour",
+							"value": "1000000"
+						},
+						{
+							"key": "X-RateLimit-Remaining-hour",
+							"value": "999997"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"129-xNI42/TZWYjtIsqnspXO4r4NBtY\""
+						},
+						{
+							"key": "X-Kong-Upstream-Latency",
+							"value": "10"
+						},
+						{
+							"key": "X-Kong-Proxy-Latency",
+							"value": "14"
+						},
+						{
+							"key": "Via",
+							"value": "kong/0.14.1"
+						},
+						{
+							"key": "Content-Encoding",
+							"value": "gzip"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"api.publisher.create\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2023-01-27T06:03:02.065Z\",\n    \"params\": {\n        \"resmsgid\": \"41e29a10-9e08-11ed-827a-edd2af60aa77\",\n        \"msgid\": \"41e13a80-9e08-11ed-a17d-b3ade16c7a73\",\n        \"status\": \"successful\",\n        \"err\": null,\n        \"errmsg\": null\n    },\n    \"responseCode\": \"OK\",\n    \"result\": {\n        \"identifier\": \"sunbird_test_publisher\"\n    }\n}"
+				},
+				{
+					"name": "400 - Publisher already exists",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Channel-ID",
+								"value": "{{x_channel_id}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{kong_api_key}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"request\": {\n        \"publisher\": {\n            \"identifier\": \"sunbird_test_publisher\",\n            \"name\": \"Sunbird Test Publisher\"\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/dialcode/v1/publisher/create",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"dialcode",
+								"v1",
+								"publisher",
+								"create"
+							],
+							"query": [
+								{
+									"key": "new_dialcodes_to_generate",
+									"value": "2",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 27 Jan 2023 06:03:32 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "331"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "X-RateLimit-Limit-hour",
+							"value": "1000000"
+						},
+						{
+							"key": "X-RateLimit-Remaining-hour",
+							"value": "999996"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Vary",
+							"value": "X-HTTP-Method-Override, Accept-Encoding"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"14b-2jcykjETm9avN7k6+UXm7tBy5pQ\""
+						},
+						{
+							"key": "X-Kong-Upstream-Latency",
+							"value": "32"
+						},
+						{
+							"key": "X-Kong-Proxy-Latency",
+							"value": "19"
+						},
+						{
+							"key": "Via",
+							"value": "kong/0.14.1"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"api.publisher.create\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2023-01-27T06:03:32.499Z\",\n    \"params\": {\n        \"resmsgid\": \"54067630-9e08-11ed-827a-edd2af60aa77\",\n        \"msgid\": null,\n        \"status\": \"failed\",\n        \"err\": \"ERR_INVALID_PUBLISHER_CREATION_REQUEST\",\n        \"errmsg\": \"Publisher with identifier: sunbird_test_publisher already exists.\"\n    },\n    \"responseCode\": \"CLIENT_ERROR\",\n    \"result\": {}\n}"
+				},
+				{
+					"name": "400 - Invalid input",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Channel-ID",
+								"value": "{{x_channel_id}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{kong_api_key}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"request\": {\n        \"publisher\": {\n            \"name\": \"Sunbird Test Publisher\"\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/dialcode/v1/publisher/create",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"dialcode",
+								"v1",
+								"publisher",
+								"create"
+							],
+							"query": [
+								{
+									"key": "new_dialcodes_to_generate",
+									"value": "2",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 27 Jan 2023 06:03:55 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "320"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "X-RateLimit-Limit-hour",
+							"value": "1000000"
+						},
+						{
+							"key": "X-RateLimit-Remaining-hour",
+							"value": "999995"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Vary",
+							"value": "X-HTTP-Method-Override, Accept-Encoding"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"140-1qnTxhzL/wnOcZzorsYYyaaQsac\""
+						},
+						{
+							"key": "X-Kong-Upstream-Latency",
+							"value": "2"
+						},
+						{
+							"key": "X-Kong-Proxy-Latency",
+							"value": "11"
+						},
+						{
+							"key": "Via",
+							"value": "kong/0.14.1"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"api.publisher.create\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2023-01-27T06:03:55.045Z\",\n    \"params\": {\n        \"resmsgid\": \"6176b550-9e08-11ed-827a-edd2af60aa77\",\n        \"msgid\": null,\n        \"status\": \"failed\",\n        \"err\": \"ERR_CREATE_PUBLISHER_DIALCODE_FIELDS_MISSING\",\n        \"errmsg\": \"Required fields for create publisher are missing\"\n    },\n    \"responseCode\": \"CLIENT_ERROR\",\n    \"result\": {}\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Publisher",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response returns Publisher Id details\", function () {",
+							"    const responseJson = pm.response.json();",
+							"    const publisherId = responseJson.result.publisher.identifier;",
+							"    pm.expect(publisherId).to.be.eq(pm.globals.get(\"publisherId\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Channel-Id",
+						"value": "{{channel_id}}",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{kong_api_key}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/api/dialcode/v1/publisher/read/{{publisherId}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"dialcode",
+						"v1",
+						"publisher",
+						"read",
+						"{{publisherId}}"
+					]
+				},
+				"description": "This API is associated with fetching a specific publisher owning a DIAL code.\n\nThe endpoint for Get Publisher is /dialcode/v1/publisher/read/publisherId\nIt points to knowledge-mw-service - /v1/dialcode/publisher/read/{{publisherId}}"
+			},
+			"response": [
+				{
+					"name": "200 - Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Channel-Id",
+								"value": "{{channel_id}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{kong_api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/dialcode/v1/publisher/read/{{publisherId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"dialcode",
+								"v1",
+								"publisher",
+								"read",
+								"{{publisherId}}"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 27 Jan 2023 06:40:00 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"key": "X-RateLimit-Limit-hour",
+							"value": "1000000"
+						},
+						{
+							"key": "X-RateLimit-Remaining-hour",
+							"value": "999994"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"1be-12Nlt4lORR296b8A3swrK4h/n+E\""
+						},
+						{
+							"key": "X-Kong-Upstream-Latency",
+							"value": "6"
+						},
+						{
+							"key": "X-Kong-Proxy-Latency",
+							"value": "114"
+						},
+						{
+							"key": "Via",
+							"value": "kong/0.14.1"
+						},
+						{
+							"key": "Content-Encoding",
+							"value": "gzip"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"api.publisher.read\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2023-01-27T06:40:00.380Z\",\n    \"params\": {\n        \"resmsgid\": \"6c1a9bc0-9e0d-11ed-827a-edd2af60aa77\",\n        \"msgid\": \"6c19ff80-9e0d-11ed-a17d-b3ade16c7a73\",\n        \"status\": \"successful\",\n        \"err\": null,\n        \"errmsg\": null\n    },\n    \"responseCode\": \"OK\",\n    \"result\": {\n        \"publisher\": {\n            \"identifier\": \"sunbird_test_publisher_47\",\n            \"name\": \"Sunbird Test Publisher\",\n            \"channel\": \"sunbird\",\n            \"createdOn\": \"2023-01-27T06:37:18.282689\",\n            \"updatedOn\": \"2023-01-27T06:37:18.282733\"\n        }\n    }\n}"
+				},
+				{
+					"name": "400 - Invalid Input",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Channel-Id",
+								"value": "{{channel_id}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{kong_api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/api/dialcode/v1/publisher/read/{{publisherId}}_525",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"dialcode",
+								"v1",
+								"publisher",
+								"read",
+								"{{publisherId}}_525"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 27 Jan 2023 06:40:18 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "333"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "X-RateLimit-Limit-hour",
+							"value": "1000000"
+						},
+						{
+							"key": "X-RateLimit-Remaining-hour",
+							"value": "999993"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"14d-dx3IVcooo63pUUwbfP1psTJxwIw\""
+						},
+						{
+							"key": "Vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"key": "X-Kong-Upstream-Latency",
+							"value": "12"
+						},
+						{
+							"key": "X-Kong-Proxy-Latency",
+							"value": "13"
+						},
+						{
+							"key": "Via",
+							"value": "kong/0.14.1"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"api.publisher.read\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2023-01-27T06:40:18.350Z\",\n    \"params\": {\n        \"resmsgid\": \"76d09ce0-9e0d-11ed-827a-edd2af60aa77\",\n        \"msgid\": null,\n        \"status\": \"failed\",\n        \"err\": \"ERR_INVALID_PUBLISHER_READ_REQUEST\",\n        \"errmsg\": \"Publisher with Identifier: sunbird_test_publisher_47_525 does not exists.\"\n    },\n    \"responseCode\": \"CLIENT_ERROR\",\n    \"result\": {}\n}"
+				}
+			]
+		},
+		{
+			"name": "Update Publisher",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Verify status code  200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Multiple scenarios handled at one place",
+							"pm.test(\"Response contains publisher Id\", function () {",
+							"    const responseJson = pm.response.json();",
+							"    const publisherId = responseJson.result.identifier;",
+							"    pm.expect(publisherId).to.be.eq(pm.globals.get(\"publisherId\"));",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "X-Channel-ID",
+						"value": "{{channel_id}}"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{kong_api_key}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"request\": {\n        \"publisher\": {\n            \"name\": \"Sunbird Test Publisher Update\"\n        }\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/dialcode/v1/publisher/update/{{publisherId}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"dialcode",
+						"v1",
+						"publisher",
+						"update",
+						"{{publisherId}}"
+					]
+				},
+				"description": "This API is associated with creating a publisher. A publisher owns the DIAL code.\n\nThe endpoint for Create Publisher is /dialcode/v1/publisher/create\nIt points to knowledge-mw-service - v1/dialcode/publisher/create"
+			},
+			"response": [
+				{
+					"name": "200 - Success",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-Channel-ID",
+								"value": "{{channel_id}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{kong_api_key}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"request\": {\n        \"publisher\": {\n            \"name\": \"Sunbird Test Publisher Update\"\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/dialcode/v1/publisher/update/{{publisherId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"dialcode",
+								"v1",
+								"publisher",
+								"update",
+								"{{publisherId}}"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 27 Jan 2023 06:54:08 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"key": "X-RateLimit-Limit-hour",
+							"value": "1000000"
+						},
+						{
+							"key": "X-RateLimit-Remaining-hour",
+							"value": "999995"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"12c-ZIzMtoefaIY55wy8EhWO4cRpzNg\""
+						},
+						{
+							"key": "X-Kong-Upstream-Latency",
+							"value": "12"
+						},
+						{
+							"key": "X-Kong-Proxy-Latency",
+							"value": "163"
+						},
+						{
+							"key": "Via",
+							"value": "kong/0.14.1"
+						},
+						{
+							"key": "Content-Encoding",
+							"value": "gzip"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"api.publisher.update\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2023-01-27T06:54:08.438Z\",\n    \"params\": {\n        \"resmsgid\": \"6595fd60-9e0f-11ed-827a-edd2af60aa77\",\n        \"msgid\": \"6594c4e0-9e0f-11ed-a17d-b3ade16c7a73\",\n        \"status\": \"successful\",\n        \"err\": null,\n        \"errmsg\": null\n    },\n    \"responseCode\": \"OK\",\n    \"result\": {\n        \"identifier\": \"sunbird_test_publisher_43\"\n    }\n}"
+				},
+				{
+					"name": "400 - Invalid Input",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-Channel-ID",
+								"value": "{{channel_id}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{kong_api_key}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"request\": {\n        \"publisher\": {\n            \"name\": \"Sunbird Test Publisher Update\"\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/dialcode/v1/publisher/update/{{publisherId}}_25",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"dialcode",
+								"v1",
+								"publisher",
+								"update",
+								"{{publisherId}}_25"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 27 Jan 2023 06:54:26 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "336"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "X-RateLimit-Limit-hour",
+							"value": "1000000"
+						},
+						{
+							"key": "X-RateLimit-Remaining-hour",
+							"value": "999994"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"150-Ch9q7P1iit5aIHZsayRNUDeCef0\""
+						},
+						{
+							"key": "X-Kong-Upstream-Latency",
+							"value": "7"
+						},
+						{
+							"key": "X-Kong-Proxy-Latency",
+							"value": "12"
+						},
+						{
+							"key": "Via",
+							"value": "kong/0.14.1"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"api.publisher.update\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2023-01-27T06:54:26.766Z\",\n    \"params\": {\n        \"resmsgid\": \"70829ee0-9e0f-11ed-827a-edd2af60aa77\",\n        \"msgid\": null,\n        \"status\": \"failed\",\n        \"err\": \"ERR_INVALID_PUBLISHER_UPDATE_REQUEST\",\n        \"errmsg\": \"Publisher with Identifier: sunbird_test_publisher_43_25 does not exists.\"\n    },\n    \"responseCode\": \"CLIENT_ERROR\",\n    \"result\": {}\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Process Status",
 			"event": [
 				{
 					"listen": "test",
@@ -1522,33 +2872,27 @@
 					}
 				}
 			],
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true
-				}
-			},
 			"request": {
-				"method": "POST",
+				"method": "GET",
 				"header": [
 					{
-						"key": "X-Channel-ID",
-						"value": "{{x_channel_id}}"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json"
+						"key": "X-Channel-Id",
+						"value": "{{channel_id}}",
+						"type": "text"
 					},
 					{
 						"key": "Authorization",
-						"value": "{{kong_api_key}}"
+						"value": "{{kong_api_key}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"request\": {\n    \"content\": {\n      \"identifier\": [\n        \"{{collection_id}}\"\n      ],\n      \"dialcode\": [\n        \"{{new_dialcode}}\"\n      ]\n    }\n  }\n}"
-				},
 				"url": {
-					"raw": "{{host}}/api/dialcode/v1/content/link",
+					"raw": "{{host}}/api/dialcode/v1/process/status/{{processId}}",
 					"host": [
 						"{{host}}"
 					],
@@ -1556,10 +2900,12 @@
 						"api",
 						"dialcode",
 						"v1",
-						"content",
-						"link"
+						"process",
+						"status",
+						"{{processId}}"
 					]
-				}
+				},
+				"description": "This API is associated with fetching a specific publisher owning a DIAL code.\n\nThe endpoint for Get Publisher is /dialcode/v1/publisher/read/publisherId\nIt points to knowledge-mw-service - /v1/dialcode/publisher/read/{{publisherId}}"
 			},
 			"response": []
 		},
@@ -1588,7 +2934,7 @@
 				"header": [
 					{
 						"key": "X-Channel-ID",
-						"value": "{{x_channel_id}}"
+						"value": "{{channel_id}}"
 					},
 					{
 						"key": "Content-Type",
@@ -1615,7 +2961,8 @@
 						"update",
 						"{{new_dialcode}}"
 					]
-				}
+				},
+				"description": "This API is used to update DIAL code context information."
 			},
 			"response": []
 		},
@@ -1646,7 +2993,7 @@
 				"header": [
 					{
 						"key": "X-Channel-Id",
-						"value": "{{x_channel_id}}",
+						"value": "{{channel_id}}",
 						"type": "text"
 					},
 					{
@@ -1672,7 +3019,8 @@
 						"read",
 						"{{new_dialcode}}"
 					]
-				}
+				},
+				"description": "This API is used to get DIAL code context information."
 			},
 			"response": []
 		}
