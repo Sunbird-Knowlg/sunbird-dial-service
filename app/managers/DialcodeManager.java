@@ -11,8 +11,10 @@ import commons.exception.ClientException;
 import commons.exception.ResponseCode;
 import dbstore.DialCodeStore;
 import dbstore.PublisherStore;
+import dbstore.QRCodesStore;
 import dto.DialCode;
 import dto.Publisher;
+import dto.QRCodesBatch;
 import dto.SearchDTO;
 import elasticsearch.ElasticSearchUtil;
 import elasticsearch.SearchProcessor;
@@ -48,6 +50,8 @@ public class DialcodeManager extends BaseManager {
     private PublisherStore publisherStore = new PublisherStore();
 
     private DialCodeStore dialCodeStore = new DialCodeStore();
+
+    private QRCodesStore qrCodesStore = new QRCodesStore();
 
     private DialCodeGenerator dialCodeGenerator =  new DialCodeGenerator();
 
@@ -146,6 +150,23 @@ public class DialcodeManager extends BaseManager {
         resp.put(DialCodeEnum.dialcode.name(), dialCode);
         return resp;
     }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.ekstep.dialcode.mgr.DialCodeManager#readQRCodesBatchInfo(java.lang.String)
+     */
+    public Response readQRCodesBatchInfo(String processId) throws Exception {
+        if (StringUtils.isBlank(processId))
+            return ERROR(DialCodeErrorCodes.ERR_INVALID_PROCESS_ID_REQUEST,
+                    DialCodeErrorMessage.ERR_INVALID_PROCESS_ID_REQUEST, ResponseCode.CLIENT_ERROR);
+        QRCodesBatch qrCodesBatch = qrCodesStore.read(processId);
+        Response resp = getSuccessResponse();
+        resp.put(DialCodeEnum.batchInfo.name(), qrCodesBatch);
+        return resp;
+    }
+
 
     /*
      * (non-Javadoc)
@@ -341,7 +362,7 @@ public class DialcodeManager extends BaseManager {
         if (null == map)
             return ERROR(DialCodeErrorCodes.ERR_INVALID_SEARCH_REQUEST, DialCodeErrorMessage.ERR_INVALID_SEARCH_REQUEST,
                     ResponseCode.CLIENT_ERROR);
-        return searchDialCode(requestContext, map);
+        return searchDialCode(requestContext, map, null);
     }
 
 
@@ -352,7 +373,7 @@ public class DialcodeManager extends BaseManager {
      * org.ekstep.dialcode.mgr.IDialCodeManager#listDialCode(java.lang.String,
      * java.utils.Map)
      */
-    public Response searchDialCode(Map<String, Object> requestContext, Map<String, Object> map) throws Exception {
+    public Response searchDialCode(Map<String, Object> requestContext, Map<String, Object> map, List<String> fieldsList) throws Exception {
         if (null == map)
             return ERROR(DialCodeErrorCodes.ERR_INVALID_SEARCH_REQUEST, DialCodeErrorMessage.ERR_INVALID_SEARCH_REQUEST,
                     ResponseCode.CLIENT_ERROR);
@@ -360,7 +381,7 @@ public class DialcodeManager extends BaseManager {
         int offset = getOffset(map, DialCodeErrorCodes.ERR_INVALID_SEARCH_REQUEST);
         map.remove("limit");
         map.remove("offset");
-        Map<String, Object> dialCodeSearch = searchDialCodes(requestContext, map, limit, offset);
+        Map<String, Object> dialCodeSearch = searchDialCodes(requestContext, map, limit, offset, fieldsList);
 
         Response resp = getSuccessResponse();
         resp.put(DialCodeEnum.count.name(), dialCodeSearch.get(DialCodeEnum.count.name()));
@@ -619,7 +640,7 @@ public class DialcodeManager extends BaseManager {
      * @return
      * @throws Exception
      */
-    private Map<String, Object> searchDialCodes(Map<String, Object> requestContext, Map<String, Object> map, int limit, int offset)
+    private Map<String, Object> searchDialCodes(Map<String, Object> requestContext, Map<String, Object> map, int limit, int offset, List<String> fieldsList)
             throws Exception {
         Map<String, Object> dialCodeSearch = new HashMap<String, Object>();
         List<Object> searchResult = new ArrayList<Object>();
@@ -629,7 +650,7 @@ public class DialcodeManager extends BaseManager {
 
         searchDto.setProperties(setSearchProperties(channelId, map));
         searchDto.setOperation(Constants.SEARCH_OPERATION_AND);
-        searchDto.setFields(getFields());
+        if(fieldsList!=null && fieldsList.size()>0) searchDto.setFields(fieldsList); else searchDto.setFields(getFields());
         searchDto.setLimit(limit);
         searchDto.setOffset(offset);
 
@@ -658,7 +679,7 @@ public class DialcodeManager extends BaseManager {
         fields.add("channel");
         fields.add("status");
         fields.add("metadata");
-
+        fields.add("imageUrl");
         return fields;
     }
 

@@ -21,7 +21,7 @@ public class DialcodeV4Controller extends BaseController {
             Response response = dialCodeManager.readDialCodeV4(dialCodeId);
             return getResponseEntity(response, apiId, null);
         } catch (Exception e) {
-            TelemetryManager.error("Exception Occured while reading Dial Code details : "+ e.getMessage(), e);
+            TelemetryManager.error("Exception Occurred while reading Dial Code details : "+ e.getMessage(), e);
             return getExceptionResponseEntity(e, apiId, null);
         }
     }
@@ -35,7 +35,18 @@ public class DialcodeV4Controller extends BaseController {
             Response response = dialCodeManager.updateDialCodeV4(dialCodeId, channelId, map);
             return getResponseEntity(response, apiId, null);
         } catch (Exception e) {
-           TelemetryManager.error("Exception Occured while updating Dial Code : "+ e.getMessage(), e);
+           TelemetryManager.error("Exception Occurred while updating Dial Code : "+ e.getMessage(), e);
+            return getExceptionResponseEntity(e, apiId, null);
+        }
+    }
+
+    public Promise<Result> readQRCodesBatchInfo(String processId) {
+        String apiId = "sunbird.dialcode.batch.read";
+        try {
+            Response response = dialCodeManager.readQRCodesBatchInfo(processId);
+            return getResponseEntity(response, apiId, null);
+        } catch (Exception e) {
+            TelemetryManager.error("Exception Occurred while reading QR ZIP path : "+ e.getMessage(), e);
             return getExceptionResponseEntity(e, apiId, null);
         }
     }

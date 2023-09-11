@@ -131,6 +131,23 @@ public abstract class CassandraStore {
             Where selectWhere = selectQuery.where();
             Clause clause = QueryBuilder.eq(key, value);
             selectWhere.and(clause);
+            TelemetryManager.log("Cassandra store:: read query: " + selectQuery);
+            ResultSet results = CassandraConnector.getSession().execute(selectQuery);
+            return results.all();
+        } catch (Exception e) {
+            throw new ServerException(CassandraStoreParam.ERR_SERVER_ERROR.name(),
+                    "Error while fetching record for ID : " + value, e);
+        }
+
+    }
+
+    protected List<Row> readByUUID(String key, Object value) {
+        try {
+            if (StringUtils.isBlank(key)) {
+                throw new ServerException(CassandraStoreParam.ERR_SERVER_ERROR.name(),
+                        "Invalid Identifier to read");
+            }
+            String selectQuery = "select * from " + keyspace+"."+table + " where " + key + "=" + value + ";";
             ResultSet results = CassandraConnector.getSession().execute(selectQuery);
             return results.all();
         } catch (Exception e) {

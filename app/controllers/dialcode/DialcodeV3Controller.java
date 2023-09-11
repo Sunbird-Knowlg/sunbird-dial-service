@@ -76,7 +76,16 @@ public class DialcodeV3Controller extends BaseController {
         Request request = getRequest();
         try {
             Map<String, Object> map = (Map<String, Object>) request.get(DialCodeEnum.search.name());
-            Response response = dialCodeManager.searchDialCode(request.getContext(), map);
+            List<String> fieldsList = new ArrayList<String>();
+            if(request.get(DialCodeEnum.fields.name()) != null) {
+                try {
+                    fieldsList = (List<String>) request.get(DialCodeEnum.fields.name());
+                } catch (ClassCastException ce) {
+                    fieldsList.add(request.get(DialCodeEnum.fields.name()).toString());
+                }
+                fieldsList.add("identifier");
+            }
+            Response response = dialCodeManager.searchDialCode(request.getContext(), map, fieldsList);
             return getResponseEntity(response, apiId, null);
         } catch (Exception e) {
             TelemetryManager

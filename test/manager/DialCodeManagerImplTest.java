@@ -190,7 +190,7 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 	// Search Dial Code with null map - CLIENT_ERROR
 	@Test
 	public void dialCodeTest_10() throws Exception {
-		Response response = dialCodeMgr.searchDialCode(getRequestContext(), null);
+		Response response = dialCodeMgr.searchDialCode(getRequestContext(), null, null);
 		Assert.assertEquals("CLIENT_ERROR", response.getResponseCode().toString());
 	}
 
@@ -199,7 +199,7 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 	public void dialCodeTest_11() throws Exception {
 		exception.expect(ClientException.class);
 		String searchReq = "{\"status\":\"Live\",\"limit\":\"abc\"}";
-		Response response = dialCodeMgr.searchDialCode(getRequestContext(), getRequestMap(searchReq));
+		Response response = dialCodeMgr.searchDialCode(getRequestContext(), getRequestMap(searchReq),null);
 	}
 
 	// Sync Dial Code with null Request - CLIENT_ERROR

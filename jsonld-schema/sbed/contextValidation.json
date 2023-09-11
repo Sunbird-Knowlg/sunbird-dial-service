@@ -22,6 +22,9 @@
     },
     "framework" : {
       "type": "object"
+    },
+    "keywords": {
+      "type": "array"
     }
   }
 }
