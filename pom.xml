@@ -55,7 +55,6 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.2.0</version>
-<!--            <scope>test</scope>-->
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -89,6 +88,12 @@
         <dependency>
             <groupId>com.typesafe.play</groupId>
             <artifactId>play-netty-server_2.11</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty</artifactId>
+                </exclusion>
+            </exclusions>
             <version>${play2.version}</version>
             <scope>runtime</scope>
         </dependency>
@@ -161,7 +166,16 @@
                     <groupId>com.google.guava</groupId>
                     <artifactId>guava</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-codec</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-codec</artifactId>
+            <version>4.1.68.Final</version>
         </dependency>
         <dependency>
             <groupId>org.cassandraunit</groupId>
