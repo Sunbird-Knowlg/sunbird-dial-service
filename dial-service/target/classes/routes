@@ -1,0 +1,18 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+GET    /health									@controllers.health.HealthCheckController.checkSystemHealth()
+GET    /service/health							@controllers.health.HealthCheckController.checkServiceHealth()
+POST   /dialcode/v3/generate						@controllers.dialcode.DialcodeV3Controller.generateDialCode()
+GET    /dialcode/v3/read/:id					@controllers.dialcode.DialcodeV3Controller.readDialCode(id: String)
+PATCH  /dialcode/v3/update/:id                     @controllers.dialcode.DialcodeV3Controller.updateDialCode(id: String)
+POST   /dialcode/v3/list                           @controllers.dialcode.DialcodeV3Controller.listDialCode()
+POST   /dialcode/v3/search                         @controllers.dialcode.DialcodeV3Controller.searchDialCode()
+POST   /dialcode/v3/sync                           @controllers.dialcode.DialcodeV3Controller.syncDialCode()
+POST   /dialcode/v3/publish/:id                    @controllers.dialcode.DialcodeV3Controller.publishDialCode(id: String)
+POST   /dialcode/v3/publisher/create               @controllers.dialcode.DialcodeV3Controller.createPublisher()
+GET    /dialcode/v3/publisher/read/:id             @controllers.dialcode.DialcodeV3Controller.readPublisher(id: String)
+PATCH  /dialcode/v3/publisher/update/:id           @controllers.dialcode.DialcodeV3Controller.updatePublisher(id: String)
+PATCH  /dialcode/v4/update/:id                     @controllers.dialcode.DialcodeV4Controller.updateDialCode(id: String)
+GET    /dialcode/v4/read/:id					    @controllers.dialcode.DialcodeV4Controller.readDialCode(id: String)
+GET    /dialcode/v4/batch/read/:processid           @controllers.dialcode.DialcodeV4Controller.readQRCodesBatchInfo(processid: String)
