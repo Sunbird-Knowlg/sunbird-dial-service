@@ -214,7 +214,7 @@ public class TelemetryGenerator {
 	private static Context getContext(Map<String, String> context) {
 		String channel = context.get(TelemetryParams.CHANNEL.name());
 		String env = context.get(TelemetryParams.ENV.name());
-		Context eventContext = new Context(channel, env, (org.apache.kafka.clients.producer.Producer) getProducer(context));
+		Context eventContext = new Context(channel, env, getProducer(context));
 		String sid = context.get("sid");
 		if (StringUtils.isNotBlank(sid))
 			eventContext.setSid(sid);
