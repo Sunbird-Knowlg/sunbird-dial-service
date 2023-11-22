@@ -1,5 +1,3 @@
-package org.sunbird;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.sunbird.commons.AppConfig;
