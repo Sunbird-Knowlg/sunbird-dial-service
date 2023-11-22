@@ -5,7 +5,6 @@ package org.sunbird.telemetry;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import org.apache.kafka.clients.producer.Producer;
 
 /**
  * @author mahesh
