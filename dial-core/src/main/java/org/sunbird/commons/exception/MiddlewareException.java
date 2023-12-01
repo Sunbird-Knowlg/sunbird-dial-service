@@ -1,6 +1,7 @@
 package org.sunbird.commons.exception;
 
 import java.text.MessageFormat;
+import java.util.List;
 
 /**
  * Base class for middleware exceptions. Provides the support for returning error
@@ -17,6 +18,7 @@ public class MiddlewareException extends RuntimeException {
 	 */
 	private static final long serialVersionUID = -3866941321932941766L;
 	private String errCode;
+    private List<String> messages;
     
     /**
      * Initializes the middleware exception with a given error code and message.
@@ -37,6 +39,12 @@ public class MiddlewareException extends RuntimeException {
     public MiddlewareException(String errCode, String message, Object... params) {
         super(MessageFormat.format(message, params));
         this.errCode = errCode;
+    }
+
+    public MiddlewareException(String errCode, String commonMessage, List<String> messages) {
+        super(commonMessage);
+        this.errCode = errCode;
+        this.messages = messages;
     }
 
     /**
@@ -71,6 +79,10 @@ public class MiddlewareException extends RuntimeException {
     
     public ResponseCode getResponseCode() {
         return ResponseCode.SERVER_ERROR;
+    }
+
+    public List<String> getMessages() {
+        return messages;
     }
     
     @Override

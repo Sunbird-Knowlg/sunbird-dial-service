@@ -61,6 +61,11 @@ public class Response implements Serializable {
         result.put(key, vo);
     }
 
+    public Response putAll(Map<String, Object> resultMap) {
+        result.putAll(resultMap);
+        return this;
+    }
+
     public ResponseParams getParams() {
         return params;
     }

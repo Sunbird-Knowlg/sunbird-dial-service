@@ -1,0 +1,99 @@
+package org.sunbird.actor.core;
+
+import akka.actor.AbstractActor;
+import akka.actor.ActorRef;
+import akka.dispatch.Futures;
+import akka.dispatch.Recover;
+import akka.pattern.Patterns;
+import org.sunbird.commons.dto.Request;
+import org.sunbird.commons.dto.Response;
+import org.sunbird.commons.dto.ResponseParams;
+import org.sunbird.commons.exception.ClientException;
+import org.sunbird.commons.exception.MiddlewareException;
+import org.sunbird.commons.exception.ResourceNotFoundException;
+import org.sunbird.commons.exception.ResponseCode;
+import org.sunbird.commons.exception.ServerException;
+import scala.Function1;
+import scala.concurrent.Future;
+
+import java.util.Arrays;
+import java.util.List;
+
+public abstract class BaseActor extends AbstractActor {
+    public List<String> preSignedObjTypes = Arrays.asList("assets", "artifact", "hierarchy");
+
+    public abstract Future<Response> onReceive(Request request) throws Throwable;
+
+    private Future<Response> internalOnReceive(Request request) {
+        try {
+            return onReceive(request).recoverWith(new Recover<Future<Response>>() {
+                @Override
+                public Future<Response> recover(Throwable failure) {
+                    return ERROR(request.getOperation(), failure);
+                }
+            }, getContext().dispatcher());
+        } catch (Throwable e) {
+            return ERROR(request.getOperation(), e);
+        }
+    }
+
+    @Override
+    public Receive createReceive() {
+        return receiveBuilder().match(Request.class, message -> {
+            Patterns.pipe(internalOnReceive(message), getContext().dispatcher()).to(sender());
+        }).build();
+    }
+
+    protected Future<Response> ERROR(String operation, Throwable exception) {
+        return Futures.successful(getErrorResponse(exception));
+    }
+
+    public Future<Response> ERROR(String operation) {
+        Response response = getErrorResponse(new ClientException(ResponseCode.CLIENT_ERROR.name(), "Invalid operation provided in request to process: " + operation));
+        return Futures.successful(response);
+    }
+
+    private Response getErrorResponse(Throwable e) {
+        Response response = new Response();
+        ResponseParams params = new ResponseParams();
+        params.setStatus(ResponseParams.StatusType.failed.name());
+        if (e instanceof MiddlewareException) {
+            MiddlewareException mwException = (MiddlewareException) e;
+            params.setErr(mwException.getErrCode());
+            response.put("messages", mwException.getMessages());
+        } else {
+            e.printStackTrace();
+            params.setErr("ERR_SYSTEM_EXCEPTION");
+        }
+        System.out.println("Exception occurred - class :" + e.getClass().getName() + " with message :" + e.getMessage());
+        params.setErrmsg(setErrMessage(e));
+        response.setParams(params);
+        setResponseCode(response, e);
+        return response;
+    }
+
+    private String setErrMessage(Throwable e) {
+        if (e instanceof MiddlewareException) {
+            return e.getMessage();
+        } else {
+            return "Something went wrong in server while processing the request";
+        }
+    }
+
+    private void setResponseCode(Response res, Throwable e) {
+        if (e instanceof ClientException) {
+            res.setResponseCode(ResponseCode.CLIENT_ERROR);
+        } else if (e instanceof ServerException) {
+            res.setResponseCode(ResponseCode.SERVER_ERROR);
+        } else if (e instanceof ResourceNotFoundException) {
+            res.setResponseCode(ResponseCode.RESOURCE_NOT_FOUND);
+        } else {
+            res.setResponseCode(ResponseCode.SERVER_ERROR);
+        }
+    }
+
+    public void OK(Response response, ActorRef actor) {
+        sender().tell(response, actor);
+    }
+
+}

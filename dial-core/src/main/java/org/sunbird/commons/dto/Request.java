@@ -29,6 +29,7 @@ public class Request implements Serializable {
     private String managerName;
     private String operation;
     private String request_id;
+    private String objectType;
 
     {
         // Set the context here.
@@ -65,6 +66,13 @@ public class Request implements Serializable {
     	this.params = new RequestParams();
     	this.params.setMsgid(request_id);
    
+    }
+
+    public Request(Map<String, Object> context, Map<String, Object> request, String operation, String objectType) {
+        this.context = context;
+        this.request = request;
+        this.operation = operation;
+        this.objectType = objectType;
     }
     
     public Request(Request request) {
@@ -178,6 +186,10 @@ public class Request implements Serializable {
     	if(this.params.getMsgid()==null&&request_id!=null)
     		this.params.setMsgid(request_id);
 
+    }
+
+    public void setObjectType(String objectType) {
+        this.objectType = objectType;
     }
 
 }
