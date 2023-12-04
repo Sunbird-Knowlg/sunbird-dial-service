@@ -1,4 +1,4 @@
-package org.sunbird.dial.actors
+package org.sunbird.actors
 
 import org.apache.commons.lang3.StringUtils
 

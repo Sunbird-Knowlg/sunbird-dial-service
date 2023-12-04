@@ -1,25 +1,14 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.sunbird</groupId>
         <artifactId>sunbird-dial-service</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-
+    <modelVersion>4.0.0</modelVersion>
     <artifactId>dial-actors</artifactId>
-    <packaging>jar</packaging>
-
-    <name>dial-actors</name>
-    <url>http://maven.apache.org</url>
-
-    <properties>
-        <typesafe.akka.version>2.5.22</typesafe.akka.version>
-        <play2.version>2.8.20</play2.version>
-        <scala.version>2.12.11</scala.version>
-        <scala.major.version>2.12</scala.major.version>
-        <jackson.version>2.13.5</jackson.version>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -62,6 +51,23 @@
                     <scalaVersion>${scala.version}</scalaVersion>
                     <checkMultipleScalaVersions>false</checkMultipleScalaVersions>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>scala-compile-first</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>scala-test-compile</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.scalatest</groupId>

@@ -1,7 +1,7 @@
 package modules
 
 import com.google.inject.AbstractModule
-import org.sunbird.dial.actors.{HealthActor, DialCodeActor}
+import org.sunbird.actors.{DialCodeActor, HealthActor}
 import play.libs.akka.AkkaGuiceSupport
 import utils.ActorNames
 class DialModule extends AbstractModule with AkkaGuiceSupport {
