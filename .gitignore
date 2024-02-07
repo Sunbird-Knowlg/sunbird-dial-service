@@ -1,10 +1,11 @@
 **/target/**
 **/.idea/**
 **/*.iml
-**/application.conf
-*.conf
 *.idea*
 *.iml
 .project
 .settings/org.eclipse.m2e.core.prefs
 RUNNING_PID
+*.class
+*.gif
+*.html

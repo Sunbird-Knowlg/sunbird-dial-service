@@ -4,6 +4,7 @@ public class Constants {
 
     //Cassandra Connection constants
     public static final String IDENTIFIER="id";
+    public static final String PROCESS_ID="processId";
     public static final String SUCCESS="SUCCESS";
     public static final String RESPONSE="response";
     public static final String SESSION_IS_NULL="cassandra session is null for this ";
@@ -99,4 +100,24 @@ public class Constants {
     // Dialcode Constants
     public static final String DIALCODE_SEARCH_LIMIT = "dialcode.search.limit";
     public static final String DIALCODE_ES_CONN_INFO = "search.es_conn_info";
+    public static final String DIALCODE = "dialcode";
+    public static final String GENERATE_DIALCODE = "generateDialCode";
+    public static final String UPDATE_DIALCODE = "updateDialCode";
+    public static final String READ_DIALCODE = "readDialCode";
+    public static final String LIST_DIALCODE = "listDialCode";
+    public static final String SEARCH_DIALCODE = "searchDialCode";
+    public static final String SYNC_DIALCODE = "syncDialCode";
+    public static final String PUBLISH_DIALCODE = "publishDialCode";
+    public static final String CREATE_PUBLISHER = "createPublisher";
+    public static final String READ_PUBLISHER = "readPublisher";
+    public static final String UPDATE_PUBLISHER = "updatePublisher";
+    public static final String READ_QR_CODES_BATCH_INFO = "readQRCodesBatchInfo";
+
+    public static final String DIALCODES = "dialcodes";
+    public static final String SYNC = "sync";
+    public static final String PUBLISHER = "publisher";
+
+    //v4
+    public static final String READ_DIALCODE_V4 = "readDialCodeV4";
+    public static final String UPDATE_DIALCODE_V4 = "updateDialCodeV4";
 }
