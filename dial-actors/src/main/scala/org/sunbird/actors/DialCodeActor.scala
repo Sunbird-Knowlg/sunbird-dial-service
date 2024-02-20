@@ -25,7 +25,6 @@ class DialCodeActor @Inject()(implicit exec: ExecutionContext) extends BaseActor
       case Constants.UPDATE_DIALCODE => updateDialCode(request)
       case Constants.LIST_DIALCODE => listDialCode(request)
       case Constants.SEARCH_DIALCODE => searchDialCode(request)
-//      case Constants.SYNC_DIALCODE => syncDialCode(request)
       case Constants.PUBLISH_DIALCODE => publishDialCode(request)
       case Constants.CREATE_PUBLISHER => createPublisher(request)
       case Constants.READ_PUBLISHER => readPublisher(request)
@@ -36,10 +35,10 @@ class DialCodeActor @Inject()(implicit exec: ExecutionContext) extends BaseActor
       case _ => ERROR(request.getOperation)
     }
   }
+  private val dialManager = new DialcodeManager
 
   @throws[Exception]
   private def generateDialCode(request: Request): Future[Response] = {
-    val dialManager = new DialcodeManager
     val response = dialManager.generateDialCode(request.getRequest, request.getContext.getOrDefault("channel", "").asInstanceOf[String])
     if (ResponseHandler.checkError(response)) {
       throw new ClientException(response.getParams.getErr, response.getParams.getErrmsg)
@@ -51,7 +50,6 @@ class DialCodeActor @Inject()(implicit exec: ExecutionContext) extends BaseActor
 
   @throws[Exception]
   private def readDialCode(request: Request): Future[Response] = {
-    val dialManager = new DialcodeManager
     val response = dialManager.readDialCode(request.getRequest.getOrDefault(Constants.IDENTIFIER, "").asInstanceOf[String])
     if (ResponseHandler.checkError(response)) {
       throw new ClientException(response.getParams.getErr, response.getParams.getErrmsg)
@@ -62,7 +60,6 @@ class DialCodeActor @Inject()(implicit exec: ExecutionContext) extends BaseActor
   }
   @throws[Exception]
   private def updateDialCode(request: Request): Future[Response] = {
-    val dialManager = new DialcodeManager
     val response = dialManager.updateDialCode(request.getRequest.getOrDefault(Constants.IDENTIFIER, "").asInstanceOf[String],
       request.getContext.getOrDefault("channel", "").asInstanceOf[String], request.getRequest)
     if (ResponseHandler.checkError(response)) {
@@ -75,8 +72,7 @@ class DialCodeActor @Inject()(implicit exec: ExecutionContext) extends BaseActor
 
   @throws[Exception]
   private def listDialCode(request: Request): Future[Response] = {
-    val dialManager = new DialcodeManager
-    val response = dialManager.listDialCode(request.getRequest.getOrDefault("search", new java.util.HashMap()).asInstanceOf[util.Map[String, AnyRef]], request.getRequest)
+    val response = dialManager.listDialCode(request.getContext, request.getRequest.getOrDefault("search", new java.util.HashMap()).asInstanceOf[util.Map[String, AnyRef]])
     if (ResponseHandler.checkError(response)) {
       throw new ClientException(response.getParams.getErr, response.getParams.getErrmsg)
     }
@@ -87,7 +83,6 @@ class DialCodeActor @Inject()(implicit exec: ExecutionContext) extends BaseActor
 
   @throws[Exception]
   private def searchDialCode(request: Request): Future[Response] = {
-    val dialManager = new DialcodeManager
     var fieldsList = new util.ArrayList[String]().asInstanceOf[util.List[String]]
     if(request.getRequest.get("fields") != null){
       try {
@@ -107,21 +102,7 @@ class DialCodeActor @Inject()(implicit exec: ExecutionContext) extends BaseActor
     }
   }
   @throws[Exception]
-  private def syncDialCode(request: Request): Future[Response] = {
-    val dialManager = new DialcodeManager
-    val ids = request.getRequest.get(Constants.IDENTIFIER).asInstanceOf[Array[String]]
-//    val identifiers: List[String]  = Optional.ofNullable(ids.toList).orElse()
-    val response = dialManager.readDialCode(request.getRequest.getOrDefault(Constants.IDENTIFIER, "").asInstanceOf[String])
-    if (ResponseHandler.checkError(response)) {
-      throw new ClientException(response.getParams.getErr, response.getParams.getErrmsg)
-    }
-    else {
-      Future { ResponseHandler.OK().putAll(response.getResult) }(ec)
-    }
-  }
-  @throws[Exception]
   private def publishDialCode(request: Request): Future[Response] = {
-    val dialManager = new DialcodeManager
     val response = dialManager.publishDialCode(request.getRequest.getOrDefault(Constants.IDENTIFIER, "").asInstanceOf[String],
       request.getContext.getOrDefault("channel", "").asInstanceOf[String])
     if (ResponseHandler.checkError(response)) {
@@ -134,7 +115,6 @@ class DialCodeActor @Inject()(implicit exec: ExecutionContext) extends BaseActor
 
   @throws[Exception]
   private def createPublisher(request: Request): Future[Response] = {
-    val dialManager = new DialcodeManager
     val response = dialManager.createPublisher(request.getRequest, request.getContext.getOrDefault("channel", "").asInstanceOf[String])
     if (ResponseHandler.checkError(response)) {
       throw new ClientException(response.getParams.getErr, response.getParams.getErrmsg)
@@ -146,7 +126,6 @@ class DialCodeActor @Inject()(implicit exec: ExecutionContext) extends BaseActor
 
   @throws[Exception]
   private def readPublisher(request: Request): Future[Response] = {
-    val dialManager = new DialcodeManager
     val response = dialManager.readPublisher(request.getRequest.getOrDefault(Constants.IDENTIFIER, "").asInstanceOf[String])
     if (ResponseHandler.checkError(response)) {
       throw new ClientException(response.getParams.getErr, response.getParams.getErrmsg)
@@ -158,7 +137,6 @@ class DialCodeActor @Inject()(implicit exec: ExecutionContext) extends BaseActor
 
   @throws[Exception]
   private def updatePublisher(request: Request): Future[Response] = {
-    val dialManager = new DialcodeManager
     val response = dialManager.updatePublisher(request.getRequest.getOrDefault(Constants.IDENTIFIER, "").asInstanceOf[String],
       request.getContext.getOrDefault("channel", "").asInstanceOf[String], request.getRequest.getOrDefault(Constants.PUBLISHER, "").asInstanceOf[util.Map[String, AnyRef]] )
     if (ResponseHandler.checkError(response)) {
@@ -171,7 +149,6 @@ class DialCodeActor @Inject()(implicit exec: ExecutionContext) extends BaseActor
 
   @throws[Exception]
   private def readDialCodeV4(request: Request): Future[Response] = {
-    val dialManager = new DialcodeManager
     val response = dialManager.readDialCodeV4(request.getRequest.getOrDefault(Constants.IDENTIFIER, "").asInstanceOf[String])
     if (ResponseHandler.checkError(response)) {
       throw new ClientException(response.getParams.getErr, response.getParams.getErrmsg)
@@ -183,7 +160,6 @@ class DialCodeActor @Inject()(implicit exec: ExecutionContext) extends BaseActor
 
   @throws[Exception]
   private def updateDialCodeV4(request: Request): Future[Response] = {
-    val dialManager = new DialcodeManager
     val response = dialManager.updateDialCodeV4(request.getRequest.getOrDefault(Constants.IDENTIFIER, "").asInstanceOf[String],
       request.getContext.getOrDefault("channel", "").asInstanceOf[String], request.getRequest)
     if (ResponseHandler.checkError(response)) {
@@ -196,7 +172,6 @@ class DialCodeActor @Inject()(implicit exec: ExecutionContext) extends BaseActor
 
   @throws[Exception]
   private def readQRCodesBatchInfo(request: Request): Future[Response] = {
-    val dialManager = new DialcodeManager
     val response = dialManager.readQRCodesBatchInfo(request.getRequest.getOrDefault(Constants.PROCESS_ID, "").asInstanceOf[String])
     if (ResponseHandler.checkError(response)) {
       throw new ClientException(response.getParams.getErr, response.getParams.getErrmsg)
