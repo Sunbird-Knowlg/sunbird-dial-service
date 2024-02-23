@@ -1,9 +1,0 @@
-org/sunbird/manager/DialCodeManagerImplTest.class
-org/sunbird/common/CassandraTestSetup.class
-org/sunbird/commons/JsonUtilsTest$1.class
-org/sunbird/manager/HealthCheckManagerTest.class
-org/sunbird/commons/SchemaCacheLoaderTest.class
-org/sunbird/manager/DialCodeManagerImplTest$1.class
-org/sunbird/commons/JsonUtilsTest.class
-org/sunbird/commons/AppConfigTest.class
-org/sunbird/manager/DialCodeManagerImplTest$2.class
