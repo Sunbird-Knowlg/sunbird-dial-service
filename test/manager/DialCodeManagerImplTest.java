@@ -410,7 +410,7 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 	}
 
 
-	private static void createDialCodeIndex() throws IOException {
+	private static void createDialCodeIndex() throws Exception {
 		Constants.DIAL_CODE_INDEX=DIALCODE_INDEX;
 		ElasticSearchUtil.initialiseESClient(DIALCODE_INDEX, AppConfig.config.getString("search.es_conn_info"));
 		String settings = "{\"max_ngram_diff\":\"29\",\"mapping\":{\"total_fields\":{\"limit\":\"1050\"}},\"analysis\":{\"analyzer\":{\"dc_index_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"standard\",\"filter\":[\"lowercase\",\"mynGram\"]},\"dc_search_analyzer\":{\"type\":\"custom\",\"tokenizer\":\"standard\",\"filter\":[\"lowercase\"]},\"keylower\":{\"tokenizer\":\"keyword\",\"filter\":\"lowercase\"}},\"filter\":{\"mynGram\":{\"type\":\"nGram\",\"min_gram\":1,\"max_gram\":30,\"token_chars\":[\"letter\",\"digit\",\"whitespace\",\"punctuation\",\"symbol\"]}}}}";
