@@ -144,7 +144,6 @@ public class ElasticSearchUtil {
 
 	public static boolean addIndex(String indexName, String settings, String mappings) throws IOException {
 		boolean response = false;
-		Map<String, Object> updatedMap = mapper.readValue(mappings, new TypeReference<Map<String, Object>>() {});
 		RestHighLevelClient client = getClient(indexName);
 		if (!isIndexExists(indexName)) {
 			CreateIndexRequest createRequest = new CreateIndexRequest(indexName);
@@ -152,7 +151,7 @@ public class ElasticSearchUtil {
 			if (StringUtils.isNotBlank(settings))
 				createRequest.settings(Settings.builder().loadFromSource(settings, XContentType.JSON));
 			if (StringUtils.isNotBlank(mappings))
-				createRequest.mapping(updatedMap);
+				createRequest.mapping(mapper.readValue(mappings, new TypeReference<Map<String, Object>>() {}));
 			CreateIndexResponse createIndexResponse = client.indices().create(createRequest, RequestOptions.DEFAULT);
 
 			response = createIndexResponse.isAcknowledged();
