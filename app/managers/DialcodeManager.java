@@ -661,7 +661,7 @@ public class DialcodeManager extends BaseManager {
                 Constants.DIAL_CODE_INDEX, true);
         SearchResponse searchResponse = Await.result(searchResp, WAIT_TIMEOUT.duration());
         searchResult = ElasticSearchUtil.getDocumentsFromHits(searchResponse.getHits());
-        dialCodeSearch.put(DialCodeEnum.count.name(), (int) searchResponse.getHits().getTotalHits().value);
+        dialCodeSearch.put(DialCodeEnum.count.name(), (int) searchResponse.getHits().getTotalHits());
         dialCodeSearch.put(DialCodeEnum.dialcodes.name(), searchResult);
         writeTelemetrySearchLog(requestContext, map, dialCodeSearch);
         return dialCodeSearch;

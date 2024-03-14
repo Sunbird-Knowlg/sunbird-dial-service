@@ -8,7 +8,6 @@ import com.datastax.driver.core.Session;
 import commons.JedisFactory;
 import commons.dto.Response;
 import elasticsearch.ElasticSearchUtil;
-import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import redis.clients.jedis.Jedis;
 import utils.CassandraConnector;
@@ -34,7 +33,7 @@ public interface IHealthCheckManager {
         try{
             dialcodeManager.init();
             RestHighLevelClient restClient= ElasticSearchUtil.getClient(Constants.DIAL_CODE_INDEX);
-            boolean response = restClient.ping(RequestOptions.DEFAULT);
+            boolean response = restClient.ping();
             return response;
         }catch (Exception e){
 //            e.printStackTrace();
