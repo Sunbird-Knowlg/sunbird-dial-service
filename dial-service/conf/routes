@@ -1,0 +1,18 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+GET	    /health		                                controllers.HealthController.health
+
+POST   /dialcode/v3/generate						controllers.v3.DialCodeController.generateDialCode()
+PATCH  /dialcode/v3/update/:id                      controllers.v3.DialCodeController.updateDialCode(id: String)
+POST   /dialcode/v3/list                            controllers.v3.DialCodeController.listDialCode()
+GET    /dialcode/v3/read/:id					    controllers.v3.DialCodeController.readDialCode(id: String)
+POST   /dialcode/v3/search                          controllers.v3.DialCodeController.searchDialCode()
+#POST   /dialcode/v3/sync                            controllers.v3.DialCodeController.syncDialCode()
+POST   /dialcode/v3/publish/:id                     controllers.v3.DialCodeController.publishDialCode(id: String)
+POST   /dialcode/v3/publisher/create                controllers.v3.DialCodeController.createPublisher()
+GET    /dialcode/v3/publisher/read/:id              controllers.v3.DialCodeController.readPublisher(id: String)
+PATCH  /dialcode/v3/publisher/update/:id            controllers.v3.DialCodeController.updatePublisher(id: String)
+PATCH  /dialcode/v4/update/:id                      controllers.v4.DialCodeController.updateDialCode(id: String)
+GET    /dialcode/v4/read/:id					    controllers.v4.DialCodeController.readDialCode(id: String)
+GET    /dialcode/v4/batch/read/:processid           controllers.v4.DialCodeController.readQRCodesBatchInfo(processid: String)
