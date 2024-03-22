@@ -228,12 +228,6 @@
             <artifactId>jackson-module-scala_2.12</artifactId>
             <version>${jackson.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.cassandra</groupId>
-            <artifactId>cassandra-all</artifactId>
-            <version>4.0.10</version>
-        </dependency>
-
     </dependencies>
 
 

@@ -26,13 +26,8 @@ public class CassandraTestSetup extends WithApplication {
 	}
 
 	private static void setupEmbeddedCassandra() throws Exception {
-		try {
 			EmbeddedCassandraServerHelper.startEmbeddedCassandra("/cassandra-unit.yaml", 100000L);
 			session = CassandraConnector.getSession();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	private static void tearEmbeddedCassandraSetup() {
