@@ -1,14 +1,13 @@
 FROM --platform=linux/x86_64 eclipse-temurin:11.0.20.1_1-jdk-focal
 RUN apt-get update \
-    && apt-get install unzip \
-    && apt-get install curl \
+    && apt-get install -y unzip curl \
     && adduser --uid 1001 --home /home/sunbird/ --disabled-login sunbird \
     && mkdir -p /home/sunbird \
     && chown -R sunbird:sunbird /home/sunbird
 RUN chown -R sunbird:sunbird /home/sunbird
 USER sunbird
-COPY ./target/sunbird-dial-service-1.0-SNAPSHOT-dist.zip /home/sunbird/
-RUN unzip /home/sunbird/sunbird-dial-service-1.0-SNAPSHOT-dist.zip -d /home/sunbird/
-RUN rm /home/sunbird/sunbird-dial-service-1.0-SNAPSHOT-dist.zip
+COPY ./dial-service/target/dial-service-1.0-SNAPSHOT-dist.zip /home/sunbird/
+RUN unzip /home/sunbird/dial-service-1.0-SNAPSHOT-dist.zip -d /home/sunbird/
+RUN rm /home/sunbird/dial-service-1.0-SNAPSHOT-dist.zip
 WORKDIR /home/sunbird/
-CMD java -XX:+PrintFlagsFinal $JAVA_OPTIONS -cp '/home/sunbird/sunbird-dial-service-1.0-SNAPSHOT/lib/*' -Dconfig.file=/home/sunbird/sunbird-dial-service-1.0-SNAPSHOT/config/application.conf -Dlogger.file=/home/sunbird/sunbird-dial-service-1.0-SNAPSHOT/config/logback.xml play.core.server.ProdServerStart /home/sunbird/sunbird-dial-service-1.0-SNAPSHOT
+CMD java -XX:+PrintFlagsFinal $JAVA_OPTIONS -cp '/home/sunbird/dial-service-1.0-SNAPSHOT/lib/*' -Dconfig.file=/home/sunbird/dial-service-1.0-SNAPSHOT/config/application.conf -Dlogger.file=/home/sunbird/dial-service-1.0-SNAPSHOT/config/logback.xml play.core.server.ProdServerStart /home/sunbird/dial-service-1.0-SNAPSHOT
