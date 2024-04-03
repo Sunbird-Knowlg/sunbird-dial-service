@@ -117,6 +117,11 @@ public class Constants {
     public static final String SYNC = "sync";
     public static final String PUBLISHER = "publisher";
 
+    public static final String CHANNEL_ID = "CHANNEL_ID";
+
+    public static final String SCHEMA_VERSION = "1.0";
+    public static final String SCHEMA_NAME = "1.0";
+
     //v4
     public static final String READ_DIALCODE_V4 = "readDialCodeV4";
     public static final String UPDATE_DIALCODE_V4 = "updateDialCodeV4";

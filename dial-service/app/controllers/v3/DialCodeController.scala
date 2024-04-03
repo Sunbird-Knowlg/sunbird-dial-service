@@ -13,14 +13,14 @@ import scala.collection.JavaConverters._
 
 @Singleton
 class DialCodeController @Inject()(@Named(ActorNames.DIALCODE_ACTOR) dialCodeActor: ActorRef, cc: ControllerComponents, actorSystem: ActorSystem) (implicit exec: ExecutionContext) extends BaseController(cc) {
-
+  val objectType = "DialCode"
   def generateDialCode() = Action.async { implicit request =>
     val headers = commonHeaders()
     val body = requestBody()
     val dialCodes = body.getOrDefault(Constants.DIALCODES, new java.util.HashMap()).asInstanceOf[java.util.Map[String, Object]]
     dialCodes.putAll(headers)
     val dialRequest = getRequest(dialCodes, headers, Constants.GENERATE_DIALCODE)
-    setRequestContext(dialRequest, "1.0", "DialCode", "dialcode")
+    setRequestContext(dialRequest, Constants.SCHEMA_VERSION, objectType, Constants.SCHEMA_NAME)
     getResult(ApiId.DIALCODE_GENERATE, dialCodeActor, dialRequest)
   }
 
@@ -30,6 +30,7 @@ class DialCodeController @Inject()(@Named(ActorNames.DIALCODE_ACTOR) dialCodeAct
     dialCodes.putAll(headers)
     dialCodes.putAll(Map(Constants.IDENTIFIER -> id).asJava)
     val dialRequest = getRequest(dialCodes, headers, Constants.READ_DIALCODE)
+    setRequestContext(dialRequest, Constants.SCHEMA_VERSION, objectType, Constants.SCHEMA_NAME)
     getResult(ApiId.DIALCODE_READ, dialCodeActor, dialRequest)
   }
   def updateDialCode(id: String) = Action.async { implicit request =>
@@ -39,6 +40,7 @@ class DialCodeController @Inject()(@Named(ActorNames.DIALCODE_ACTOR) dialCodeAct
     dialCode.putAll(headers)
     dialCode.putAll(Map(Constants.IDENTIFIER -> id).asJava)
     val dialRequest = getRequest(dialCode, headers, Constants.UPDATE_DIALCODE)
+    setRequestContext(dialRequest, Constants.SCHEMA_VERSION, objectType, Constants.SCHEMA_NAME)
     getResult(ApiId.DIALCODE_UPDATE, dialCodeActor, dialRequest)
   }
 
@@ -47,6 +49,7 @@ class DialCodeController @Inject()(@Named(ActorNames.DIALCODE_ACTOR) dialCodeAct
     val body = requestBody()
     body.putAll(headers)
     val dialRequest = getRequest(body, headers, Constants.LIST_DIALCODE)
+    setRequestContext(dialRequest, Constants.SCHEMA_VERSION, objectType, Constants.SCHEMA_NAME)
     getResult(ApiId.DIALCODE_LIST, dialCodeActor, dialRequest)
   }
 
@@ -55,6 +58,7 @@ class DialCodeController @Inject()(@Named(ActorNames.DIALCODE_ACTOR) dialCodeAct
     val body = requestBody()
     body.putAll(headers)
     val dialRequest = getRequest(body, headers, Constants.SEARCH_DIALCODE)
+    setRequestContext(dialRequest, Constants.SCHEMA_VERSION, objectType, Constants.SCHEMA_NAME)
     getResult(ApiId.DIALCODE_SEARCH, dialCodeActor, dialRequest)
   }
 
@@ -63,6 +67,7 @@ class DialCodeController @Inject()(@Named(ActorNames.DIALCODE_ACTOR) dialCodeAct
     val body = requestBody()
     body.putAll(headers)
     val dialRequest = getRequest(body, headers, Constants.SYNC_DIALCODE)
+    setRequestContext(dialRequest, Constants.SCHEMA_VERSION, objectType, Constants.SCHEMA_NAME)
     getResult(ApiId.DIALCODE_SYNC, dialCodeActor, dialRequest)
   }
 
@@ -72,6 +77,7 @@ class DialCodeController @Inject()(@Named(ActorNames.DIALCODE_ACTOR) dialCodeAct
     dialCodes.putAll(headers)
     dialCodes.putAll(Map(Constants.IDENTIFIER -> id).asJava)
     val dialRequest = getRequest(dialCodes, headers, Constants.PUBLISH_DIALCODE)
+    setRequestContext(dialRequest, Constants.SCHEMA_VERSION, objectType, Constants.SCHEMA_NAME)
     getResult(ApiId.DIALCODE_PUBLISH, dialCodeActor, dialRequest)
   }
 
@@ -81,7 +87,7 @@ class DialCodeController @Inject()(@Named(ActorNames.DIALCODE_ACTOR) dialCodeAct
     val publisher = body.getOrDefault(Constants.PUBLISHER, new java.util.HashMap()).asInstanceOf[java.util.Map[String, Object]]
     publisher.putAll(headers)
     val publisherRequest = getRequest(publisher, headers, Constants.CREATE_PUBLISHER)
-    setRequestContext(publisherRequest, "1.0", "DialCode", "dialcode")
+    setRequestContext(publisherRequest, Constants.SCHEMA_VERSION, objectType, Constants.SCHEMA_NAME)
     getResult(ApiId.PUBLISHER_CREATE, dialCodeActor, publisherRequest)
   }
 
@@ -91,6 +97,7 @@ class DialCodeController @Inject()(@Named(ActorNames.DIALCODE_ACTOR) dialCodeAct
     publisher.putAll(headers)
     publisher.putAll(Map(Constants.IDENTIFIER -> id).asJava)
     val publisherRequest = getRequest(publisher, headers, Constants.READ_PUBLISHER)
+    setRequestContext(publisherRequest, Constants.SCHEMA_VERSION, objectType, Constants.SCHEMA_NAME)
     getResult(ApiId.PUBLISHER_READ, dialCodeActor, publisherRequest)
   }
 
@@ -100,6 +107,7 @@ class DialCodeController @Inject()(@Named(ActorNames.DIALCODE_ACTOR) dialCodeAct
     body.putAll(headers)
     body.putAll(Map(Constants.IDENTIFIER -> id).asJava)
     val publisherRequest = getRequest(body, headers, Constants.UPDATE_PUBLISHER)
+    setRequestContext(publisherRequest, Constants.SCHEMA_VERSION, objectType, Constants.SCHEMA_NAME)
     getResult(ApiId.PUBLISHER_UPDATE, dialCodeActor, publisherRequest)
   }
 
