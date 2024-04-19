@@ -41,11 +41,12 @@ abstract class BaseController(protected val cc: ControllerComponents)(implicit e
     new org.sunbird.commons.dto.Request(context, input, operation, null);
   }
 
-  def getResult(apiId: String, actor: ActorRef, request: org.sunbird.commons.dto.Request) : Future[Result] = {
-    val future = Patterns.ask(actor, request, 30000) recoverWith {case e: Exception => Future(ResponseHandler.getErrorResponse(e))}
+  def getResult(apiId: String, actor: ActorRef, request: org.sunbird.commons.dto.Request, version: String = "3.0"): Future[Result] = {
+    val future = Patterns.ask(actor, request, 30000) recoverWith { case e: Exception => Future(ResponseHandler.getErrorResponse(e)) }
     future.map(f => {
       val result = f.asInstanceOf[Response]
       result.setId(apiId)
+      result.setVer(version)
       setResponseEnvelope(result)
       val response = JavaJsonUtils.serialize(result);
       result.getResponseCode match {
