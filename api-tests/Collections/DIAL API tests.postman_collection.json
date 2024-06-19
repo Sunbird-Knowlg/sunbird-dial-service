@@ -1,0 +1,3792 @@
+{
+	"info": {
+		"_postman_id": "27c4c8fb-0f2e-4c7e-87ee-6a7d3959d5d9",
+		"name": "DIAL API tests",
+		"description": "Public API documentation of DIAL api's  \n  \n[DIAL API's](https://documenter.getpostman.com/view/4214340/UVsMv6Kd)\n\nHere we are writing all the different test cases for DIAL service.\n\nThe structure of the API test should be as below\n\n*   **{service name} tests**\n    *   **Postive** (folder)\n        *   {API name} (*folder*)\n            *   Different positive tests of the API\n        *   {API name} (*folder*)\n            *   Different positive tests of the API\n    *   **Negative** (folder)\n        *   {API name} (*folder*)\n            *   Different negative tests of the API\n        *   {API name} (*folder*)\n            *   Different positive tests of the API\n    *   **Scenarios**\n        *   Scenario 1 (*folder*)\n            *   {Sequence of API's part of the scenario}\n        *   Scenario 2 (*folder*)\n            *   {Sequence of API's part of the scenario}",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19432603"
+	},
+	"item": [
+		{
+			"name": "Positive Copy",
+			"item": [
+				{
+					"name": "Generate DIAL code",
+					"item": [
+						{
+							"name": "DIAL code count is >1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"",
+											"pm.test(\"Verify status code  200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response contains DIAL code\", function () {",
+											"    const responseJson = pm.response.json();",
+											"",
+											"    var req = JSON.parse(request.data);",
+											"    if(req.request.dialcodes.count > 1000){",
+											"        pm.response.to.have.status(403);",
+											"    } else {",
+											"        const dialcodes = responseJson.result.dialcodes;",
+											"        pm.expect(dialcodes).to.length.greaterThan(0);",
+											"        pm.globals.set(\"new_dialcode\", dialcodes[0]);",
+											"        console.log(pm.globals.get(\"new_dialcode\"));",
+											"    }",
+											"  ",
+											"});",
+											"",
+											"// pm.test(\"Check total DIAL codes increased\", function() {",
+											"//     pm.globals.get(\"dial_count\");",
+											"// });"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"new_dialcodes_to_generate\", 1);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Channel-ID",
+										"value": "{{channel_id}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"request\": {\n    \"dialcodes\": {\n      \"count\": {{new_dialcodes_to_generate}}\n    }\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/dialcode/v1/generate",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v1",
+										"generate"
+									],
+									"query": [
+										{
+											"key": "new_dialcodes_to_generate",
+											"value": "2",
+											"disabled": true
+										}
+									]
+								},
+								"description": "The user want to generate some list of DIAL codes for a specific reason. This API will help to get the specific number(count property in the request) of DIAL codes required for him.  \n  \n**count**: No of DIAL codes required to generate."
+							},
+							"response": [
+								{
+									"name": "200 - Success",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-Channel-ID",
+												"value": "0125805318613565447"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"name": "Content-Type",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{auth}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"request\": {\n    \"dialcodes\": {\n      \"count\": 1\n    }\n  }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/api/dialcode/v1/generate",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"dialcode",
+												"v1",
+												"generate"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Thu, 17 Mar 2022 08:59:43 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29996"
+										},
+										{
+											"key": "x-powered-by",
+											"value": "Express"
+										},
+										{
+											"key": "vary",
+											"value": "X-HTTP-Method-Override, Accept-Encoding"
+										},
+										{
+											"key": "access-control-allow-origin",
+											"value": "*"
+										},
+										{
+											"key": "access-control-allow-methods",
+											"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+										},
+										{
+											"key": "access-control-allow-headers",
+											"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+										},
+										{
+											"key": "etag",
+											"value": "W/\"147-x7j8bLNDYehMsjADCU7tdSIwedU\""
+										},
+										{
+											"key": "x-envoy-upstream-service-time",
+											"value": "165"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "170"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "72"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "gzip"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.dialcode.generate\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2022-03-17T08:59:43.629Z\",\n    \"params\": {\n        \"resmsgid\": \"965fe3d0-a5d0-11ec-88f3-b3fb6ff88b18\",\n        \"msgid\": \"9646dd90-a5d0-11ec-a6f2-dddf22685ab9\",\n        \"status\": \"successful\",\n        \"err\": null,\n        \"errmsg\": null\n    },\n    \"responseCode\": \"OK\",\n    \"result\": {\n        \"dialcodes\": [\n            \"E2Z2B8\"\n        ],\n        \"count\": 1,\n        \"batchcode\": null,\n        \"publisher\": null\n    }\n}"
+								},
+								{
+									"name": "400 - Channel Id missing",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-Channel-ID",
+												"value": "0125805318613565447",
+												"disabled": true
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"name": "Content-Type",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{auth}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"request\": {\n    \"dialcodes\": {\n      \"count\": 1\n    }\n  }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/api/dialcode/v1/generate",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"dialcode",
+												"v1",
+												"generate"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Mon, 04 Apr 2022 09:28:43 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "302"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29998"
+										},
+										{
+											"key": "x-powered-by",
+											"value": "Express"
+										},
+										{
+											"key": "vary",
+											"value": "X-HTTP-Method-Override, Accept-Encoding"
+										},
+										{
+											"key": "access-control-allow-origin",
+											"value": "*"
+										},
+										{
+											"key": "access-control-allow-methods",
+											"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+										},
+										{
+											"key": "access-control-allow-headers",
+											"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+										},
+										{
+											"key": "etag",
+											"value": "W/\"12e-zWV61spYD8miBUiVN1QkJBqh3YA\""
+										},
+										{
+											"key": "x-envoy-upstream-service-time",
+											"value": "2"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "5"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "50"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.dialcode.generate\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2022-04-04T09:28:43.640Z\",\n    \"params\": {\n        \"resmsgid\": \"9eefff80-b3f9-11ec-a8b6-8b6d917b3a2a\",\n        \"msgid\": null,\n        \"status\": \"failed\",\n        \"err\": \"ERR_REQUEST_FIELDS_CHANNEL_ID_MISSING\",\n        \"errmsg\": \"Required field channel id is missing\"\n    },\n    \"responseCode\": \"CLIENT_ERROR\",\n    \"result\": {}\n}"
+								},
+								{
+									"name": "400 - Required fields missing: count",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-Channel-ID",
+												"value": "{{x_channel_id}}"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"name": "Content-Type",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{auth}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"request\": {\n    \"dialcodes\": {\n      \"count\": 0\n    }\n  }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/api/dialcode/v1/generate",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"dialcode",
+												"v1",
+												"generate"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Apr 2022 17:47:49 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "305"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29999"
+										},
+										{
+											"key": "x-powered-by",
+											"value": "Express"
+										},
+										{
+											"key": "vary",
+											"value": "X-HTTP-Method-Override, Accept-Encoding"
+										},
+										{
+											"key": "access-control-allow-origin",
+											"value": "*"
+										},
+										{
+											"key": "access-control-allow-methods",
+											"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+										},
+										{
+											"key": "access-control-allow-headers",
+											"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+										},
+										{
+											"key": "etag",
+											"value": "W/\"131-LF5IC/kuw4BhC7Vup+Uz+ZHGKJk\""
+										},
+										{
+											"key": "x-envoy-upstream-service-time",
+											"value": "2"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "7"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "14"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.dialcode.generate\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2022-04-06T17:47:49.082Z\",\n    \"params\": {\n        \"resmsgid\": \"aca353a0-b5d1-11ec-a8b6-8b6d917b3a2a\",\n        \"msgid\": null,\n        \"status\": \"failed\",\n        \"err\": \"ERR_DIALCODE_GENERATE_COUNT_ERROR\",\n        \"errmsg\": \"Required fields count is missing or invalid\"\n    },\n    \"responseCode\": \"CLIENT_ERROR\",\n    \"result\": {}\n}"
+								}
+							]
+						},
+						{
+							"name": "Request for Max DIAL codes",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"",
+											"pm.test(\"Verify status code  200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response contains DIAL code\", function () {",
+											"    const responseJson = pm.response.json();",
+											"",
+											"    var req = JSON.parse(request.data);",
+											"    if(req.request.dialcodes.count > 1000){",
+											"        pm.response.to.have.status(403);",
+											"    } else {",
+											"        const dialcodes = responseJson.result.dialcodes;",
+											"        pm.expect(dialcodes).to.length.greaterThan(0);",
+											"        pm.globals.set(\"new_dialcode\", dialcodes[0]);",
+											"        console.log(pm.globals.get(\"new_dialcode\"));",
+											"    }",
+											"  ",
+											"});",
+											"",
+											"// pm.test(\"Check total DIAL codes increased\", function() {",
+											"//     pm.globals.get(\"dial_count\");",
+											"// });"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"new_dialcodes_to_generate\", 100);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Channel-ID",
+										"value": "{{channel_id}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"request\": {\n    \"dialcodes\": {\n      \"count\": {{new_dialcodes_to_generate}}\n    }\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/dialcode/v1/generate",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v1",
+										"generate"
+									],
+									"query": [
+										{
+											"key": "new_dialcodes_to_generate",
+											"value": "2",
+											"disabled": true
+										}
+									]
+								},
+								"description": "The user want to generate some list of DIAL codes for a specific reason. This API will help to get the specific number(count property in the request) of DIAL codes required for him.  \n  \n**count**: No of DIAL codes required to generate."
+							},
+							"response": [
+								{
+									"name": "200 - Success",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-Channel-ID",
+												"value": "0125805318613565447"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"name": "Content-Type",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{auth}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"request\": {\n    \"dialcodes\": {\n      \"count\": 1\n    }\n  }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/api/dialcode/v1/generate",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"dialcode",
+												"v1",
+												"generate"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Thu, 17 Mar 2022 08:59:43 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29996"
+										},
+										{
+											"key": "x-powered-by",
+											"value": "Express"
+										},
+										{
+											"key": "vary",
+											"value": "X-HTTP-Method-Override, Accept-Encoding"
+										},
+										{
+											"key": "access-control-allow-origin",
+											"value": "*"
+										},
+										{
+											"key": "access-control-allow-methods",
+											"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+										},
+										{
+											"key": "access-control-allow-headers",
+											"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+										},
+										{
+											"key": "etag",
+											"value": "W/\"147-x7j8bLNDYehMsjADCU7tdSIwedU\""
+										},
+										{
+											"key": "x-envoy-upstream-service-time",
+											"value": "165"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "170"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "72"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "gzip"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.dialcode.generate\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2022-03-17T08:59:43.629Z\",\n    \"params\": {\n        \"resmsgid\": \"965fe3d0-a5d0-11ec-88f3-b3fb6ff88b18\",\n        \"msgid\": \"9646dd90-a5d0-11ec-a6f2-dddf22685ab9\",\n        \"status\": \"successful\",\n        \"err\": null,\n        \"errmsg\": null\n    },\n    \"responseCode\": \"OK\",\n    \"result\": {\n        \"dialcodes\": [\n            \"E2Z2B8\"\n        ],\n        \"count\": 1,\n        \"batchcode\": null,\n        \"publisher\": null\n    }\n}"
+								},
+								{
+									"name": "400 - Channel Id missing",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-Channel-ID",
+												"value": "0125805318613565447",
+												"disabled": true
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"name": "Content-Type",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{auth}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"request\": {\n    \"dialcodes\": {\n      \"count\": 1\n    }\n  }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/api/dialcode/v1/generate",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"dialcode",
+												"v1",
+												"generate"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Mon, 04 Apr 2022 09:28:43 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "302"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29998"
+										},
+										{
+											"key": "x-powered-by",
+											"value": "Express"
+										},
+										{
+											"key": "vary",
+											"value": "X-HTTP-Method-Override, Accept-Encoding"
+										},
+										{
+											"key": "access-control-allow-origin",
+											"value": "*"
+										},
+										{
+											"key": "access-control-allow-methods",
+											"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+										},
+										{
+											"key": "access-control-allow-headers",
+											"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+										},
+										{
+											"key": "etag",
+											"value": "W/\"12e-zWV61spYD8miBUiVN1QkJBqh3YA\""
+										},
+										{
+											"key": "x-envoy-upstream-service-time",
+											"value": "2"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "5"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "50"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.dialcode.generate\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2022-04-04T09:28:43.640Z\",\n    \"params\": {\n        \"resmsgid\": \"9eefff80-b3f9-11ec-a8b6-8b6d917b3a2a\",\n        \"msgid\": null,\n        \"status\": \"failed\",\n        \"err\": \"ERR_REQUEST_FIELDS_CHANNEL_ID_MISSING\",\n        \"errmsg\": \"Required field channel id is missing\"\n    },\n    \"responseCode\": \"CLIENT_ERROR\",\n    \"result\": {}\n}"
+								},
+								{
+									"name": "400 - Required fields missing: count",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-Channel-ID",
+												"value": "{{x_channel_id}}"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"name": "Content-Type",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{auth}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"request\": {\n    \"dialcodes\": {\n      \"count\": 0\n    }\n  }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/api/dialcode/v1/generate",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"dialcode",
+												"v1",
+												"generate"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Apr 2022 17:47:49 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "305"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29999"
+										},
+										{
+											"key": "x-powered-by",
+											"value": "Express"
+										},
+										{
+											"key": "vary",
+											"value": "X-HTTP-Method-Override, Accept-Encoding"
+										},
+										{
+											"key": "access-control-allow-origin",
+											"value": "*"
+										},
+										{
+											"key": "access-control-allow-methods",
+											"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+										},
+										{
+											"key": "access-control-allow-headers",
+											"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+										},
+										{
+											"key": "etag",
+											"value": "W/\"131-LF5IC/kuw4BhC7Vup+Uz+ZHGKJk\""
+										},
+										{
+											"key": "x-envoy-upstream-service-time",
+											"value": "2"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "7"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "14"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.dialcode.generate\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2022-04-06T17:47:49.082Z\",\n    \"params\": {\n        \"resmsgid\": \"aca353a0-b5d1-11ec-a8b6-8b6d917b3a2a\",\n        \"msgid\": null,\n        \"status\": \"failed\",\n        \"err\": \"ERR_DIALCODE_GENERATE_COUNT_ERROR\",\n        \"errmsg\": \"Required fields count is missing or invalid\"\n    },\n    \"responseCode\": \"CLIENT_ERROR\",\n    \"result\": {}\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Get DIAL code",
+					"item": [
+						{
+							"name": "Get DIAL code details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"// pm.variables.set(\"new_dialcode\", \"{DIAL_code}\")",
+											"",
+											"console.log(pm.globals.get(\"new_dialcode\"))"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Channel-Id",
+										"value": "{{channel_id}}",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"dialcode\": {\n            \"identifier\": \"{{new_dialcode}}\"\n        }\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/dialcode/v1/read",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v1",
+										"read"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Update DIAL code Context",
+					"item": [
+						{
+							"name": "Update DIAL Code Context",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "X-Channel-ID",
+										"value": "{{channel_id}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"dialcode\": {\n            \"contextInfo\": {\n                \"@type\": \"sb-ed:TextBookUnit\",\n                \"identifier\": \"{{unit_id}}\",\n                \"name\": \"Textbook Unit\",\n                \"parentInfo\": {\n                    \"name\": \"Test Context\",\n                    \"channel\": \"{{channel_id}}\",\n                    \"identifier\": \"{{collection_id}}\",\n                    \"primaryCategory\": \"Digital Textbook\",\n                    \"framework\": {\n                        \"subject\": [\n                            \"Mathematics\"\n                        ],\n                        \"identifier\": \"tn_k-12\",\n                        \"medium\": [\n                            \"English\"\n                        ],\n                        \"board\": \"CBSE\"\n                    },\n                    \"status\": \"Live\",\n                    \"@type\": \"sb-ed:TextBook\"\n                }\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{host}}/api/dialcode/v2/update/{{new_dialcode}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v2",
+										"update",
+										"{{new_dialcode}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get DIAL code Context",
+					"item": [
+						{
+							"name": "Get DIAL Code Context",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response contains DIAL code\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    const dialcodeData = responseJson.result.dialcode;",
+											"    pm.expect(dialcodeData.identifier).to.be.eq(pm.globals.get(\"new_dialcode\"));",
+											"    pm.expect(dialcodeData.contextInfo).to.be.not.null",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Channel-Id",
+										"value": "{{channel_id}}",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/api/dialcode/v2/read/{{new_dialcode}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v2",
+										"read",
+										"{{new_dialcode}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Negative Copy",
+			"item": [
+				{
+					"name": "Generate DIAL code",
+					"item": [
+						{
+							"name": "Without channel",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"",
+											"pm.test(\"Verify status code  400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"pm.test(\"Body matches string\", function () {",
+											"    let jsonResp = pm.response.json();",
+											"    pm.expect(jsonResp.params.err).to.be.equal(\"ERR_REQUEST_FIELDS_CHANNEL_ID_MISSING\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"new_dialcodes_to_generate\", 0);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Channel-ID",
+										"value": "{{channel_id}}",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"request\": {\n    \"dialcodes\": {\n      \"count\": {{new_dialcodes_to_generate}}\n    }\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/dialcode/v1/generate",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v1",
+										"generate"
+									],
+									"query": [
+										{
+											"key": "new_dialcodes_to_generate",
+											"value": "2",
+											"disabled": true
+										}
+									]
+								},
+								"description": "The user want to generate some list of DIAL codes for a specific reason. This API will help to get the specific number(count property in the request) of DIAL codes required for him.  \n  \n**count**: No of DIAL codes required to generate."
+							},
+							"response": [
+								{
+									"name": "200 - Success",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-Channel-ID",
+												"value": "0125805318613565447"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"name": "Content-Type",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{auth}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"request\": {\n    \"dialcodes\": {\n      \"count\": 1\n    }\n  }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/api/dialcode/v1/generate",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"dialcode",
+												"v1",
+												"generate"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Thu, 17 Mar 2022 08:59:43 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29996"
+										},
+										{
+											"key": "x-powered-by",
+											"value": "Express"
+										},
+										{
+											"key": "vary",
+											"value": "X-HTTP-Method-Override, Accept-Encoding"
+										},
+										{
+											"key": "access-control-allow-origin",
+											"value": "*"
+										},
+										{
+											"key": "access-control-allow-methods",
+											"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+										},
+										{
+											"key": "access-control-allow-headers",
+											"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+										},
+										{
+											"key": "etag",
+											"value": "W/\"147-x7j8bLNDYehMsjADCU7tdSIwedU\""
+										},
+										{
+											"key": "x-envoy-upstream-service-time",
+											"value": "165"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "170"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "72"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "gzip"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.dialcode.generate\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2022-03-17T08:59:43.629Z\",\n    \"params\": {\n        \"resmsgid\": \"965fe3d0-a5d0-11ec-88f3-b3fb6ff88b18\",\n        \"msgid\": \"9646dd90-a5d0-11ec-a6f2-dddf22685ab9\",\n        \"status\": \"successful\",\n        \"err\": null,\n        \"errmsg\": null\n    },\n    \"responseCode\": \"OK\",\n    \"result\": {\n        \"dialcodes\": [\n            \"E2Z2B8\"\n        ],\n        \"count\": 1,\n        \"batchcode\": null,\n        \"publisher\": null\n    }\n}"
+								},
+								{
+									"name": "400 - Channel Id missing",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-Channel-ID",
+												"value": "0125805318613565447",
+												"disabled": true
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"name": "Content-Type",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{auth}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"request\": {\n    \"dialcodes\": {\n      \"count\": 1\n    }\n  }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/api/dialcode/v1/generate",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"dialcode",
+												"v1",
+												"generate"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Mon, 04 Apr 2022 09:28:43 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "302"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29998"
+										},
+										{
+											"key": "x-powered-by",
+											"value": "Express"
+										},
+										{
+											"key": "vary",
+											"value": "X-HTTP-Method-Override, Accept-Encoding"
+										},
+										{
+											"key": "access-control-allow-origin",
+											"value": "*"
+										},
+										{
+											"key": "access-control-allow-methods",
+											"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+										},
+										{
+											"key": "access-control-allow-headers",
+											"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+										},
+										{
+											"key": "etag",
+											"value": "W/\"12e-zWV61spYD8miBUiVN1QkJBqh3YA\""
+										},
+										{
+											"key": "x-envoy-upstream-service-time",
+											"value": "2"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "5"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "50"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.dialcode.generate\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2022-04-04T09:28:43.640Z\",\n    \"params\": {\n        \"resmsgid\": \"9eefff80-b3f9-11ec-a8b6-8b6d917b3a2a\",\n        \"msgid\": null,\n        \"status\": \"failed\",\n        \"err\": \"ERR_REQUEST_FIELDS_CHANNEL_ID_MISSING\",\n        \"errmsg\": \"Required field channel id is missing\"\n    },\n    \"responseCode\": \"CLIENT_ERROR\",\n    \"result\": {}\n}"
+								},
+								{
+									"name": "400 - Required fields missing: count",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-Channel-ID",
+												"value": "{{x_channel_id}}"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"name": "Content-Type",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{auth}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"request\": {\n    \"dialcodes\": {\n      \"count\": 0\n    }\n  }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/api/dialcode/v1/generate",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"dialcode",
+												"v1",
+												"generate"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Apr 2022 17:47:49 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "305"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29999"
+										},
+										{
+											"key": "x-powered-by",
+											"value": "Express"
+										},
+										{
+											"key": "vary",
+											"value": "X-HTTP-Method-Override, Accept-Encoding"
+										},
+										{
+											"key": "access-control-allow-origin",
+											"value": "*"
+										},
+										{
+											"key": "access-control-allow-methods",
+											"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+										},
+										{
+											"key": "access-control-allow-headers",
+											"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+										},
+										{
+											"key": "etag",
+											"value": "W/\"131-LF5IC/kuw4BhC7Vup+Uz+ZHGKJk\""
+										},
+										{
+											"key": "x-envoy-upstream-service-time",
+											"value": "2"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "7"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "14"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.dialcode.generate\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2022-04-06T17:47:49.082Z\",\n    \"params\": {\n        \"resmsgid\": \"aca353a0-b5d1-11ec-a8b6-8b6d917b3a2a\",\n        \"msgid\": null,\n        \"status\": \"failed\",\n        \"err\": \"ERR_DIALCODE_GENERATE_COUNT_ERROR\",\n        \"errmsg\": \"Required fields count is missing or invalid\"\n    },\n    \"responseCode\": \"CLIENT_ERROR\",\n    \"result\": {}\n}"
+								}
+							]
+						},
+						{
+							"name": "request with count=0",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"",
+											"pm.test(\"Verify status code  400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"pm.test(\"Body matches string\", function () {",
+											"    let jsonResp = pm.response.json();",
+											"    pm.expect(jsonResp.params.err).to.be.equal(\"ERR_DIALCODE_GENERATE_COUNT_ERROR\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"console.log(\"Newly generated dialcode\", pm.globals.get(\"new_dialcode\"));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Channel-ID",
+										"value": "{{channel_id}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"request\": {\n    \"dialcodes\": {\n      \"count\": 0\n    }\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/dialcode/v1/generate",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v1",
+										"generate"
+									],
+									"query": [
+										{
+											"key": "new_dialcodes_to_generate",
+											"value": "2",
+											"disabled": true
+										}
+									]
+								},
+								"description": "The user want to generate some list of DIAL codes for a specific reason. This API will help to get the specific number(count property in the request) of DIAL codes required for him.  \n  \n**count**: No of DIAL codes required to generate."
+							},
+							"response": [
+								{
+									"name": "200 - Success",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-Channel-ID",
+												"value": "0125805318613565447"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"name": "Content-Type",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{auth}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"request\": {\n    \"dialcodes\": {\n      \"count\": 1\n    }\n  }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/api/dialcode/v1/generate",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"dialcode",
+												"v1",
+												"generate"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Thu, 17 Mar 2022 08:59:43 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29996"
+										},
+										{
+											"key": "x-powered-by",
+											"value": "Express"
+										},
+										{
+											"key": "vary",
+											"value": "X-HTTP-Method-Override, Accept-Encoding"
+										},
+										{
+											"key": "access-control-allow-origin",
+											"value": "*"
+										},
+										{
+											"key": "access-control-allow-methods",
+											"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+										},
+										{
+											"key": "access-control-allow-headers",
+											"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+										},
+										{
+											"key": "etag",
+											"value": "W/\"147-x7j8bLNDYehMsjADCU7tdSIwedU\""
+										},
+										{
+											"key": "x-envoy-upstream-service-time",
+											"value": "165"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "170"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "72"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "gzip"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.dialcode.generate\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2022-03-17T08:59:43.629Z\",\n    \"params\": {\n        \"resmsgid\": \"965fe3d0-a5d0-11ec-88f3-b3fb6ff88b18\",\n        \"msgid\": \"9646dd90-a5d0-11ec-a6f2-dddf22685ab9\",\n        \"status\": \"successful\",\n        \"err\": null,\n        \"errmsg\": null\n    },\n    \"responseCode\": \"OK\",\n    \"result\": {\n        \"dialcodes\": [\n            \"E2Z2B8\"\n        ],\n        \"count\": 1,\n        \"batchcode\": null,\n        \"publisher\": null\n    }\n}"
+								},
+								{
+									"name": "400 - Channel Id missing",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-Channel-ID",
+												"value": "0125805318613565447",
+												"disabled": true
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"name": "Content-Type",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{auth}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"request\": {\n    \"dialcodes\": {\n      \"count\": 1\n    }\n  }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/api/dialcode/v1/generate",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"dialcode",
+												"v1",
+												"generate"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Mon, 04 Apr 2022 09:28:43 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "302"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29998"
+										},
+										{
+											"key": "x-powered-by",
+											"value": "Express"
+										},
+										{
+											"key": "vary",
+											"value": "X-HTTP-Method-Override, Accept-Encoding"
+										},
+										{
+											"key": "access-control-allow-origin",
+											"value": "*"
+										},
+										{
+											"key": "access-control-allow-methods",
+											"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+										},
+										{
+											"key": "access-control-allow-headers",
+											"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+										},
+										{
+											"key": "etag",
+											"value": "W/\"12e-zWV61spYD8miBUiVN1QkJBqh3YA\""
+										},
+										{
+											"key": "x-envoy-upstream-service-time",
+											"value": "2"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "5"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "50"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.dialcode.generate\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2022-04-04T09:28:43.640Z\",\n    \"params\": {\n        \"resmsgid\": \"9eefff80-b3f9-11ec-a8b6-8b6d917b3a2a\",\n        \"msgid\": null,\n        \"status\": \"failed\",\n        \"err\": \"ERR_REQUEST_FIELDS_CHANNEL_ID_MISSING\",\n        \"errmsg\": \"Required field channel id is missing\"\n    },\n    \"responseCode\": \"CLIENT_ERROR\",\n    \"result\": {}\n}"
+								},
+								{
+									"name": "400 - Required fields missing: count",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-Channel-ID",
+												"value": "{{x_channel_id}}"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"name": "Content-Type",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{auth}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"request\": {\n    \"dialcodes\": {\n      \"count\": 0\n    }\n  }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/api/dialcode/v1/generate",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"dialcode",
+												"v1",
+												"generate"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Apr 2022 17:47:49 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "305"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29999"
+										},
+										{
+											"key": "x-powered-by",
+											"value": "Express"
+										},
+										{
+											"key": "vary",
+											"value": "X-HTTP-Method-Override, Accept-Encoding"
+										},
+										{
+											"key": "access-control-allow-origin",
+											"value": "*"
+										},
+										{
+											"key": "access-control-allow-methods",
+											"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+										},
+										{
+											"key": "access-control-allow-headers",
+											"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+										},
+										{
+											"key": "etag",
+											"value": "W/\"131-LF5IC/kuw4BhC7Vup+Uz+ZHGKJk\""
+										},
+										{
+											"key": "x-envoy-upstream-service-time",
+											"value": "2"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "7"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "14"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.dialcode.generate\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2022-04-06T17:47:49.082Z\",\n    \"params\": {\n        \"resmsgid\": \"aca353a0-b5d1-11ec-a8b6-8b6d917b3a2a\",\n        \"msgid\": null,\n        \"status\": \"failed\",\n        \"err\": \"ERR_DIALCODE_GENERATE_COUNT_ERROR\",\n        \"errmsg\": \"Required fields count is missing or invalid\"\n    },\n    \"responseCode\": \"CLIENT_ERROR\",\n    \"result\": {}\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Get DIAL code",
+					"item": [
+						{
+							"name": "invalid DIAL code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 404\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});",
+											"",
+											"pm.test(\"Response contains DIAL code\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    pm.expect(responseJson.params.err).to.be.eq(\"ERR_DIALCODE_INFO\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Channel-Id",
+										"value": "{{channel_id}}",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"dialcode\": {\n            \"identifier\": \"XXXXXX\"\n        }\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/dialcode/v1/read",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v1",
+										"read"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "200 - Success",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-Channel-Id",
+												"value": "{{x_channel_id}}",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{auth}}",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"request\": {\n        \"dialcode\": {\n            \"identifier\": \"I9Z2W5\"\n        }\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/api/dialcode/v1/read",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"dialcode",
+												"v1",
+												"read"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Apr 2022 17:43:10 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29999"
+										},
+										{
+											"key": "x-powered-by",
+											"value": "Express"
+										},
+										{
+											"key": "vary",
+											"value": "X-HTTP-Method-Override, Accept-Encoding"
+										},
+										{
+											"key": "access-control-allow-origin",
+											"value": "*"
+										},
+										{
+											"key": "access-control-allow-methods",
+											"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+										},
+										{
+											"key": "access-control-allow-headers",
+											"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+										},
+										{
+											"key": "etag",
+											"value": "W/\"1c6-E+wPyegZQNr07mifHyiSwroyBFo\""
+										},
+										{
+											"key": "x-envoy-upstream-service-time",
+											"value": "15"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "19"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "30"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "gzip"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.dialcode.read\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2022-04-06T17:43:10.085Z\",\n    \"params\": {\n        \"resmsgid\": \"0657c350-b5d1-11ec-a8b6-8b6d917b3a2a\",\n        \"msgid\": \"0655a070-b5d1-11ec-9b27-9d4d54fedc3d\",\n        \"status\": \"successful\",\n        \"err\": null,\n        \"errmsg\": null\n    },\n    \"responseCode\": \"OK\",\n    \"result\": {\n        \"dialcode\": {\n            \"identifier\": \"I9Z2W5\",\n            \"channel\": \"0125805318613565447\",\n            \"publisher\": null,\n            \"batchCode\": null,\n            \"status\": \"Draft\",\n            \"generatedOn\": \"2022-04-06T12:38:39.686+0000\",\n            \"publishedOn\": null,\n            \"metadata\": null\n        }\n    }\n}"
+								},
+								{
+									"name": "400 - Channel Id missing",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-Channel-Id",
+												"value": "{{x_channel_id}}",
+												"type": "text",
+												"disabled": true
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{auth}}",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"request\": {\n        \"dialcode\": {\n            \"identifier\": \"I9Z2W5\"\n        }\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/api/dialcode/v1/read",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"dialcode",
+												"v1",
+												"read"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Apr 2022 17:43:49 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "298"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29998"
+										},
+										{
+											"key": "x-powered-by",
+											"value": "Express"
+										},
+										{
+											"key": "vary",
+											"value": "X-HTTP-Method-Override, Accept-Encoding"
+										},
+										{
+											"key": "access-control-allow-origin",
+											"value": "*"
+										},
+										{
+											"key": "access-control-allow-methods",
+											"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+										},
+										{
+											"key": "access-control-allow-headers",
+											"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+										},
+										{
+											"key": "etag",
+											"value": "W/\"12a-pfBkw6jsLcvth8GoQeUtyIIprjg\""
+										},
+										{
+											"key": "x-envoy-upstream-service-time",
+											"value": "2"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "5"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "19"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.dialcode.read\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2022-04-06T17:43:49.974Z\",\n    \"params\": {\n        \"resmsgid\": \"1e1e5760-b5d1-11ec-a8b6-8b6d917b3a2a\",\n        \"msgid\": null,\n        \"status\": \"failed\",\n        \"err\": \"ERR_REQUEST_FIELDS_CHANNEL_ID_MISSING\",\n        \"errmsg\": \"Required field channel id is missing\"\n    },\n    \"responseCode\": \"CLIENT_ERROR\",\n    \"result\": {}\n}"
+								},
+								{
+									"name": "400 - Required field missing: dialcode",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-Channel-Id",
+												"value": "{{x_channel_id}}",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{auth}}",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"request\": {\n        \"dialcode\": {\n        }\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/api/dialcode/v1/read",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"dialcode",
+												"v1",
+												"read"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Apr 2022 17:45:48 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "300"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29995"
+										},
+										{
+											"key": "x-powered-by",
+											"value": "Express"
+										},
+										{
+											"key": "vary",
+											"value": "X-HTTP-Method-Override, Accept-Encoding"
+										},
+										{
+											"key": "access-control-allow-origin",
+											"value": "*"
+										},
+										{
+											"key": "access-control-allow-methods",
+											"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+										},
+										{
+											"key": "access-control-allow-headers",
+											"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+										},
+										{
+											"key": "etag",
+											"value": "W/\"12c-3q66Da3Vkw5kMHuoOvHpD/ZgcT8\""
+										},
+										{
+											"key": "x-envoy-upstream-service-time",
+											"value": "3"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "6"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "11"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.dialcode.read\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2022-04-06T17:45:48.463Z\",\n    \"params\": {\n        \"resmsgid\": \"64be53f0-b5d1-11ec-a8b6-8b6d917b3a2a\",\n        \"msgid\": null,\n        \"status\": \"failed\",\n        \"err\": \"ERR_DIALCODE_GET_FIELDS_MISSING\",\n        \"errmsg\": \"Required fields for get dialcode are missing\"\n    },\n    \"responseCode\": \"CLIENT_ERROR\",\n    \"result\": {}\n}"
+								},
+								{
+									"name": "404 - DIAL code not found",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "X-Channel-Id",
+												"value": "{{x_channel_id}}",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{auth}}",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"request\": {\n        \"dialcode\": {\n            \"identifier\": \"I9Z2W9\"\n        }\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/api/dialcode/v1/read",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"dialcode",
+												"v1",
+												"read"
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Apr 2022 17:44:54 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29997"
+										},
+										{
+											"key": "x-powered-by",
+											"value": "Express"
+										},
+										{
+											"key": "vary",
+											"value": "X-HTTP-Method-Override, Accept-Encoding"
+										},
+										{
+											"key": "access-control-allow-origin",
+											"value": "*"
+										},
+										{
+											"key": "access-control-allow-methods",
+											"value": "GET,PUT,POST,PATCH,DELETE,OPTIONS"
+										},
+										{
+											"key": "access-control-allow-headers",
+											"value": "Content-Type, Authorization,cid, user-id, x-auth, Cache-Control, X-Requested-With, *"
+										},
+										{
+											"key": "etag",
+											"value": "W/\"11b-z4x2a/89cQgPnYreMRxW4vRiwLo\""
+										},
+										{
+											"key": "x-envoy-upstream-service-time",
+											"value": "11"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "14"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "1"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "gzip"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.dialcode.read\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2022-04-06T17:44:54.403Z\",\n    \"params\": {\n        \"resmsgid\": \"44856d30-b5d1-11ec-a8b6-8b6d917b3a2a\",\n        \"msgid\": null,\n        \"status\": \"failed\",\n        \"err\": \"ERR_DIALCODE_INFO\",\n        \"errmsg\": \"Dial Code Not Found With Id: I9Z2W9\"\n    },\n    \"responseCode\": \"RESOURCE_NOT_FOUND\",\n    \"result\": {}\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Update DIAL code context",
+					"item": [
+						{
+							"name": "Invalid content id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "X-Channel-ID",
+										"value": "{{channel_id}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"dialcode\": {\n            \"contextInfo\": {\n                \"@type\": \"sb-ed:TextBookUnit\",\n                \"identifier\": \" \",\n                \"name\": \"Textbook Unit\",\n                \"parentInfo\": {\n                    \"name\": \"Test Context\",\n                    \"channel\": \"{{channel_id}}\",\n                    \"identifier\": \"do_12345\",\n                    \"primaryCategory\": \"Digital Textbook\",\n                    \"framework\": {\n                        \"subject\": [\n                            \"Mathematics\"\n                        ],\n                        \"identifier\": \"tn_k-12\",\n                        \"medium\": [\n                            \"English\"\n                        ],\n                        \"board\": \"CBSE\"\n                    },\n                    \"status\": \"Live\",\n                    \"@type\": \"sb-ed:TextBook\"\n                }\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{host}}/api/dialcode/v2/update/{{new_dialcode}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v2",
+										"update",
+										"{{new_dialcode}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Invalid channel content",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "X-Channel-ID",
+										"value": "{{X_Channel_ID}}",
+										"description": "negative scenario with invalid channel id\n"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"dialcode\": {\n            \"contextInfo\": {\n                \"@type\": \"sb-ed:TextBookUnit\",\n                \"identifier\": \"do_123456\",\n                \"name\": \"Textbook Unit\",\n                \"parentInfo\": {\n                    \"name\": \"Test Context\",\n                    \"channel\": \"{{X_Channel_ID}}\",\n                    \"identifier\": \"do_12345\",\n                    \"primaryCategory\": \"Digital Textbook\",\n                    \"framework\": {\n                        \"subject\": [\n                            \"Mathematics\"\n                        ],\n                        \"identifier\": \"tn_k-12\",\n                        \"medium\": [\n                            \"English\"\n                        ],\n                        \"board\": \"CBSE\"\n                    },\n                    \"status\": \"Live\",\n                    \"@type\": \"sb-ed:TextBook\"\n                }\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{host}}/api/dialcode/v2/update/{{new_dialcode}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v2",
+										"update",
+										"{{new_dialcode}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get DIAL code context",
+					"item": [
+						{
+							"name": "invalid dial code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 404\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Channel-Id",
+										"value": "{{x_channel_id}}",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/api/dialcode/v2/read/abcdef",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v2",
+										"read",
+										"abcdef"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "invalid channel id in header",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response contains DIAL code\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    const dialcodeData = responseJson.result.dialcode;",
+											"    pm.expect(dialcodeData.identifier).to.be.eq(pm.globals.get(\"new_dialcode\"));",
+											"    pm.expect(dialcodeData.contextInfo).to.be.not.null",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Channel-Id",
+										"value": "x_channel_id_invalid",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/api/dialcode/v2/read/{{new_dialcode}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v2",
+										"read",
+										"{{new_dialcode}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Scenarios",
+			"item": [
+				{
+					"name": "Verify count after generating DIAL codes",
+					"item": [
+						{
+							"name": "List DIAL codes",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Get DIAL count\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    const result = responseJson.result;",
+											"    pm.globals.set(\"dial_count\", result.count);",
+											"    console.log(\"DIAL codes count: \"+ pm.globals.get(\"dial_count\"));",
+											"    pm.expect(result.count).to.be.eq(parseInt(pm.globals.get(\"dial_count\")));",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"user-agent": true,
+									"connection": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Channel-Id",
+										"value": "{{channel_id}}",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"search\": {\n        \t\"status\":[\"Draft\"],\n        \t\"offset\": 0,\n            \"limit\":100\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{host}}/api/dialcode/v1/list",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v1",
+										"list"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Generate DIAL code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response contains DIAL code\", function () {",
+											"    console.log(\"requested dial count: \" + pm.globals.get(\"new_dial_codes_count\"))",
+											"    const responseJson = pm.response.json();",
+											"    const dialcodes = responseJson.result.dialcodes;",
+											"    pm.expect(dialcodes.length).to.be.equal(parseInt(pm.globals.get(\"new_dial_codes_count\")));",
+											"    pm.globals.set(\"new_dialcodes\", JSON.stringify(dialcodes));",
+											"    // pm.globals.set(\"new_dialcode\", dialcodes[0]);",
+											"    // console.log(pm.globals.get(\"new_dialcode\"));",
+											"});",
+											"postman.setNextRequest(null);",
+											"let timeOut = setTimeout(function() {",
+											"    postman.setNextRequest(\"List DIAL codes - Verify new DIAL add\");",
+											"    clearTimeout(timeOut);",
+											"}, 3000, postman);",
+											"// pm.test(\"Check total DIAL codes increased\", function() {",
+											"//     pm.globals.get(\"dial_count\");",
+											"// });"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set(\"new_dial_codes_count\", \"2\");"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Channel-ID",
+										"value": "{{channel_id}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"request\": {\n    \"dialcodes\": {\n      \"count\": {{new_dial_codes_count}}\n    }\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/dialcode/v1/generate",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v1",
+										"generate"
+									]
+								},
+								"description": "The user want to generate some list of DIAL codes for a specific reason. This API will help to get the specific number(count property in the request) of DIAL codes required for him.  \n  \n**count**: No of DIAL codes required to generate."
+							},
+							"response": []
+						},
+						{
+							"name": "List DIAL codes - Verify new DIAL add",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Verify newly generated DIAL is increased total count\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    pm.globals.set(\"list_response\", responseJson);",
+											"    const dialcodes = responseJson.result.dialcodes;",
+											"    const newTotalCount = parseInt(pm.globals.get(\"dial_count\")) + parseInt(pm.globals.get(\"new_dial_codes_count\"));",
+											"    console.log(\"DIAL codes count after generation: \"+ newTotalCount);",
+											"    pm.expect(responseJson.result.count).to.be.equal(newTotalCount);        ",
+											"});",
+											"",
+											"pm.sendRequest(null);",
+											"",
+											"pm.globals.set(\"list_response\", \"variable_value\");"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"setTimeout(() => {}, 2000 );"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Channel-Id",
+										"value": "{{channel_id}}",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"search\": {\n        \t\"status\":[\"Draft\"],\n        \t\"offset\": 0,\n            \"limit\": 10\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{host}}/api/dialcode/v1/list",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v1",
+										"list"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Generated DIAL code should be discoverable",
+					"item": [
+						{
+							"name": "Get DIAL code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response contains DIAL code\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    const dialcodeData = responseJson.result.dialcode;",
+											"    pm.expect(dialcodeData.identifier).to.be.eq(pm.globals.get(\"new_dialcode\"));",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"console.log(pm.globals.get(\"new_dialcodes\"));",
+											"const newDialCodes = JSON.parse(pm.globals.get(\"new_dialcodes\"));",
+											"",
+											"pm.globals.set(\"new_dialcode\", newDialCodes[0]);",
+											"console.log(\"new_dialcode - Get dialcode of: \", newDialCodes[0]);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Channel-Id",
+										"value": "{{channel_id}}",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"dialcode\": {\n            \"identifier\": \"{{new_dialcode}}\"\n        }\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/dialcode/v1/read",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v1",
+										"read"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search DIAL code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response count is greather 0\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    const dialcodes = responseJson.result.dialcodes;",
+											"    pm.expect(responseJson.result.count).to.be.greaterThan(0);",
+											"});",
+											"",
+											"pm.test(\"Response is for the requested DIAL code\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    const dialcodes = responseJson.result.dialcodes;",
+											"    pm.expect(dialcodes[0].identifier).to.be.eq(pm.globals.get(\"new_dialcode\"));",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Channel-Id",
+										"value": "{{channel_id}}",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"search\": {\n        \t\"identifier\": \"{{new_dialcode}}\",\n            \"status\": \"Draft\"\n        },\n        \"fields\": [\"dialcode_index\",\"identifier\",\"channel\",\"batchcode\"],\n        \"limit\": 100,\n        \"sort\": {\"dialcode_index\": \"Desc\"}\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/dialcode/v1/search",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v1",
+										"search"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Linked diacode should be discoverable",
+					"item": [
+						{
+							"name": "Collection Create",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let jsonResponse = pm.response.json()",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"});",
+											"pm.globals.set(\"content_id\", jsonResponse.result.identifier);",
+											"pm.globals.set(\"versionKey\", jsonResponse.result.versionKey);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"connection": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "userId",
+										"value": "user",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "kong_api_key",
+										"value": "Bearer {{kong_api_key}}",
+										"disabled": true
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}"
+									},
+									{
+										"key": "Cookie",
+										"value": "connect.sid=s%3AyRLPeHt6zZ93WjZ2BD_Cejc11xNN-isK.ANbL%2FZ1t88yXax%2BiXjGFVtgFUAKhoWdl%2FgXU4yBX9rU; 81f30cf708470b974874c8a96a6bcdb2=l99ob678op07nq0qs5i0dae0m3; AWSELB=83D53DFF08C363B9195F6717118E44E326DE55CB796FB96A69500BA54C477B7512D6342B64B0B494BBD6699FCFFFB308C0DC9247AA23DA73B4F62BA4C399A735F647C86F50",
+										"disabled": true
+									},
+									{
+										"key": "X-Channel-Id",
+										"value": "{{channel_id}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"collection\": {\n            \"name\": \"New Collection\",\n            \"code\": \"1242e9ea-660a-4536-a142-cc242a7a4162\",\n            \"mimeType\": \"application/vnd.ekstep.content-collection\",\n            \"createdBy\": \"9b858548-9ddd-44a0-99f2-4c7e15ff8aff\",\n            \"createdFor\": [\n                \"sunbird\"\n            ],\n            \"resourceType\": \"Learn\",\n            \"creator\": \"cbsestaging26\",\n            \"framework\": \"ekstep_ncert_k-12\",\n            \"organisation\": [\n                \"CBSE\"\n            ],\n            \"primaryCategory\": \"Digital Textbook\"\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{host}}/api/collection/v1/create",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"collection",
+										"v1",
+										"create"
+									]
+								},
+								"description": "This API is associated with batch creation\nThe endpoint for Creates a Batch is /batch/create\nThe fields marked with an asterisk (*) are mandatory. They cannot be null or empty."
+							},
+							"response": []
+						},
+						{
+							"name": "Content publish",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{auth_token_1}}"
+									},
+									{
+										"key": "x-authentication-user-token",
+										"value": "{{user_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"request\": {\n    \"content\": {\n      \"lastPublishedBy\": \"Support Team\"\n    }\n  }\n}"
+								},
+								"url": {
+									"raw": "{{host}}/api/private/content/v3/publish/do_213596126019813376146",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"private",
+										"content",
+										"v3",
+										"publish",
+										"do_213596126019813376146"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search DIAL code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response count is greater 0\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    const dialcodes = responseJson.result.dialcodes;",
+											"    pm.expect(responseJson.result.count).to.be.greaterThan(0);",
+											"});",
+											"",
+											"pm.test(\"Response is for the requested DIAL code\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    const dialcodes = responseJson.result.dialcodes;",
+											"    pm.expect(dialcodes[0].identifier).to.be.eq(pm.globals.get(\"new_dialcode\"));",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Channel-Id",
+										"value": "{{channel_id}}",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"search\": {\n        \t\"identifier\": \"{{new_dialcode}}\",\n            \"status\": \"Draft\"\n        },\n        \"fields\": [\"dialcode_index\",\"identifier\",\"channel\",\"batchcode\"],\n        \"limit\": 5,\n        \"sort\": {\"dialcode_index\": \"Desc\"}\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/dialcode/v1/search",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"dialcode",
+										"v1",
+										"search"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Verify linking of reserved Dialcode through link API",
+					"item": [
+						{
+							"name": "Collection create",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let jsonResponse = pm.response.json()",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"});",
+											"pm.globals.set(\"content_id\", jsonResponse.result.identifier);",
+											"pm.globals.set(\"versionKey\", jsonResponse.result.versionKey);",
+											"console.log(jsonResponse.result.identifier);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"connection": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "userId",
+										"value": "user",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "kong_api_key",
+										"value": "",
+										"disabled": true
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}"
+									},
+									{
+										"key": "Cookie",
+										"value": "connect.sid=s%3AyRLPeHt6zZ93WjZ2BD_Cejc11xNN-isK.ANbL%2FZ1t88yXax%2BiXjGFVtgFUAKhoWdl%2FgXU4yBX9rU; 81f30cf708470b974874c8a96a6bcdb2=l99ob678op07nq0qs5i0dae0m3; AWSELB=83D53DFF08C363B9195F6717118E44E326DE55CB796FB96A69500BA54C477B7512D6342B64B0B494BBD6699FCFFFB308C0DC9247AA23DA73B4F62BA4C399A735F647C86F50",
+										"disabled": true
+									},
+									{
+										"key": "X-Channel-Id",
+										"value": "{{channel_id}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"collection\": {\n            \"name\": \"New Collection\",\n            \"code\": \"1242e9ea-660a-4536-a142-cc242a7a4162\",\n            \"mimeType\": \"application/vnd.ekstep.content-collection\",\n            \"createdBy\": \"9b858548-9ddd-44a0-99f2-4c7e15ff8aff\",\n            \"createdFor\": [\n                \"sunbird\"\n            ],\n            \"resourceType\": \"Learn\",\n            \"creator\": \"cbsestaging26\",\n            \"framework\": \"ekstep_ncert_k-12\",\n            \"organisation\": [\n                \"CBSE\"\n            ],\n            \"primaryCategory\": \"Digital Textbook\"\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{host}}/api/collection/v1/create",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"collection",
+										"v1",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Collection Hierarchy Update",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let jsonResponse = pm.response.json()",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"});",
+											"var first_id =  jsonResponse.result.identifiers;",
+											"var node_id = _.values(first_id);",
+											"pm.globals.set(\"first_node\", node_id[0]);",
+											"console.log(pm.globals.get(\"first_node\"));",
+											"pm.globals.set(\"second_node\", node_id[1]);",
+											"console.log(pm.globals.get(\"second_node\"));",
+											"pm.globals.set(\"third_node\", node_id[1]);",
+											"console.log(pm.globals.get(\"third_node\"));",
+											"console.log(node_id[0]);",
+											"console.log(node_id[1]);",
+											"console.log(node_id[2]);",
+											"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var uuid = require('uuid');\r",
+											"var uuid_one = require('uuid');\r",
+											"pm.globals.set(\"myuuid_new\", uuid.v4());\r",
+											"pm.globals.set(\"myuuid_new_one\", uuid_one.v4());\r",
+											"pm.globals.set(\"myuuid_new_two\", uuid_one.v4());\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "kong_api_key",
+										"value": "Bearer {{kong_api_key}}",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"data\": {\n            \"nodesModified\": {\n                \"{{myuuid_new}}\": {\n                    \"isNew\": true,\n                    \"root\": false,\n                    \"metadata\": {\n                        \"mimeType\": \"application/vnd.ekstep.content-collection\",\n                        \"contentType\": \"TextBookUnit\",\n                        \"code\": \"kp.citrus\",\n                        \"name\": \"Test_CourseUnit_1\",\n                        \"description\": \"Test_CourseUnit_desc_1\",\n                        \"primaryCategory\": \"Textbook Unit\",\n                        \"additionalCategories\": [\n                            \"Textbook\"\n                        ]\n                    }\n                },\n                \"{{myuuid_new_one}}\": {\n                    \"isNew\": true,\n                    \"root\": false,\n                    \"metadata\": {\n                        \"mimeType\": \"application/vnd.ekstep.content-collection\",\n                        \"contentType\": \"TextBookUnit\",\n                        \"code\": \"kp.citrus\",\n                        \"name\": \"Test_Course_SubUnit_name_1\",\n                        \"description\": \"Test_CourseSubUnit_desc_1\",\n                        \"primaryCategory\": \"Textbook Unit\",\n                        \"additionalCategories\": [\n                            \"Textbook\"\n                        ]\n                    }\n                }\n            },\n            \"hierarchy\": {\n                \"{{content_id}}\": {\n                    \"children\": [\n                        \"{{myuuid_new}}\",\n                        \"{{myuuid_new_one}}\"\n                    ],\n                    \"root\": true\n                },\n                \"{{myuuid_new_two}}\": {\n                    \"children\": [],\n                    \"root\": false\n                }\n            }\n        }\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/collection/v1/hierarchy/update",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"collection",
+										"v1",
+										"hierarchy",
+										"update"
+									]
+								},
+								"description": "Fetch a particular Batch\nThis API is associated with fetching a particular batch on the Sunbird Platform.\nThe endpoint for Fetch a particular Batch is /batch/read/{Batch_ID}\nThe fields marked with an asterisk (*) are mandatory. They cannot be null or empty."
+							},
+							"response": []
+						},
+						{
+							"name": "Dial reserve",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.set(\"count\", \"9\");\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"let jsonResponse = pm.response.json()\r",
+											"var dialcodes =  jsonResponse.result.reservedDialcodes;\r",
+											"console.log(dialcodes);\r",
+											"var json = JSON.parse(dialcodes);\r",
+											"console.log(dialcodes);\r",
+											"var qr_code_one = _.values(json); \r",
+											"console.log(qr_code_one);\r",
+											"//console.log(qr_code[1]);\r",
+											"//console.log(qr_code[2]);\r",
+											"//everytime we run this API for same collection, it should be incremented by 1 else it throws invalid count error\r",
+											"var qr_code = _.keys(json); \r",
+											"console.log(qr_code);\r",
+											"\r",
+											"console.log(qr_code[0]);\r",
+											"console.log(qr_code[1]);\r",
+											"console.log(qr_code[2]);\r",
+											"console.log(qr_code[3]);\r",
+											"console.log(qr_code[4]);\r",
+											"console.log(qr_code[5]);\r",
+											"console.log(qr_code[6]);\r",
+											"pm.globals.set(\"first_qr_code\", qr_code[0]);\r",
+											"console.log(pm.globals.get(\"first_qr_code\"));\r",
+											"pm.globals.set(\"second_qr_code\", qr_code[1]);\r",
+											"console.log(pm.globals.get(\"second_qr_code\"));\r",
+											"pm.globals.set(\"third_qr_code\", qr_code[2]);\r",
+											"console.log(pm.globals.get(\"third_qr_code\"));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-Channel-ID",
+										"value": "{{channel_id}}"
+									},
+									{
+										"key": "kong_api_key",
+										"value": "Bearer {{kong_api_key}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"dialcodes\": {\n            \"count\": {{count}} ,\n            \"qrCodeSpec\": {\n                \"errorCorrectionLevel\": \"H\"\n            }\n        }\n    }\n}"
+								},
+								"url": {
+									"raw": "{{host}}/api/collection/v1/dialcode/reserve/{{content_id}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"collection",
+										"v1",
+										"dialcode",
+										"reserve",
+										"{{content_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Link dialcode",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"setTimeout(() => {}, 2000 );\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200, dialcodes linked successfully\", function () {\r",
+											"    pm.response.to.have.status(200)\r",
+											"});\r",
+											"pm.globals.get(\"variable_key\");\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Channel-ID",
+										"value": "{{channel_id}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}"
+									},
+									{
+										"key": "kong_api_key",
+										"value": "Bearer {{kong_api_key}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"content\": [{\n            \"identifier\": [\"{{first_node}}\"],\n            \"dialcode\": [\"{{first_qr_code}}\"]\n        }]\n    }\n}"
+								},
+								"url": {
+									"raw": "{{host}}/api/collection/v1/dialcode/link/{{content_id}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"collection",
+										"v1",
+										"dialcode",
+										"link",
+										"{{content_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Collection read hierarchy when it is in draft",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200)",
+											"});",
+											"pm.test(\"Verify whether the dialcode is  linked successfully\", function () {",
+											"    const responseJson = pm.response.json();",
+											"var child_nodes  = responseJson.result.content.children;",
+											"console.log(\"first node:: \" + pm.globals.get(\"first_node\"));",
+											"var unit_node = _.find(child_nodes, function(o) { return o.identifier == pm.globals.get(\"first_node\") });",
+											"console.log(\"unit_node:: \"+ unit_node.identifier);",
+											"console.log(\"unit_node_dialcodes:: \"+ unit_node.dialcodes);",
+											"pm.expect(unit_node.dialcodes == pm.globals.get(\"first_qr_code\"));",
+											"var unit_node_one = _.find(child_nodes, { 'identifier' : pm.globals.get(\"first_node\") });",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "kong_api_key",
+										"value": "Bearer {{kong_api_key}}",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{host}}/api/collection/v1/hierarchy/{{content_id}}?mode=edit",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"collection",
+										"v1",
+										"hierarchy",
+										"{{content_id}}"
+									],
+									"query": [
+										{
+											"key": "mode",
+											"value": "edit"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"description": "count of the dialcode should be increased everytime we run reserve dialcode API for same collection",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"//var uuid_one = \"{{$randomUUID}}\";",
+							"//pm.globals.set(\"unit_one_uuid_new\", uuid_one);"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.globals.set(\"X_Channel_ID\", \"0125805318613565447\");",
+					"pm.globals.set(\"new_dial_codes_count\", \"2\");"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

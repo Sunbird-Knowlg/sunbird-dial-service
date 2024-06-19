@@ -1,0 +1,30 @@
+{
+  "$id": "file:./jsonld-schema/sbed/contextValidation.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "contextValidation",
+  "type": "object",
+  "required": [
+    "@type",
+    "identifier"
+  ],
+  "properties": {
+    "@type": {
+      "type": "string"
+    },
+    "identifier": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "parentInfo" : {
+      "type": "object"
+    },
+    "framework" : {
+      "type": "object"
+    },
+    "keywords": {
+      "type": "array"
+    }
+  }
+}
