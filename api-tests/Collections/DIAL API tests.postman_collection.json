@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "7a21d798-338c-4774-80e9-258aecb18c16",
+		"_postman_id": "27c4c8fb-0f2e-4c7e-87ee-6a7d3959d5d9",
 		"name": "DIAL API tests",
 		"description": "Public API documentation of DIAL api's  \n  \n[DIAL API's](https://documenter.getpostman.com/view/4214340/UVsMv6Kd)\n\nHere we are writing all the different test cases for DIAL service.\n\nThe structure of the API test should be as below\n\n*   **{service name} tests**\n    *   **Postive** (folder)\n        *   {API name} (*folder*)\n            *   Different positive tests of the API\n        *   {API name} (*folder*)\n            *   Different positive tests of the API\n    *   **Negative** (folder)\n        *   {API name} (*folder*)\n            *   Different negative tests of the API\n        *   {API name} (*folder*)\n            *   Different positive tests of the API\n    *   **Scenarios**\n        *   Scenario 1 (*folder*)\n            *   {Sequence of API's part of the scenario}\n        *   Scenario 2 (*folder*)\n            *   {Sequence of API's part of the scenario}",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -66,7 +66,6 @@
 									},
 									{
 										"key": "Content-Type",
-										"name": "Content-Type",
 										"value": "application/json",
 										"type": "text"
 									},
@@ -117,8 +116,8 @@
 											},
 											{
 												"key": "Content-Type",
-												"name": "Content-Type",
 												"value": "application/json",
+												"name": "Content-Type",
 												"type": "text"
 											},
 											{
@@ -240,8 +239,8 @@
 											},
 											{
 												"key": "Content-Type",
-												"name": "Content-Type",
 												"value": "application/json",
+												"name": "Content-Type",
 												"type": "text"
 											},
 											{
@@ -354,8 +353,8 @@
 											},
 											{
 												"key": "Content-Type",
-												"name": "Content-Type",
 												"value": "application/json",
+												"name": "Content-Type",
 												"type": "text"
 											},
 											{
@@ -512,7 +511,6 @@
 									},
 									{
 										"key": "Content-Type",
-										"name": "Content-Type",
 										"value": "application/json",
 										"type": "text"
 									},
@@ -563,8 +561,8 @@
 											},
 											{
 												"key": "Content-Type",
-												"name": "Content-Type",
 												"value": "application/json",
+												"name": "Content-Type",
 												"type": "text"
 											},
 											{
@@ -686,8 +684,8 @@
 											},
 											{
 												"key": "Content-Type",
-												"name": "Content-Type",
 												"value": "application/json",
+												"name": "Content-Type",
 												"type": "text"
 											},
 											{
@@ -800,8 +798,8 @@
 											},
 											{
 												"key": "Content-Type",
-												"name": "Content-Type",
 												"value": "application/json",
+												"name": "Content-Type",
 												"type": "text"
 											},
 											{
@@ -1153,7 +1151,6 @@
 									},
 									{
 										"key": "Content-Type",
-										"name": "Content-Type",
 										"value": "application/json",
 										"type": "text"
 									},
@@ -1204,8 +1201,8 @@
 											},
 											{
 												"key": "Content-Type",
-												"name": "Content-Type",
 												"value": "application/json",
+												"name": "Content-Type",
 												"type": "text"
 											},
 											{
@@ -1327,8 +1324,8 @@
 											},
 											{
 												"key": "Content-Type",
-												"name": "Content-Type",
 												"value": "application/json",
+												"name": "Content-Type",
 												"type": "text"
 											},
 											{
@@ -1441,8 +1438,8 @@
 											},
 											{
 												"key": "Content-Type",
-												"name": "Content-Type",
 												"value": "application/json",
+												"name": "Content-Type",
 												"type": "text"
 											},
 											{
@@ -1585,7 +1582,6 @@
 									},
 									{
 										"key": "Content-Type",
-										"name": "Content-Type",
 										"value": "application/json",
 										"type": "text"
 									},
@@ -1636,8 +1632,8 @@
 											},
 											{
 												"key": "Content-Type",
-												"name": "Content-Type",
 												"value": "application/json",
+												"name": "Content-Type",
 												"type": "text"
 											},
 											{
@@ -1759,8 +1755,8 @@
 											},
 											{
 												"key": "Content-Type",
-												"name": "Content-Type",
 												"value": "application/json",
+												"name": "Content-Type",
 												"type": "text"
 											},
 											{
@@ -1873,8 +1869,8 @@
 											},
 											{
 												"key": "Content-Type",
-												"name": "Content-Type",
 												"value": "application/json",
+												"name": "Content-Type",
 												"type": "text"
 											},
 											{
@@ -2057,7 +2053,7 @@
 											},
 											{
 												"key": "Authorization",
-												"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIyZThlNmU5MjA4YjI0MjJmOWFlM2EzNjdiODVmNWQzNiJ9.gvpNN7zEl28ZVaxXWgFmCL6n65UJfXZikUWOKSE8vJ8",
+												"value": "Bearer {{auth}}",
 												"type": "text"
 											},
 											{
@@ -2888,7 +2884,6 @@
 									},
 									{
 										"key": "Content-Type",
-										"name": "Content-Type",
 										"value": "application/json",
 										"type": "text"
 									},
@@ -3639,7 +3634,6 @@
 									},
 									{
 										"key": "Content-Type",
-										"name": "Content-Type",
 										"value": "application/json",
 										"type": "text"
 									},
