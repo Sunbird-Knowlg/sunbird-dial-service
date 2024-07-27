@@ -13,7 +13,7 @@
         <play2.version>2.4.6</play2.version>
         <play2.plugin.version>1.0.0-rc5</play2.plugin.version>
         <scala.version>2.11.12</scala.version>
-        <jackson.version>2.9.8</jackson.version>
+        <jackson.version>2.15.0</jackson.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <scoverage.plugin.version>1.4.1</scoverage.plugin.version>
         <sbt-compiler.plugin.version>1.0.0</sbt-compiler.plugin.version>
@@ -142,7 +142,7 @@
         <dependency>
             <groupId>org.elasticsearch.client</groupId>
             <artifactId>elasticsearch-rest-high-level-client</artifactId>
-            <version>6.8.22</version>
+            <version>7.17.8</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
