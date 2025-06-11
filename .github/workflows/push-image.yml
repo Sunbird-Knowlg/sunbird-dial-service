@@ -2,7 +2,7 @@ name: Build and Push Dial Service Image
 
 on:
   push:
-    tags:
+    branches:
       - '*'
 
 jobs:
@@ -12,6 +12,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-dial-mvn-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
 
       - name: Set up JDK 11 and Maven
         uses: actions/setup-java@v3
@@ -46,8 +53,6 @@ jobs:
       - name: Build dial-service
         run: |
           mvn clean install -DskipTests
-          echo "Built dial-service successfully."
-          ls -la target/
 
       - name: Build Docker Image
         run: |
