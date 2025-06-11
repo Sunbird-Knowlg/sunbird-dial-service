@@ -48,10 +48,11 @@ jobs:
         run: |
           mvn clean package -DskipTests
           echo "Built dial-service successfully."
+          ls -la target/
 
       - name: Build Docker Image
         run: |
-          IMAGE_NAME="content-service"
+          IMAGE_NAME="dial-service"
           IMAGE_TAG=$(echo "${{ github.ref_name }}_$(echo $GITHUB_SHA | cut -c1-7)" | tr '[:upper:]' '[:lower:]')
           docker build -f build/Dockerfile -t $REGISTRY_URL/${IMAGE_NAME}:${IMAGE_TAG} .
 
