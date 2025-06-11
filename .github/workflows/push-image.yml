@@ -18,7 +18,6 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '11'
-          cache: 'maven'
 
       - name: Login Docker Registry
         run: |
@@ -46,7 +45,7 @@ jobs:
 
       - name: Build dial-service
         run: |
-          mvn clean package -DskipTests
+          mvn clean install -DskipTests
           echo "Built dial-service successfully."
           ls -la target/
 
