@@ -51,6 +51,7 @@ jobs:
       - name: Build dial-service
         run: |
           mvn clean install -DskipTests
+          mvn play2:dist
 
       - name: Build Docker Image
         run: |
