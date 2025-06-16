@@ -1,7 +1,7 @@
 name: PR Code Quality Check
 
 on:
-  pull_request:
+  push:
     branches:
       - "**"
 
