@@ -1,0 +1,108 @@
+name: PR Code Quality Check
+
+on:
+  pull_request:
+    branches:
+      - "**"
+
+jobs:
+  build-test-analyze:
+    runs-on: ubuntu-latest
+
+    services:
+      redis:
+        image: redis:6.0.8
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.17.13
+        env:
+          discovery.type: single-node
+          ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+        ports:
+          - 9200:9200
+        options: >-
+          --health-cmd "curl -f http://localhost:9200 || exit 1"
+          --health-interval 10s
+          --health-timeout 10s
+          --health-retries 10
+
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 11
+
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{runner.os}}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{runner.os}}-maven-
+
+      - name: Build Dial
+        run: mvn install -DskipTests
+
+      - name: Run Unit Tests
+        id: run-tests
+        run: mvn clean test
+
+      - name: Upload Test Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: target/surefire-reports/*.xml
+
+      - name: Publish Test Results to GitHub UI
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Test Results
+          path: target/surefire-reports/*.xml
+          reporter: java-junit
+          fail-on-error: false
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Run SonarCloud Analysis
+        run: |
+          mvn sonar:sonar \
+            -Dsonar.projectKey=vinodbhorge \
+            -Dsonar.organization=vinodbhorge \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=$SONAR_TOKEN \
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+
+      - name: Comment PR with SonarQube Results
+        uses: actions/github-script@v6
+        if: github.event_name == 'pull_request'
+        with:
+          script: |
+            const sonarUrl = `https://sonarcloud.io/dashboard?id=${process.env.GITHUB_REPOSITORY.replace('/', '_')}`;
+            const message = `### Quality Gate Results
+            Check the detailed SonarQube analysis at: ${sonarUrl}`;
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: message
+            });
