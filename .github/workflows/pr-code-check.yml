@@ -1,7 +1,7 @@
 name: PR Code Quality Check
 
 on:
-  push:
+  pull_request:
     branches:
       - "**"
 
@@ -50,9 +50,12 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          key: maven-${{ hashFiles('**/pom.xml') }}
+          key: ${{runner.os}}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
-            maven-
+            ${{runner.os}}-maven-
+
+      - name: Build for Sonar Analysis
+        run: mvn install -DskipTests
 
       - name: Run Unit Tests
         id: run-tests
@@ -74,9 +77,6 @@ jobs:
           reporter: java-junit
           fail-on-error: false
 
-      - name: Build for Sonar Analysis
-        run: mvn install -DskipTests
-
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -94,7 +94,7 @@ jobs:
 
       - name: Comment PR with SonarQube Results
         uses: actions/github-script@v6
-        if: github.event_name == 'pull_request' && always()
+        if: github.event_name == 'pull_request'
         with:
           script: |
             const sonarUrl = `https://sonarcloud.io/dashboard?id=${process.env.GITHUB_REPOSITORY.replace('/', '_')}`;
