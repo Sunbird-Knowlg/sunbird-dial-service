@@ -97,7 +97,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const sonarUrl = `https://sonarcloud.io/dashboard?id=${process.env.SONAR_PROJECT_KEY}`;
+            const sonarUrl = `https://sonarcloud.io/dashboard?id=vinodbhorge`;
             const message = `### 🔍 SonarCloud Analysis\n[View Quality Gate and Code Analysis](${sonarUrl})`;
             await github.rest.issues.createComment({
               owner: context.repo.owner,
