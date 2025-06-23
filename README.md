@@ -145,7 +145,11 @@ curl http://localhost:9000/health
 4. Reference of 'sb' vocabulary (schema.jsonld) in the custom 'context.json' is a must.
 
 
-### GitHub Actions Workflow Prerequisites
+## GitHub Actions Workflow 
+
+### Build Docker image Workflow
+
+Prerequisites
 
 To ensure the GitHub Actions workflows in this repository function correctly, the following prerequisites must be met:
 
@@ -180,3 +184,15 @@ To ensure the GitHub Actions workflows in this repository function correctly, th
 
     Ensure these secrets are added to the repository settings under **Settings > Secrets and variables > Actions**.
     By ensuring these prerequisites are met, the workflows in this repository will execute successfully.
+
+### Pull Request Quality Checks
+
+Every pull request triggers a GitHub Actions workflow that:
+
+- Spins up **Redis (6.0.8)** and **Elasticsearch (7.17.13)** containers
+- Runs unit tests and publishes results
+- Builds the project using Maven
+- Performs **SonarCloud** static code analysis
+- Comments test and analysis results on the PR
+
+> Requires `SONAR_TOKEN` to be set in repository secrets.
