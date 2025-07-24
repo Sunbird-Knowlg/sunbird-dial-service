@@ -189,7 +189,7 @@ To ensure the GitHub Actions workflows in this repository function correctly, th
 
 Every pull request triggers a GitHub Actions workflow that:
 
-- Spins up **Redis (6.0.8)** and **Elasticsearch (7.17.13)** containers
+- Spins up **Redis (6.0.8)** and **Elasticsearch (7.10.2)** containers
 - Runs unit tests and publishes results
 - Builds the project using Maven
 - Performs **SonarCloud** static code analysis

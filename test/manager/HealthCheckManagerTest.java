@@ -3,6 +3,7 @@ package manager;
 import commons.dto.Response;
 import managers.HealthCheckManager;
 import managers.IHealthCheckManager;
+import common.CassandraTestSetup;
 import org.junit.After;
 
 import org.junit.Before;
@@ -10,7 +11,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class HealthCheckManagerTest {
+public class HealthCheckManagerTest extends CassandraTestSetup {
 
     HealthCheckManager healthCheckManager;
     boolean goodHealth;
