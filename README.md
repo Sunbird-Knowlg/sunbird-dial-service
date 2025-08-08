@@ -22,7 +22,7 @@ docker run --name sunbird_es -d -p 9200:9200 -p 9300:9300 \
 -v $sunbird_dbs_path/es/data:/usr/share/elasticsearch/data \
 -v $sunbird_dbs_path/es/logs://usr/share/elasticsearch/logs \
 -v $sunbird_dbs_path/es/backups:/opt/elasticsearch/backup \
- -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:6.8.22
+ -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.10.2
 
 ```
 > --name -  Name your container (avoids generic id)
