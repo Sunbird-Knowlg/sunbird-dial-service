@@ -10,7 +10,6 @@ import commons.dto.Response;
 import commons.dto.ResponseParams;
 import commons.exception.*;
 import org.apache.commons.lang3.StringUtils;
-import play.libs.F.Promise;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Http;
@@ -21,29 +20,37 @@ import telemetry.TelemetryParams;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.CompletableFuture;
 
 public class BaseController extends Controller {
     private static ObjectMapper mapper = new ObjectMapper();
 
-    protected Request getRequest() {
-        JsonNode requestData = request().body().asJson();
+    protected Request getRequest(Http.Request httpRequest) {
+        JsonNode requestData = httpRequest.body().asJson();
         Request req = mapper.convertValue(requestData, Request.class);
-        setHeaderContext(request(),req);
+        setHeaderContext(httpRequest,req);
         return req;
     }
-
-
-    protected Promise<Result> getResponseEntity(Response response, String apiId, String msgId) {
-        int statusCode = response.getResponseCode().code();
-        setResponseEnvelope(response, apiId, msgId);
-        return Promise.<Result>pure(Results.status(statusCode ,Json.toJson(response)).as("application/json"));
+    
+    // Keep old method for backward compatibility but mark deprecated
+    @Deprecated
+    protected Request getRequest() {
+        return getRequest(request());
     }
 
-    protected Promise<Result> getExceptionResponseEntity(Exception e, String apiId, String msgId) {
+
+    protected CompletionStage<Result> getResponseEntity(Response response, String apiId, String msgId) {
+        int statusCode = response.getResponseCode().code();
+        setResponseEnvelope(response, apiId, msgId);
+        return CompletableFuture.completedFuture(Results.status(statusCode ,Json.toJson(response)).as("application/json"));
+    }
+
+    protected CompletionStage<Result> getExceptionResponseEntity(Exception e, String apiId, String msgId) {
         int statusCode = getStatus(e);
         Response response = getErrorResponse(e);
         setResponseEnvelope(response, apiId, msgId);
-        return Promise.<Result>pure(Results.status(statusCode ,Json.toJson(response)).as("application/json"));
+        return CompletableFuture.completedFuture(Results.status(statusCode ,Json.toJson(response)).as("application/json"));
     }
 
     public Result getServiceUnavailableResponseEntity(Exception e, String apiId, String msgId) {

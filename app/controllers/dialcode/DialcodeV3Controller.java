@@ -4,7 +4,7 @@ import commons.dto.Request;
 import commons.dto.Response;
 import controllers.BaseController;
 import managers.DialcodeManager;
-import play.libs.F.Promise;
+import java.util.concurrent.CompletionStage;
 import play.mvc.Result;
 import telemetry.TelemetryManager;
 import utils.DialCodeEnum;
@@ -19,7 +19,7 @@ public class DialcodeV3Controller extends BaseController {
     
     private DialcodeManager dialCodeManager = new DialcodeManager();
 
-    public Promise<Result> generateDialCode() {
+    public CompletionStage<Result> generateDialCode() {
         String apiId = "sunbird.dialcode.generate";
         String channelId = request().getHeader("X-Channel-ID");
         Request request = getRequest();
@@ -33,7 +33,7 @@ public class DialcodeV3Controller extends BaseController {
         }
     }
 
-    public Promise<Result> readDialCode(String dialCodeId) {
+    public CompletionStage<Result> readDialCode(String dialCodeId) {
         String apiId = "sunbird.dialcode.read";
         try {
             Response response = dialCodeManager.readDialCode(dialCodeId);
@@ -44,7 +44,7 @@ public class DialcodeV3Controller extends BaseController {
         }
     }
 
-    public Promise<Result> updateDialCode(String dialCodeId) {
+    public CompletionStage<Result> updateDialCode(String dialCodeId) {
         String apiId = "sunbird.dialcode.update";
         String channelId = request().getHeader("X-Channel-ID");
         Request request = getRequest();
@@ -58,7 +58,7 @@ public class DialcodeV3Controller extends BaseController {
         }
     }
 
-    public Promise<Result> listDialCode() {
+    public CompletionStage<Result> listDialCode() {
         String apiId = "sunbird.dialcode.list";
         Request request = getRequest();
         try {
@@ -71,7 +71,7 @@ public class DialcodeV3Controller extends BaseController {
         }
     }
 
-    public Promise<Result> searchDialCode() {
+    public CompletionStage<Result> searchDialCode() {
         String apiId = "sunbird.dialcode.search";
         Request request = getRequest();
         try {
@@ -97,7 +97,7 @@ public class DialcodeV3Controller extends BaseController {
     /**
      * @return
      */
-    public Promise<Result> syncDialCode() {
+    public CompletionStage<Result> syncDialCode() {
         String apiId = "sunbird.dialcode.sync";
         String channelId = request().getHeader("X-Channel-ID");
         String[] ids = request().queryString().get("identifier");
@@ -118,7 +118,7 @@ public class DialcodeV3Controller extends BaseController {
      * @param dialCodeId
      * @return
      */
-    public Promise<Result> publishDialCode(String dialCodeId) {
+    public CompletionStage<Result> publishDialCode(String dialCodeId) {
         String apiId = "sunbird.dialcode.publish";
         String channelId = request().getHeader("X-Channel-ID");
         try {
@@ -137,7 +137,7 @@ public class DialcodeV3Controller extends BaseController {
      * @return
      */
 
-    public Promise<Result> createPublisher() {
+    public CompletionStage<Result> createPublisher() {
 
         String apiId = "sunbird.publisher.create";
         String channelId = request().getHeader("X-Channel-ID");
@@ -159,7 +159,7 @@ public class DialcodeV3Controller extends BaseController {
      *
      * @return
      */
-    public Promise<Result> readPublisher(String publisherId) {
+    public CompletionStage<Result> readPublisher(String publisherId) {
         String apiId = "sunbird.publisher.info";
         try {
             Response response = dialCodeManager.readPublisher(publisherId);
@@ -176,7 +176,7 @@ public class DialcodeV3Controller extends BaseController {
      * @param publisherId
      * @return
      */
-    public Promise<Result> updatePublisher(String publisherId) {
+    public CompletionStage<Result> updatePublisher(String publisherId) {
         String apiId = "sunbird.publisher.update";
         String channelId = request().getHeader("X-Channel-ID");
         Request request = getRequest();

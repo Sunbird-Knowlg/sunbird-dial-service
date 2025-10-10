@@ -4,7 +4,7 @@ import commons.dto.Request;
 import commons.dto.Response;
 import controllers.BaseController;
 import managers.DialcodeManager;
-import play.libs.F.Promise;
+import java.util.concurrent.CompletionStage;
 import play.mvc.Result;
 import telemetry.TelemetryManager;
 import utils.DialCodeEnum;
@@ -15,7 +15,7 @@ public class DialcodeV4Controller extends BaseController {
     
     private DialcodeManager dialCodeManager = new DialcodeManager();
 
-    public Promise<Result> readDialCode(String dialCodeId) {
+    public CompletionStage<Result> readDialCode(String dialCodeId) {
         String apiId = "sunbird.dialcode.read";
         try {
             Response response = dialCodeManager.readDialCodeV4(dialCodeId);
@@ -26,7 +26,7 @@ public class DialcodeV4Controller extends BaseController {
         }
     }
 
-    public Promise<Result> updateDialCode(String dialCodeId) {
+    public CompletionStage<Result> updateDialCode(String dialCodeId) {
         String apiId = "sunbird.dialcode.update";
         String channelId = request().getHeader("X-Channel-ID");
         Request request = getRequest();
@@ -40,7 +40,7 @@ public class DialcodeV4Controller extends BaseController {
         }
     }
 
-    public Promise<Result> readQRCodesBatchInfo(String processId) {
+    public CompletionStage<Result> readQRCodesBatchInfo(String processId) {
         String apiId = "sunbird.dialcode.batch.read";
         try {
             Response response = dialCodeManager.readQRCodesBatchInfo(processId);

@@ -38,9 +38,9 @@ public class Global extends GlobalSettings {
     public Action onRequest(Request request, Method actionMethod) {
         long startTime = System.currentTimeMillis();
         return new Action.Simple() {
-            public Promise<Result> call(Context ctx) throws Throwable {
-                Promise<Result> call = delegate.call(ctx);
-                call.onRedeem((r) -> {
+            public CompletionStage<Result> call(Context ctx) throws Throwable {
+                CompletionStage<Result> call = delegate.call(ctx);
+                call.thenAccept((r) -> {
                     try {
                         String path = request.uri();
                         if (!path.contains("/health")) {
