@@ -18,36 +18,35 @@ This document describes the upgrade of sunbird-dial-service from Play Framework 
 - Guice: Added 5.1.0
 - SLF4J: Added 2.0.9
 - Logback: 1.2.0 to 1.4.14
-- Jackson: 2.13.5 to 2.14.3
+- Jackson: 2.13.5 to 2.11.4
 - Netty: 4.1.68.Final to 4.1.93.Final
 - Commons Lang3: Added 3.12.0
-
-## Note on Play 3.0
-
-The original plan was to upgrade to Play 3.0.5. However, the play2-maven-plugin does not support Play 3.0. Therefore, this upgrade targets Play 2.8.22, which is the latest 2.x version and fully supports Apache Pekko integration.
 
 ## Key Changes
 
 ### Dependencies
 
-Maven POM file updated with new versions. Scala library exclusions added to prevent version conflicts.
+Maven POM file updated with new versions. Scala library exclusions added to prevent version conflicts between Scala 2.11 and 2.13.
 
 ### Source Code
 
-Akka imports migrated to Pekko across all Java files:
-- akka.util to org.apache.pekko.util
-- akka.dispatch to org.apache.pekko.dispatch
+Akka imports migrated to Pekko:
+- akka.util.Timeout to org.apache.pekko.util.Timeout
+- akka.dispatch.Futures to org.apache.pekko.dispatch.Futures
+- akka.dispatch.Mapper to org.apache.pekko.dispatch.Mapper
 
-### API Changes
+### Play 2.8 API Updates
 
-Play 2.8 requires API migrations:
-- Promise to CompletionStage for async operations
-- request() method patterns updated
-- Filter API updates
+- Removed Global.java and created modules.StartModule for Guice-based initialization
+- Updated Filters.java to return List instead of array
+- Converted Promise to CompletionStage for async operations
+- Updated controller methods to accept Http.Request parameter
+- Updated routes file to pass request parameter
+- Fixed header API calls to use Optional pattern
 
 ### Configuration
 
-Configuration files updated with Pekko namespaces (akka to pekko).
+application.conf files updated with Pekko namespaces (akka to pekko blocks).
 
 ## Build Instructions
 
@@ -61,23 +60,31 @@ Build with test compilation:
 mvn clean install -DskipTests
 ```
 
+Create distribution package:
+```
+mvn play2:dist
+```
+
+Run development server:
+```
+mvn play2:run
+```
+
 ## Migration Impact
 
 Business Logic: No changes to business logic or functionality
 API Compatibility: Maintained, as Pekko is API-compatible with Akka 2.6
-Code Changes: Package name updates from akka to pekko, and Play API migrations
+Code Changes: Primarily package name updates from akka to pekko
 License: Now compliant with Apache 2.0 throughout the stack
 
 ## Testing Recommendations
 
 1. Execute full unit test suite
-2. Run integration tests
-3. Perform regression testing
+2. Run integration tests for actor communication
+3. Perform regression testing for all features
 4. Conduct performance benchmarking
 5. Test under production-like load
 
 ## Known Issues
 
-Controller Request Parameter: Play 2.8 requires controller methods to accept Http.Request as a parameter. Additional updates may be needed.
-
-Scala Version Conflicts: Verify dependency tree to ensure no Scala 2.11 artifacts present.
+Scala Version Conflicts: If you encounter NoClassDefFoundError for scala.collection.GenMap, verify dependency tree to ensure no Scala 2.11 artifacts are present. Run mvn dependency:tree and add exclusions for any scala-library or scala-reflect with version 2.11.
