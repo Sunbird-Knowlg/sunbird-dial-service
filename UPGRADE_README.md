@@ -1,4 +1,4 @@
-# Play Framework and Apache Pekko Upgrade
+# Play Framework and Apache Pekko Upgrade (Phase 1 - Play Framework 2.4.6 TO Play Framework 2.8.22)
 
 ## Overview
 
@@ -98,14 +98,5 @@ API Compatibility: Maintained, as Pekko is API-compatible with Akka 2.6
 Code Changes: Primarily package name updates from akka to pekko
 License: Now compliant with Apache 2.0 throughout the stack
 
-## Testing Recommendations
-
-1. Execute full unit test suite
-2. Run integration tests for actor communication
-3. Perform regression testing for all features
-4. Conduct performance benchmarking
-5. Test under production-like load
-
-## Known Issues
-
-Scala 2.11/2.13 Conflict: If you encounter NoClassDefFoundError for scala.collection.GenMap, verify dependency tree to ensure no Scala 2.11 artifacts are present. Run mvn dependency:tree and add exclusions for any scala-library or scala-reflect with version 2.11.
+## Phase 2
+Play Framework 2.8.22 To 3.0.5 (Pending)
