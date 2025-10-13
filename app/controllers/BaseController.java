@@ -129,12 +129,12 @@ public class BaseController extends Controller {
      * @param dialRequest
      */
     protected void setHeaderContext(Http.Request httpRequest, Request dialRequest) {
-        String sessionId = httpRequest.getHeader("X-Session-ID");
-        String consumerId = httpRequest.getHeader("X-Consumer-ID");
-        String deviceId = httpRequest.getHeader("X-Device-ID");
-        String authUserId = httpRequest.getHeader("X-Authenticated-Userid");
-        String channelId = httpRequest.getHeader("X-Channel-ID");
-        String appId = httpRequest.getHeader("X-App-Id");
+        String sessionId = httpRequest.header("X-Session-ID").orElse(null);
+        String consumerId = httpRequest.header("X-Consumer-ID").orElse(null);
+        String deviceId = httpRequest.header("X-Device-ID").orElse(null);
+        String authUserId = httpRequest.header("X-Authenticated-Userid").orElse(null);
+        String channelId = httpRequest.header("X-Channel-ID").orElse(null);
+        String appId = httpRequest.header("X-App-Id").orElse(null);
 
         if (StringUtils.isNotBlank(sessionId))
             dialRequest.getContext().put("SESSION_ID", sessionId);

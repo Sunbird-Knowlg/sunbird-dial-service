@@ -13,11 +13,11 @@ public class Filters implements HttpFilters {
 
     @Inject
     public Filters(HealthCheckFilter healthCheckFilter) {
-        this.healthCheckFilter= healthCheckFilter;
+        this.healthCheckFilter = healthCheckFilter;
     }
 
     @Override
-    public EssentialFilter[] filters() {
-        return new EssentialFilter[] {(EssentialFilter) this.healthCheckFilter };
+    public EssentialFilter[] getFilters() {
+        return new EssentialFilter[] {this.healthCheckFilter};
     }
 }
