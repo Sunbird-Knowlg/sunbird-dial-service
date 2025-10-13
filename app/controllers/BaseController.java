@@ -25,6 +25,17 @@ import java.util.concurrent.CompletableFuture;
 
 public class BaseController extends Controller {
     private static ObjectMapper mapper = new ObjectMapper();
+    
+    // Thread-local to store current request in Play 2.8
+    private static ThreadLocal<Http.Request> currentRequest = new ThreadLocal<>();
+    
+    protected static void setCurrentRequest(Http.Request req) {
+        currentRequest.set(req);
+    }
+    
+    protected static Http.Request request() {
+        return currentRequest.get();
+    }
 
     protected Request getRequest(Http.Request httpRequest) {
         JsonNode requestData = httpRequest.body().asJson();
@@ -33,8 +44,7 @@ public class BaseController extends Controller {
         return req;
     }
     
-    // Keep old method for backward compatibility but mark deprecated
-    @Deprecated
+    // Keep old method for backward compatibility
     protected Request getRequest() {
         return getRequest(request());
     }

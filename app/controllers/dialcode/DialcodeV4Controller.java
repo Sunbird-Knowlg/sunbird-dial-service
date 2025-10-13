@@ -8,6 +8,7 @@ import java.util.concurrent.CompletionStage;
 import play.mvc.Result;
 import telemetry.TelemetryManager;
 import utils.DialCodeEnum;
+import play.mvc.Http;
 
 import java.util.*;
 
@@ -26,12 +27,13 @@ public class DialcodeV4Controller extends BaseController {
         }
     }
 
-    public CompletionStage<Result> updateDialCode(String dialCodeId) {
+    public CompletionStage<Result> updateDialCode(Http.Request request, String dialCodeId) {
+        setCurrentRequest(request);
         String apiId = "sunbird.dialcode.update";
-        String channelId = request().getHeader("X-Channel-ID");
-        Request request = getRequest();
+        String channelId = request.header("X-Channel-ID").orElse(null);
+        Request req = getRequest(request);
         try {
-            Map<String, Object> map = (Map<String, Object>) request.get(DialCodeEnum.dialcode.name());
+            Map<String, Object> map = (Map<String, Object>) req.get(DialCodeEnum.dialcode.name());
             Response response = dialCodeManager.updateDialCodeV4(dialCodeId, channelId, map);
             return getResponseEntity(response, apiId, null);
         } catch (Exception e) {
