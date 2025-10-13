@@ -1,6 +1,6 @@
 package managers;
 
-import akka.util.Timeout;
+import org.apache.pekko.util.Timeout;
 import com.datastax.driver.core.Row;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;

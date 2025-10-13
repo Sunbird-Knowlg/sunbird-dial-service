@@ -4,10 +4,11 @@ import commons.dto.Request;
 import commons.dto.Response;
 import controllers.BaseController;
 import managers.DialcodeManager;
-import play.libs.F.Promise;
+import java.util.concurrent.CompletionStage;
 import play.mvc.Result;
 import telemetry.TelemetryManager;
 import utils.DialCodeEnum;
+import play.mvc.Http;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,12 +20,13 @@ public class DialcodeV3Controller extends BaseController {
     
     private DialcodeManager dialCodeManager = new DialcodeManager();
 
-    public Promise<Result> generateDialCode() {
+    public CompletionStage<Result> generateDialCode(Http.Request request) {
+        setCurrentRequest(request);
         String apiId = "sunbird.dialcode.generate";
-        String channelId = request().getHeader("X-Channel-ID");
-        Request request = getRequest();
+        String channelId = request.header("X-Channel-ID").orElse(null);
+        Request req = getRequest(request);
         try {
-            Map<String, Object> map = (Map<String, Object>) request.get(DialCodeEnum.dialcodes.name());
+            Map<String, Object> map = (Map<String, Object>) req.get(DialCodeEnum.dialcodes.name());
             Response response = dialCodeManager.generateDialCode(map, channelId);
             return getResponseEntity(response, apiId, null);
         } catch (Exception e) {
@@ -33,7 +35,7 @@ public class DialcodeV3Controller extends BaseController {
         }
     }
 
-    public Promise<Result> readDialCode(String dialCodeId) {
+    public CompletionStage<Result> readDialCode(String dialCodeId) {
         String apiId = "sunbird.dialcode.read";
         try {
             Response response = dialCodeManager.readDialCode(dialCodeId);
@@ -44,12 +46,13 @@ public class DialcodeV3Controller extends BaseController {
         }
     }
 
-    public Promise<Result> updateDialCode(String dialCodeId) {
+    public CompletionStage<Result> updateDialCode(Http.Request request, String dialCodeId) {
+        setCurrentRequest(request);
         String apiId = "sunbird.dialcode.update";
-        String channelId = request().getHeader("X-Channel-ID");
-        Request request = getRequest();
+        String channelId = request.header("X-Channel-ID").orElse(null);
+        Request req = getRequest(request);
         try {
-            Map<String, Object> map = (Map<String, Object>) request.get(DialCodeEnum.dialcode.name());
+            Map<String, Object> map = (Map<String, Object>) req.get(DialCodeEnum.dialcode.name());
             Response response = dialCodeManager.updateDialCode(dialCodeId, channelId, map);
             return getResponseEntity(response, apiId, null);
         } catch (Exception e) {
@@ -58,12 +61,13 @@ public class DialcodeV3Controller extends BaseController {
         }
     }
 
-    public Promise<Result> listDialCode() {
+    public CompletionStage<Result> listDialCode(Http.Request request) {
+        setCurrentRequest(request);
         String apiId = "sunbird.dialcode.list";
-        Request request = getRequest();
+        Request req = getRequest(request);
         try {
-            Map<String, Object> requestMap = (Map<String, Object>) request.get(DialCodeEnum.search.name());
-            Response response = dialCodeManager.listDialCode(request.getContext(), requestMap);
+            Map<String, Object> requestMap = (Map<String, Object>) req.get(DialCodeEnum.search.name());
+            Response response = dialCodeManager.listDialCode(req.getContext(), requestMap);
             return getResponseEntity(response, apiId, null);
         } catch (Exception e) {
             TelemetryManager.error("Exception Occured while Performing List Operation for Dial Codes : "+ e.getMessage(), e);
@@ -71,21 +75,22 @@ public class DialcodeV3Controller extends BaseController {
         }
     }
 
-    public Promise<Result> searchDialCode() {
+    public CompletionStage<Result> searchDialCode(Http.Request request) {
+        setCurrentRequest(request);
         String apiId = "sunbird.dialcode.search";
-        Request request = getRequest();
+        Request req = getRequest(request);
         try {
-            Map<String, Object> map = (Map<String, Object>) request.get(DialCodeEnum.search.name());
+            Map<String, Object> map = (Map<String, Object>) req.get(DialCodeEnum.search.name());
             List<String> fieldsList = new ArrayList<String>();
-            if(request.get(DialCodeEnum.fields.name()) != null) {
+            if(req.get(DialCodeEnum.fields.name()) != null) {
                 try {
-                    fieldsList = (List<String>) request.get(DialCodeEnum.fields.name());
+                    fieldsList = (List<String>) req.get(DialCodeEnum.fields.name());
                 } catch (ClassCastException ce) {
-                    fieldsList.add(request.get(DialCodeEnum.fields.name()).toString());
+                    fieldsList.add(req.get(DialCodeEnum.fields.name()).toString());
                 }
                 fieldsList.add("identifier");
             }
-            Response response = dialCodeManager.searchDialCode(request.getContext(), map, fieldsList);
+            Response response = dialCodeManager.searchDialCode(req.getContext(), map, fieldsList);
             return getResponseEntity(response, apiId, null);
         } catch (Exception e) {
             TelemetryManager
@@ -97,14 +102,15 @@ public class DialcodeV3Controller extends BaseController {
     /**
      * @return
      */
-    public Promise<Result> syncDialCode() {
+    public CompletionStage<Result> syncDialCode(Http.Request request) {
+        setCurrentRequest(request);
         String apiId = "sunbird.dialcode.sync";
-        String channelId = request().getHeader("X-Channel-ID");
-        String[] ids = request().queryString().get("identifier");
+        String channelId = request.header("X-Channel-ID").orElse(null);
+        String[] ids = request.queryString().get("identifier");
         List<String> identifiers = Optional.ofNullable(Arrays.asList(ids)).orElse(new ArrayList<>());
-        Request request = getRequest();
+        Request req = getRequest(request);
         try {
-            Map<String, Object> map = (Map<String, Object>) request.get("sync");
+            Map<String, Object> map = (Map<String, Object>) req.get("sync");
             Response response = dialCodeManager.syncDialCode(channelId, map, identifiers);
             return getResponseEntity(response, apiId, null);
         } catch (Exception e) {
@@ -118,9 +124,10 @@ public class DialcodeV3Controller extends BaseController {
      * @param dialCodeId
      * @return
      */
-    public Promise<Result> publishDialCode(String dialCodeId) {
+    public CompletionStage<Result> publishDialCode(Http.Request request, String dialCodeId) {
+        setCurrentRequest(request);
         String apiId = "sunbird.dialcode.publish";
-        String channelId = request().getHeader("X-Channel-ID");
+        String channelId = request.header("X-Channel-ID").orElse(null);
         try {
             Response response = dialCodeManager.publishDialCode(dialCodeId, channelId);
             return getResponseEntity(response, apiId, null);
@@ -137,13 +144,14 @@ public class DialcodeV3Controller extends BaseController {
      * @return
      */
 
-    public Promise<Result> createPublisher() {
+    public CompletionStage<Result> createPublisher(Http.Request request) {
+        setCurrentRequest(request);
 
         String apiId = "sunbird.publisher.create";
-        String channelId = request().getHeader("X-Channel-ID");
-        Request request = getRequest();
+        String channelId = request.header("X-Channel-ID").orElse(null);
+        Request req = getRequest(request);
         try {
-            Map<String, Object> map = (Map<String, Object>) request.get(DialCodeEnum.publisher.name());
+            Map<String, Object> map = (Map<String, Object>) req.get(DialCodeEnum.publisher.name());
             Response response = dialCodeManager.createPublisher(map, channelId);
             return getResponseEntity(response, apiId, null);
         } catch (Exception e) {
@@ -159,7 +167,7 @@ public class DialcodeV3Controller extends BaseController {
      *
      * @return
      */
-    public Promise<Result> readPublisher(String publisherId) {
+    public CompletionStage<Result> readPublisher(String publisherId) {
         String apiId = "sunbird.publisher.info";
         try {
             Response response = dialCodeManager.readPublisher(publisherId);
@@ -176,12 +184,13 @@ public class DialcodeV3Controller extends BaseController {
      * @param publisherId
      * @return
      */
-    public Promise<Result> updatePublisher(String publisherId) {
+    public CompletionStage<Result> updatePublisher(Http.Request request, String publisherId) {
+        setCurrentRequest(request);
         String apiId = "sunbird.publisher.update";
-        String channelId = request().getHeader("X-Channel-ID");
-        Request request = getRequest();
+        String channelId = request.header("X-Channel-ID").orElse(null);
+        Request req = getRequest(request);
         try {
-            Map<String, Object> map = (Map<String, Object>) request.get("publisher");
+            Map<String, Object> map = (Map<String, Object>) req.get("publisher");
             Response response = dialCodeManager.updatePublisher(publisherId, channelId, map);
             return getResponseEntity(response, apiId, null);
         } catch (Exception e) {
