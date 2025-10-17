@@ -99,4 +99,86 @@ Code Changes: Primarily package name updates from akka to pekko
 License: Now compliant with Apache 2.0 throughout the stack
 
 ## Phase 2
-Play Framework 2.8.22 To 3.0.5 (Pending)
+Play Framework 2.8.22 To 3.0.5
+
+### Overview
+
+Phase 2 upgrades sunbird-dial-service from Play Framework 2.8.22 to Play Framework 3.0.5, bringing the application to the latest stable version with improved performance and security.
+
+### Technology Stack Changes
+
+- Play Framework: 2.8.22 to 3.0.5
+- Scala: 2.13.12 to 2.13.14
+- Jackson: 2.11.4 to 2.14.3
+- Guice: 5.1.0 to 6.0.0
+- Netty: 4.1.93.Final to 4.1.100.Final
+- Java Runtime: 11 to 17 (minimum requirement for Play 3.0.5)
+
+### Key Changes
+
+#### Dependencies
+
+- Play Framework groupId changed from `com.typesafe.play` to `org.playframework`
+- Updated all Play dependencies:
+  - `play_2.13` → version 3.0.5
+  - `play-netty-server_2.13` → version 3.0.5
+  - `play-specs2_2.13` → version 3.0.5
+  - `filters-helpers_2.13` → `play-filters-helpers_2.13` version 3.0.5
+- Jackson upgraded to 2.14.3 for compatibility with Play 3.0.5
+- Guice upgraded to 6.0.0 for Jakarta EE support
+- Added jakarta.inject-api 2.0.1 dependency
+
+#### Jakarta EE Migration
+
+Play 3.0.5 uses Jakarta EE instead of Java EE (javax.* packages). All imports updated:
+- `javax.inject.Inject` → `jakarta.inject.Inject`
+- All other javax.* references replaced with jakarta.* equivalents
+
+Files updated:
+- `app/Filters.java`
+- `app/modules/StartModule.java`
+- `app/filters/HealthCheckFilter.scala`
+
+#### Build Configuration
+
+- Dockerfile updated to use Java 17 (eclipse-temurin:17-jdk-focal)
+- Maven compiler plugin already set to Java 11+ with `<release>11</release>`
+
+### Build Instructions
+
+Build all modules:
+```
+mvn clean install -DskipTests
+```
+
+Build with test compilation:
+```
+mvn clean install
+```
+
+Compile Scala and Java code:
+```
+mvn sbt-compiler:compile sbt-compiler:testCompile
+```
+
+Run development server:
+```
+mvn play2:run
+```
+
+Create distribution package:
+```
+mvn play2:dist
+```
+
+### Migration Impact
+
+- **Business Logic**: No changes to business logic or functionality
+- **API Compatibility**: Maintained, all endpoints remain the same
+- **Code Changes**: Minimal - primarily dependency updates and javax to jakarta package migrations
+- **Runtime Requirements**: Java 17 or higher now required (was Java 11)
+- **License**: Remains Apache 2.0 compliant throughout the stack
+
+### Testing
+
+All existing tests remain compatible. The upgrade maintains backward compatibility for the application's API and functionality.
