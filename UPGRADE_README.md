@@ -124,8 +124,11 @@ Phase 2 upgrades sunbird-dial-service from Play Framework 2.8.22 to Play Framewo
   - `play-netty-server_2.13` → version 3.0.5
   - `play-specs2_2.13` → version 3.0.5
   - `filters-helpers_2.13` → `play-filters-helpers_2.13` version 3.0.5
+  - Added `play-guice_2.13` version 3.0.5 for Guice application loader
 - Jackson upgraded to 2.14.3 for compatibility with Play 3.0.5
 - Guice upgraded to 6.0.0 for Jakarta EE support
+- Guava upgraded to 32.1.3-jre for Guice 6.0.0 compatibility
+- Cassandra driver upgraded from 3.1.2 to 3.11.5 for Guava 32.x compatibility
 - Added jakarta.inject-api 2.0.1 dependency
 
 #### Jakarta EE Migration
