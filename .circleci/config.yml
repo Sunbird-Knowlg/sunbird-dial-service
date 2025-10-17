@@ -3,7 +3,7 @@ executorType: machine
 jobs:
   dial-build:
     docker:
-      - image: cimg/openjdk:17.0
+      - image: cimg/openjdk:17.0.2
       - image: circleci/redis:latest
     steps:
       - checkout
