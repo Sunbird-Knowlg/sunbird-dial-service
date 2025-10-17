@@ -108,7 +108,7 @@ Phase 2 upgrades sunbird-dial-service from Play Framework 2.8.22 to Play Framewo
 ### Technology Stack Changes
 
 - Play Framework: 2.8.22 to 3.0.5
-- Scala: 2.13.12 to 2.13.14
+- Scala: 2.13.12 (kept at 2.13.12 for sbt-compiler-maven-plugin compatibility)
 - Jackson: 2.11.4 to 2.14.3
 - Guice: 5.1.0 to 6.0.0
 - Netty: 4.1.93.Final to 4.1.100.Final
@@ -143,6 +143,8 @@ Files updated:
 
 - Dockerfile updated to use Java 17 (eclipse-temurin:17-jdk-focal)
 - Maven compiler plugin already set to Java 11+ with `<release>11</release>`
+- Packaging type changed from `pom` to `play2` to enable distribution package creation
+- Scala version kept at 2.13.12 for compatibility with sbt-compiler-maven-plugin 1.0.0
 
 ### Build Instructions
 
