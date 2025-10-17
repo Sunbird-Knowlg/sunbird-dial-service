@@ -200,7 +200,7 @@
         <dependency>
             <groupId>com.datastax.cassandra</groupId>
             <artifactId>cassandra-driver-core</artifactId>
-            <version>3.1.2</version>
+            <version>3.11.5</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.google.guava</groupId>
@@ -232,7 +232,7 @@
         <dependency>
             <groupId>com.datastax.cassandra</groupId>
             <artifactId>cassandra-driver-mapping</artifactId>
-            <version>3.1.2</version>
+            <version>3.11.5</version>
         </dependency>
         <dependency>
             <groupId>redis.clients</groupId>
