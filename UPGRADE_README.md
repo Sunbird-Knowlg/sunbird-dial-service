@@ -145,6 +145,7 @@ Files updated:
 - Maven compiler plugin already set to Java 11+ with `<release>11</release>`
 - Packaging type changed from `pom` to `play2` to enable distribution package creation
 - Scala version kept at 2.13.12 for compatibility with sbt-compiler-maven-plugin 1.0.0
+- Added application loader configuration in application.conf for Play 3.0 compatibility
 
 ### Build Instructions
 
