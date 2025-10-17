@@ -17,7 +17,7 @@ public class StartModule extends AbstractModule {
     }
     
     static class HealthCheckInitializer {
-        @javax.inject.Inject
+        @jakarta.inject.Inject
         public HealthCheckInitializer() {
             try {
                 new HealthCheckManager().getAllServiceHealth();

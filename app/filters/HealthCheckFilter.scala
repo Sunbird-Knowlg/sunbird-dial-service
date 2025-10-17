@@ -8,9 +8,9 @@ import commons.DialCodeErrorMessage
 import commons.exception.{ResponseCode, ServiceUnavailableException}
 import controllers.BaseController
 import play.api.mvc._
-import javax.inject.Inject
+import jakarta.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
-import akka.stream.Materializer
+import org.apache.pekko.stream.Materializer
 
 class HealthCheckFilter @Inject()(implicit val mat: Materializer, ec: ExecutionContext) extends Filter {
   val baseController :BaseController = new BaseController()
