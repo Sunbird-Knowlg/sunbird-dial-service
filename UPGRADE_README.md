@@ -19,7 +19,7 @@ This document describes the upgrade of sunbird-dial-service from Play Framework 
 - Guice: 4.2.3
 - SLF4J: 2.0.9
 - Logback: 1.4.14
-- Netty: 4.1.93.Final
+- Netty: 4.1.100.Final
 - Commons Lang3: 3.12.0
 
 ## Key Changes
