@@ -3,9 +3,11 @@
  * @author Rhea Fernandes
  */
 import filters.HealthCheckFilter;
-import play.api.mvc.EssentialFilter;
+import play.mvc.EssentialFilter;
 import play.http.HttpFilters;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
+import java.util.Arrays;
+import java.util.List;
 
 public class Filters implements HttpFilters {
 
@@ -13,11 +15,11 @@ public class Filters implements HttpFilters {
 
     @Inject
     public Filters(HealthCheckFilter healthCheckFilter) {
-        this.healthCheckFilter= healthCheckFilter;
+        this.healthCheckFilter = healthCheckFilter;
     }
 
     @Override
-    public EssentialFilter[] filters() {
-        return new EssentialFilter[] {(EssentialFilter) this.healthCheckFilter };
+    public List<EssentialFilter> getFilters() {
+        return Arrays.asList(healthCheckFilter.asJava());
     }
 }
