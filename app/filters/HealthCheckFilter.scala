@@ -12,8 +12,7 @@ import jakarta.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import org.apache.pekko.stream.Materializer
 
-class HealthCheckFilter @Inject()(implicit val mat: Materializer, ec: ExecutionContext) extends Filter {
-  val baseController :BaseController = new BaseController()
+class HealthCheckFilter @Inject()(baseController: BaseController)(implicit val mat: Materializer, ec: ExecutionContext) extends Filter {
   
   def apply(nextFilter: RequestHeader => Future[Result])
            (requestHeader: RequestHeader): Future[Result] = {
