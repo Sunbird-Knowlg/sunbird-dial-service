@@ -97,7 +97,7 @@ jobs:
         if: github.event_name == 'pull_request'
         with:
           script: |
-            const sonarUrl = `https://sonarcloud.io/dashboard?id=${process.env.GITHUB_REPOSITORY.replace('/', '_')}`;
+            const sonarUrl = `https://sonarcloud.io/dashboard?id=Sunbird-Knowlg_sunbird-dial-service`;
             const message = `### Quality Gate Results
             Check the detailed SonarQube analysis at: ${sonarUrl}`;
             github.rest.issues.createComment({
