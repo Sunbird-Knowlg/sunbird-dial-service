@@ -15,7 +15,7 @@ This document describes the upgrade of sunbird-dial-service from Play Framework 
 - Play Framework: 2.4.6 to 2.8.22
 - Actor Framework: Akka to Apache Pekko 1.0.3
 - Scala: 2.11.12 to 2.13.12
-- Jackson: 2.10.5
+- Jackson: 2.13.5 to 2.14.3
 - Guice: 4.2.3
 - SLF4J: 2.0.9
 - Logback: 1.4.14
