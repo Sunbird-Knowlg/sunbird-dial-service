@@ -358,7 +358,6 @@
                 <artifactId>play2-maven-plugin</artifactId>
                 <version>${play2.plugin.version}</version>
                 <extensions>true</extensions>
-               
             </plugin>
             <plugin>
                 <groupId>com.google.code.sbt-compiler-maven-plugin</groupId>
