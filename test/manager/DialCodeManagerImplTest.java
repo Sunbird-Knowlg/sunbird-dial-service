@@ -391,7 +391,7 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 
 	@Test
 	public void validateAdopterContext () throws Exception {
-		Response response = dialCodeMgr.validateContextVocabulary("https://raw.githubusercontent.com/project-sunbird/sunbird-dial-service/release-5.0.0/test/resources/context.json");
+		Response response = dialCodeMgr.validateContextVocabulary("https://raw.githubusercontent.com/Sunbird-Knowlg/sunbird-dial-service/master/test/resources/context.json");
 		Assert.assertEquals("CLIENT_ERROR", response.getResponseCode().toString());
 	}
 
@@ -410,13 +410,12 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 	}
 
 
-	private static void createDialCodeIndex() throws IOException {
+	private static void createDialCodeIndex() throws Exception {
 		Constants.DIAL_CODE_INDEX=DIALCODE_INDEX;
 		ElasticSearchUtil.initialiseESClient(DIALCODE_INDEX, AppConfig.config.getString("search.es_conn_info"));
-		String settings = "{\"analysis\": {       \"analyzer\": {         \"dc_index_analyzer\": {           \"type\": \"custom\",           \"tokenizer\": \"standard\",           \"filter\": [             \"lowercase\",             \"mynGram\"           ]         },         \"dc_search_analyzer\": {           \"type\": \"custom\",           \"tokenizer\": \"standard\",           \"filter\": [             \"standard\",             \"lowercase\"           ]         },         \"keylower\": {           \"tokenizer\": \"keyword\",           \"filter\": \"lowercase\"         }       },       \"filter\": {         \"mynGram\": {           \"type\": \"nGram\",           \"min_gram\": 1,           \"max_gram\": 20,           \"token_chars\": [             \"letter\",             \"digit\",             \"whitespace\",             \"punctuation\",             \"symbol\"           ]         }       }     }   }";
-		String mappings = "{\"dynamic_templates\":[{\"longs\":{\"match_mapping_type\":\"long\",\"mapping\":{\"type\":\"long\",\"fields\":{\"raw\":{\"type\":\"long\"}}}}},{\"booleans\":{\"match_mapping_type\":\"boolean\",\"mapping\":{\"type\":\"boolean\",\"fields\":{\"raw\":{\"type\":\"boolean\"}}}}},{\"doubles\":{\"match_mapping_type\":\"double\",\"mapping\":{\"type\":\"double\",\"fields\":{\"raw\":{\"type\":\"double\"}}}}},{\"dates\":{\"match_mapping_type\":\"date\",\"mapping\":{\"type\":\"date\",\"fields\":{\"raw\":{\"type\":\"date\"}}}}},{\"strings\":{\"match_mapping_type\":\"string\",\"mapping\":{\"type\":\"text\",\"copy_to\":\"all_fields\",\"analyzer\":\"dc_index_analyzer\",\"search_analyzer\":\"dc_search_analyzer\",\"fields\":{\"raw\":{\"type\":\"text\",\"analyzer\":\"keylower\"}}}}}],\"properties\":{\"all_fields\":{\"type\":\"text\",\"analyzer\":\"dc_index_analyzer\",\"search_analyzer\":\"dc_search_analyzer\",\"fields\":{\"raw\":{\"type\":\"text\",\"analyzer\":\"keylower\"}}}}}";
-		ElasticSearchUtil.addIndex(DIALCODE_INDEX,
-				Constants.DIAL_CODE_INDEX_TYPE, settings, mappings);
+		String settings = "{\"analysis\":{\"analyzer\":{\"dc_index_analyzer\":{\"filter\":[\"lowercase\",\"mynGram\"],\"tokenizer\":\"standard\",\"type\":\"custom\"},\"dc_search_analyzer\":{\"filter\":[\"lowercase\"],\"tokenizer\":\"standard\",\"type\":\"custom\"},\"keylower\":{\"filter\":\"lowercase\",\"tokenizer\":\"keyword\"}},\"filter\":{\"mynGram\":{\"max_gram\":20,\"min_gram\":1,\"token_chars\":[\"letter\",\"digit\",\"whitespace\",\"punctuation\",\"symbol\"],\"type\":\"nGram\"}}},\"max_ngram_diff\":\"19\"}";
+		String mappings = "{\"dynamic_templates\":[{\"longs\":{\"match_mapping_type\":\"long\",\"mapping\":{\"fields\":{\"raw\":{\"type\":\"long\"}},\"type\":\"long\"}}},{\"booleans\":{\"match_mapping_type\":\"boolean\",\"mapping\":{\"fields\":{\"raw\":{\"type\":\"boolean\"}},\"type\":\"boolean\"}}},{\"doubles\":{\"match_mapping_type\":\"double\",\"mapping\":{\"fields\":{\"raw\":{\"type\":\"double\"}},\"type\":\"double\"}}},{\"dates\":{\"match_mapping_type\":\"date\",\"mapping\":{\"fields\":{\"raw\":{\"type\":\"date\"}},\"type\":\"date\"}}},{\"strings\":{\"match_mapping_type\":\"string\",\"mapping\":{\"analyzer\":\"dc_index_analyzer\",\"copy_to\":\"all_fields\",\"fields\":{\"raw\":{\"fielddata\":true,\"analyzer\":\"keylower\",\"type\":\"text\"}},\"search_analyzer\":\"dc_search_analyzer\",\"type\":\"text\"}}}],\"properties\":{\"all_fields\":{\"type\":\"text\",\"fields\":{\"raw\":{\"type\":\"text\",\"analyzer\":\"keylower\",\"fielddata\":true}},\"analyzer\":\"dc_index_analyzer\",\"search_analyzer\":\"dc_search_analyzer\"},\"batchcode\":{\"type\":\"text\",\"fields\":{\"raw\":{\"type\":\"text\",\"analyzer\":\"keylower\",\"fielddata\":true}},\"copy_to\":[\"all_fields\"],\"analyzer\":\"dc_index_analyzer\",\"search_analyzer\":\"dc_search_analyzer\"},\"channel\":{\"type\":\"text\",\"fields\":{\"raw\":{\"type\":\"text\",\"analyzer\":\"keylower\",\"fielddata\":true}},\"copy_to\":[\"all_fields\"],\"analyzer\":\"dc_index_analyzer\",\"search_analyzer\":\"dc_search_analyzer\"},\"dialcode_index\":{\"type\":\"double\",\"fields\":{\"raw\":{\"type\":\"double\"}}},\"generated_on\":{\"type\":\"date\",\"fields\":{\"raw\":{\"type\":\"date\"}}},\"identifier\":{\"type\":\"text\",\"fields\":{\"raw\":{\"type\":\"text\",\"analyzer\":\"keylower\",\"fielddata\":true}},\"copy_to\":[\"all_fields\"],\"analyzer\":\"dc_index_analyzer\",\"search_analyzer\":\"dc_search_analyzer\"},\"objectType\":{\"type\":\"text\",\"fields\":{\"raw\":{\"type\":\"text\",\"analyzer\":\"keylower\",\"fielddata\":true}},\"copy_to\":[\"all_fields\"],\"analyzer\":\"dc_index_analyzer\",\"search_analyzer\":\"dc_search_analyzer\"},\"status\":{\"type\":\"text\",\"fields\":{\"raw\":{\"type\":\"text\",\"analyzer\":\"keylower\",\"fielddata\":true}},\"copy_to\":[\"all_fields\"],\"analyzer\":\"dc_index_analyzer\",\"search_analyzer\":\"dc_search_analyzer\"}}}";
+		ElasticSearchUtil.addIndex(DIALCODE_INDEX, settings, mappings);
 
 		populateData();
 	}
@@ -475,7 +474,6 @@ public class DialCodeManagerImplTest extends CassandraTestSetup {
 		indexDocument.put("userId", "ANONYMOUS");
 		indexDocument.put("objectType", "DialCode");
 
-		ElasticSearchUtil.addDocumentWithId(DIALCODE_INDEX, Constants.DIAL_CODE_INDEX_TYPE, dialCode,
-				mapper.writeValueAsString(indexDocument));
+		ElasticSearchUtil.addDocumentWithId(DIALCODE_INDEX, dialCode, mapper.writeValueAsString(indexDocument));
 	}
 }

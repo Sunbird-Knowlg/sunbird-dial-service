@@ -1,6 +1,6 @@
 package elasticsearch;
 
-import akka.dispatch.Mapper;
+import org.apache.pekko.dispatch.Mapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import commons.AppConfig;
 import dto.SearchDTO;
