@@ -14,6 +14,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -32,6 +33,7 @@ import static org.junit.Assert.assertTrue;
  * @author gauraw
  *
  */
+@Ignore("requires live OpenSearch on localhost:9200 and embedded Cassandra — run as integration test")
 public class DialCodeManagerImplTest extends CassandraTestSetup {
 
 	private DialcodeManager dialCodeMgr = new DialcodeManager();
