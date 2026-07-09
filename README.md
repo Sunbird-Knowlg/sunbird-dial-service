@@ -4,7 +4,7 @@ Micro-service for DIAL code management
 ## DIAL-Service local setup
 This readme file contains the instruction to set up and run the DIAL-service in local machine.
 ### Prerequisites:
-* Elasticsearch
+* OpenSearch
 * Redis
 * Cassandra
 
@@ -16,26 +16,25 @@ mkdir -p ~/sunbird-dbs/neo4j ~/sunbird-dbs/cassandra ~/sunbird-dbs/redis ~/sunbi
 export sunbird_dbs_path=~/sunbird-dbs
 ```
 
-### Elasticsearch database setup in docker:
+### OpenSearch database setup in docker:
 ```shell
-docker run --name sunbird_es -d -p 9200:9200 -p 9300:9300 \
--v $sunbird_dbs_path/es/data:/usr/share/elasticsearch/data \
--v $sunbird_dbs_path/es/logs://usr/share/elasticsearch/logs \
--v $sunbird_dbs_path/es/backups:/opt/elasticsearch/backup \
- -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+docker run --name sunbird_es -d -p 9200:9200 -p 9600:9600 \
+-v $sunbird_dbs_path/es/data:/usr/share/opensearch/data \
+-v $sunbird_dbs_path/es/logs:/usr/share/opensearch/logs \
+ -e "discovery.type=single-node" \
+ -e "plugins.security.disabled=true" \
+ opensearchproject/opensearch:2.19.5
 
 ```
 > --name -  Name your container (avoids generic id)
 >
-> -p - Specify container ports to expose
->
-> Using the -p option with ports 7474 and 7687 allows us to expose and listen for traffic on both the HTTP and Bolt ports. Having the HTTP port means we can connect to our database with Neo4j Browser, and the Bolt port means efficient and type-safe communication requests between other layers and the database.
+> -p - Specify container ports to expose (9200 for REST API, 9600 for Performance Analyzer)
 >
 > -d - This detaches the container to run in the background, meaning we can access the container separately and see into all of its processes.
 >
-> -v - The next several lines start with the -v option. These lines define volumes we want to bind in our local directory structure so we can access certain files locally.
+> -v - These lines define volumes we want to bind in our local directory structure so we can access certain files locally.
 >
-> --env - Set config as environment variables for Neo4j database
+> --env - Set config as environment variables for OpenSearch
 >
 
 
