@@ -141,13 +141,16 @@ public abstract class CassandraStore {
 
     }
 
-    protected List<Row> readByUUID(String key, Object value) {
+    protected List<Row> readByUUID(String key, java.util.UUID value) {
         try {
             if (StringUtils.isBlank(key)) {
                 throw new ServerException(CassandraStoreParam.ERR_SERVER_ERROR.name(),
                         "Invalid Identifier to read");
             }
-            String selectQuery = "select * from " + keyspace+"."+table + " where " + key + "=" + value + ";";
+            // Build via QueryBuilder so the UUID is bound through its TypeCodec instead of
+            // being concatenated into the CQL string (closes CQL injection at CassandraStore.java).
+            Select selectQuery = QueryBuilder.select().all().from(keyspace, table);
+            selectQuery.where(QueryBuilder.eq(key, value));
             ResultSet results = CassandraConnector.getSession().execute(selectQuery);
             return results.all();
         } catch (Exception e) {

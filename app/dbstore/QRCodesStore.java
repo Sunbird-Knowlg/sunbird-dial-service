@@ -42,7 +42,10 @@ public class QRCodesStore extends CassandraStore {
 	public QRCodesBatch read(String processId) throws Exception {
 		QRCodesBatch qrCodesBatchObj = null;
 		try {
-			List<Row> rows = readByUUID(DialCodeEnum.processid.name(), processId);
+			// processid is a uuid column; parse+validate before the DB call. A malformed id
+			// (incl. any CQL-injection payload) fails here and is surfaced as not-found below.
+			java.util.UUID processUuid = java.util.UUID.fromString(StringUtils.trimToEmpty(processId));
+			List<Row> rows = readByUUID(DialCodeEnum.processid.name(), processUuid);
 			Row row = rows.get(0);
 			qrCodesBatchObj = setQRCodesBatchData(row);
 		} catch (Exception e) {
