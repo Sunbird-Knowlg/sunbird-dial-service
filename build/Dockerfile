@@ -1,4 +1,8 @@
-FROM --platform=linux/x86_64 eclipse-temurin:17-jdk-focal
+FROM --platform=linux/x86_64 eclipse-temurin:17.0.21.1_2-jdk-noble
+ARG MIN_JAVA_VERSION=17.0.21.1
+RUN JAVA_VERSION_FOUND=$(java -XshowSettings:properties -version 2>&1 | awk -F'= ' '/java.version =/{print $2}') \
+    && printf '%s\n%s\n' "$MIN_JAVA_VERSION" "$JAVA_VERSION_FOUND" | sort -V -C \
+    || { echo "Java $JAVA_VERSION_FOUND is older than $MIN_JAVA_VERSION (CVE-2026-114938)"; exit 1; }
 RUN apt-get update \
     && apt-get upgrade -y \
     && apt-get install -y unzip curl \
